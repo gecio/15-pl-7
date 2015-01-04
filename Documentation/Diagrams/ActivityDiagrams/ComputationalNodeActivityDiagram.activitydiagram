@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<activityRootModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="f4ead47c-0335-4e8a-b551-49282d63be02" name="ComputationalNodeActivityDiagram" linkedPackageId="39158de0-8cd4-4aff-9705-1f119dc66ed9" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ActivityDesigner">
+  <profileInstances>
+    <packageHasProfileInstances Id="d0922e02-58bc-4565-9985-5aaf48bca686">
+      <profileInstance Id="21c604da-8fd6-454d-9f27-8a88259f5fe3" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="bf9f922c-87a0-4760-8999-c572ca6e2793">
+      <profileInstance Id="5a6b8efa-4bf6-46b4-9f2b-d8ddd2ddffa0" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <activityRootModelHasActivity>
+      <activity Id="89b77821-a2da-4b9c-a47d-90649a9723be" name="ComputationalNodeActivityDiagram" isAbstract="false" isLeaf="false" isActiveClass="false" isReentrant="false" isReadOnly="false" isSingleExecution="false">
+        <elementDefinition Id="40e94e19-ec36-46be-bcac-c7237c2118e4" />
+        <nodes>
+          <initialNode Id="93de111d-fee5-4231-acdf-770295d27def" name="Initial1" isLeaf="false">
+            <elementDefinition Id="a4c8fff4-42af-4a45-8def-c060affda7e8" />
+            <flowNodeTargets>
+              <controlFlow Id="ad291ebc-2c45-4783-b639-dc66b05cf40e" isLeaf="false">
+                <opaqueActionMoniker Id="40771ebf-0c36-4c38-9496-a0c8ea585172" LastKnownName="Wyjmowanie podproblemów z kolejki i wysyłanie nie Węzła Obliczeniowego" />
+                <elementDefinition Id="de437a86-e3e5-4be4-9680-73e286d9a261" />
+              </controlFlow>
+            </flowNodeTargets>
+          </initialNode>
+          <objectNode Id="1266baab-b008-45fe-96c3-d079532dcaa6" name="Węzeł Obliczeniowy" isLeaf="false" ordering="Unordered" isControlType="false">
+            <elementDefinition Id="758c2505-4bfd-4d65-9a44-6e65cfe2b06d" />
+            <upperBound>
+              <literalInteger Id="37750768-7ec8-4ce0-b74b-d3edd9cd8cfd" name="2147483647" value="2147483647">
+                <elementDefinition Id="c815aaa6-4281-4a92-b2a6-b32ab6e3c3c3" />
+              </literalInteger>
+            </upperBound>
+          </objectNode>
+          <objectNode Id="f765a88f-23aa-4566-9745-1c0adaaf5587" name="Serwer" isLeaf="false" ordering="Unordered" isControlType="false">
+            <elementDefinition Id="37cb84c3-1971-4e0f-9fbc-2cbd8e6b63ab" />
+            <upperBound>
+              <literalInteger Id="6170a51f-a6e7-4092-9543-b8adf1cf87a2" name="2147483647" value="2147483647">
+                <elementDefinition Id="ecb829fd-5089-4bef-89c6-1f58a5fcaab4" />
+              </literalInteger>
+            </upperBound>
+          </objectNode>
+          <activityFinalNode Id="662dd7bf-cc88-4ecf-b7c6-92a78459d21b" name="ActivityFinal1" isLeaf="false">
+            <elementDefinition Id="94888069-3453-4d85-83d7-7de574f31fe7" />
+          </activityFinalNode>
+          <opaqueAction Id="40771ebf-0c36-4c38-9496-a0c8ea585172" name="Wyjmowanie podproblemów z kolejki i wysyłanie nie Węzła Obliczeniowego" isLeaf="false">
+            <elementDefinition Id="719f2e00-54ec-4c69-b87d-bbd5a83b2106" />
+            <flowNodeTargets>
+              <controlFlow Id="97a4e1b3-b09d-4835-8ff1-1848f9979e98" isLeaf="false">
+                <opaqueActionMoniker Id="19e23968-dbbe-4810-adfd-9c3e9099c28c" LastKnownName="Rozwiązanie problemu" />
+                <elementDefinition Id="4e0266f4-1d89-4f0b-a877-7863e0767d51" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="19e23968-dbbe-4810-adfd-9c3e9099c28c" name="Rozwiązanie problemu" isLeaf="false">
+            <elementDefinition Id="d20b6ced-eae3-42e1-89fe-72f3068ceb6c" />
+            <flowNodeTargets>
+              <controlFlow Id="44f60276-d92e-495a-9242-6e75c208d9f3" isLeaf="false">
+                <decisionNodeMoniker Id="9fc88d36-0b80-4d57-970f-5cc39dd0761a" LastKnownName="Decision1" />
+                <elementDefinition Id="c8c1a2e9-76ed-44e7-a61a-a625b76b75bb" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="7ed68f2c-2df9-4d77-8b3a-99ca6e558359" name="Wysłanie wyników działania węzła do serwera" isLeaf="false">
+            <elementDefinition Id="157fd116-6db2-4bdf-b9e9-1c0005a534d8" />
+            <flowNodeTargets>
+              <controlFlow Id="dfac2322-5d89-4b43-b95c-ea4917491d34" isLeaf="false">
+                <opaqueActionMoniker Id="ca1dd61f-3105-4987-b91d-5ea8ddf4314d" LastKnownName="Odebranie rozwiązania od węzła obliczeniowego" />
+                <elementDefinition Id="d1b6d547-2acc-44c9-81c2-631904eab122" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="ca1dd61f-3105-4987-b91d-5ea8ddf4314d" name="Odebranie rozwiązania od węzła obliczeniowego" isLeaf="false">
+            <elementDefinition Id="c2ef8898-3e00-4dee-9cf5-7815c5654f8d" />
+            <flowNodeTargets>
+              <controlFlow Id="99d1825d-b765-42f7-a19f-f61ca5015bc1" isLeaf="false">
+                <activityFinalNodeMoniker Id="662dd7bf-cc88-4ecf-b7c6-92a78459d21b" LastKnownName="ActivityFinal1" />
+                <elementDefinition Id="f5ff55fa-b520-4b60-a4ba-402b43178b69" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="52a0f726-c9a2-4588-a6bd-7668b3d5327d" name="Przygotowanie raportu błędu" isLeaf="false">
+            <elementDefinition Id="06f7b410-e31e-43fd-a6ab-ae92e96aad43" />
+            <flowNodeTargets>
+              <controlFlow Id="0027afce-818f-4c95-8dcf-547a5b17d5cf" isLeaf="false">
+                <mergeNodeMoniker Id="fa182d50-dbb5-402b-ac7e-62f8bd4b7270" LastKnownName="Merge1" />
+                <elementDefinition Id="edbf9049-4f89-4d9b-b422-741e716b9aa3" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <decisionNode Id="9fc88d36-0b80-4d57-970f-5cc39dd0761a" name="Decision1" isLeaf="false">
+            <elementDefinition Id="aaddd50b-0828-4986-b6fe-1774e1196250" />
+            <flowNodeTargets>
+              <controlFlow Id="f65b0eaa-5fb2-489d-a2e6-98e758b1b79b" guard="Błąd = true" isLeaf="false">
+                <opaqueActionMoniker Id="52a0f726-c9a2-4588-a6bd-7668b3d5327d" LastKnownName="Przygotowanie raportu błędu" />
+                <elementDefinition Id="deac537c-4ce9-4709-96c5-ce445f08a411" />
+              </controlFlow>
+              <controlFlow Id="0ab86d59-238f-4e01-9ed5-bddb7fc56957" guard="Błąd = false" isLeaf="false">
+                <mergeNodeMoniker Id="fa182d50-dbb5-402b-ac7e-62f8bd4b7270" LastKnownName="Merge1" />
+                <elementDefinition Id="3a459d38-3e69-4f87-9ca5-a7c8b9cbfec2" />
+              </controlFlow>
+            </flowNodeTargets>
+          </decisionNode>
+          <mergeNode Id="fa182d50-dbb5-402b-ac7e-62f8bd4b7270" name="Merge1" isLeaf="false">
+            <elementDefinition Id="064a50b5-49e8-4955-bc2b-cd153dcdb00e" />
+            <flowNodeTargets>
+              <controlFlow Id="e7ffe1c0-dab1-449d-a691-24ad67b6bfad" isLeaf="false">
+                <opaqueActionMoniker Id="7ed68f2c-2df9-4d77-8b3a-99ca6e558359" LastKnownName="Wysłanie wyników działania węzła do serwera" />
+                <elementDefinition Id="7d7a8a5d-5956-4176-8705-960a50b3dec2" />
+              </controlFlow>
+            </flowNodeTargets>
+          </mergeNode>
+        </nodes>
+      </activity>
+    </activityRootModelHasActivity>
+  </packagedElements>
+  <package Id="39158de0-8cd4-4aff-9705-1f119dc66ed9" name="Diagrams">
+    <elementDefinition Id="8510b310-7a46-47cb-ac1f-4b06aa070b9d" />
+  </package>
+</activityRootModel>

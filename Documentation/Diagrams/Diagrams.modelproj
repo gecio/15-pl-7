@@ -22,30 +22,41 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\ArchitectureTools\Microsoft.VisualStudio.TeamArchitect.ModelingProject.targets" Condition="'$(VSToolsPath)' != ''" />
   <ItemGroup>
-    <Content Include="ComputationalClientActivityDiagram1.activitydiagram">
+    <Content Include="ActivityDiagrams\ComputationalClientActivityDiagram1.activitydiagram">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="ComputationalClientActivityDiagram1.activitydiagram.layout">
+    <Content Include="ActivityDiagrams\ComputationalClientActivityDiagram1.activitydiagram.layout">
       <SubType>Content</SubType>
-      <DependentUpon>ComputationalClientActivityDiagram1.activitydiagram</DependentUpon>
+      <DependentUpon>ActivityDiagrams\ComputationalClientActivityDiagram1.activitydiagram</DependentUpon>
     </Content>
-    <Content Include="ComputationalClientActivityDiagram2.activitydiagram">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="ComputationalClientActivityDiagram2.activitydiagram.layout">
-      <SubType>Content</SubType>
-      <DependentUpon>ComputationalClientActivityDiagram2.activitydiagram</DependentUpon>
-    </Content>
-    <Content Include="TaskManagerActivityDiagram.activitydiagram">
+    <Content Include="ActivityDiagrams\ComputationalClientActivityDiagram2.activitydiagram">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="TaskManagerActivityDiagram.activitydiagram.layout">
+    <Content Include="ActivityDiagrams\ComputationalClientActivityDiagram2.activitydiagram.layout">
       <SubType>Content</SubType>
-      <DependentUpon>TaskManagerActivityDiagram.activitydiagram</DependentUpon>
+      <DependentUpon>ActivityDiagrams\ComputationalClientActivityDiagram2.activitydiagram</DependentUpon>
+    </Content>
+    <Content Include="ActivityDiagrams\ComputationalNodeActivityDiagram.activitydiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ActivityDiagrams\ComputationalNodeActivityDiagram.activitydiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>ActivityDiagrams\ComputationalNodeActivityDiagram.activitydiagram</DependentUpon>
+    </Content>
+    <Content Include="ActivityDiagrams\ComputationalNodeDescription.txt">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ActivityDiagrams\TaskManagerActivityDiagram.activitydiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ActivityDiagrams\TaskManagerActivityDiagram.activitydiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>ActivityDiagrams\TaskManagerActivityDiagram.activitydiagram</DependentUpon>
     </Content>
     <Folder Include="ModelDefinition\" />
     <Content Include="ModelDefinition\Diagrams.uml">
       <SubType>Content</SubType>
     </Content>
+    <Folder Include="ActivityDiagrams" />
   </ItemGroup>
 </Project>
