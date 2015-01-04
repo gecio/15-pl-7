@@ -22,6 +22,20 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\ArchitectureTools\Microsoft.VisualStudio.TeamArchitect.ModelingProject.targets" Condition="'$(VSToolsPath)' != ''" />
   <ItemGroup>
+    <Content Include="ComputationalClientActivityDiagram1.activitydiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ComputationalClientActivityDiagram1.activitydiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>ComputationalClientActivityDiagram1.activitydiagram</DependentUpon>
+    </Content>
+    <Content Include="ComputationalClientActivityDiagram2.activitydiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ComputationalClientActivityDiagram2.activitydiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>ComputationalClientActivityDiagram2.activitydiagram</DependentUpon>
+    </Content>
     <Content Include="TaskManagerActivityDiagram.activitydiagram">
       <SubType>Content</SubType>
     </Content>

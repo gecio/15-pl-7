@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<activityRootModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="1d9d2ffa-4310-48a9-ab69-d766b7a7b2ce" name="ComputationalClientActivityDiagram2 - odczytanie wyniku" linkedPackageId="e3694319-88f2-4c2a-b67c-38e67af2b7bd" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ActivityDesigner">
+  <packagedElements>
+    <activityRootModelHasActivity>
+      <activity Id="37d978bc-2789-41ec-aba1-4f7927e57d95" name="ComputationalClientActivityDiagram2 - odczytanie wyniku" isAbstract="false" isLeaf="false" isActiveClass="false" isReentrant="false" isReadOnly="false" isSingleExecution="false">
+        <elementDefinition Id="d1d959f9-ba43-4ee9-8b40-db678b8da490" />
+        <nodes>
+          <initialNode Id="2d194eb8-b44e-41d8-9161-53129bb505ee" name="Initial1" isLeaf="false">
+            <elementDefinition Id="1c85291b-b7e1-462d-92dd-b2444a66b372" />
+            <flowNodeTargets>
+              <controlFlow Id="1f76fc5c-c265-402d-9da7-3659d463e76c" isLeaf="false">
+                <opaqueActionMoniker Id="b62bd2ea-c2c9-4e61-b35e-72f223636a9d" LastKnownName="Odebranie rozwiązania problemu od managera zadań" />
+                <elementDefinition Id="3831f2ac-3f80-427a-a807-1893610bff22" />
+              </controlFlow>
+            </flowNodeTargets>
+          </initialNode>
+          <objectNode Id="80345408-67fc-4fb0-964c-22838c7e424b" name="Klient" isLeaf="false" ordering="Unordered" isControlType="false">
+            <elementDefinition Id="7cb16457-f196-4045-ba75-c9ac5fc71982" />
+            <upperBound>
+              <literalInteger Id="6b4f45c2-9324-4acf-9954-c832b65a6abb" name="2147483647" value="2147483647">
+                <elementDefinition Id="4e3a9bcd-d0a7-42c1-b5bd-e4a2e9c06e36" />
+              </literalInteger>
+            </upperBound>
+          </objectNode>
+          <objectNode Id="5bdb7191-3fa7-4003-9bde-93fdca53ce20" name="Użytkownik" isLeaf="false" ordering="Unordered" isControlType="false">
+            <elementDefinition Id="e1efa6e1-5857-45b9-9f57-d30b9b51a49a" />
+            <upperBound>
+              <literalInteger Id="21906843-9838-4a4e-8838-d0fabf2d0bbb" name="2147483647" value="2147483647">
+                <elementDefinition Id="e93ae692-7938-4201-a147-ce71f28fc97a" />
+              </literalInteger>
+            </upperBound>
+          </objectNode>
+          <objectNode Id="26844035-602c-4270-8169-a54eb51e6963" name="Serwer" isLeaf="false" ordering="Unordered" isControlType="false">
+            <elementDefinition Id="04ba3aac-33a9-4164-a085-3f4d7305291f" />
+            <upperBound>
+              <literalInteger Id="a2f18dd2-881e-46b0-9592-360ceb7b3f74" name="2147483647" value="2147483647">
+                <elementDefinition Id="71982547-8c1b-43b6-b585-50407a3f848d" />
+              </literalInteger>
+            </upperBound>
+          </objectNode>
+          <activityFinalNode Id="18972ce5-013e-4582-8d16-e53f86db35c6" name="ActivityFinal1" isLeaf="false">
+            <elementDefinition Id="c493eaf0-6cf5-40df-afa1-4ec128826c1e" />
+          </activityFinalNode>
+          <opaqueAction Id="b62bd2ea-c2c9-4e61-b35e-72f223636a9d" name="Odebranie rozwiązania problemu od managera zadań" isLeaf="false">
+            <elementDefinition Id="79b70f84-ba5e-46d7-aecb-772aa3cf29fe" />
+            <flowNodeTargets>
+              <controlFlow Id="a3288d0d-a7e7-4bca-ba89-47dc6b2fafd3" isLeaf="false">
+                <opaqueActionMoniker Id="184a4f8c-be6a-487c-80f7-c7446e1824b2" LastKnownName="Umieszczenie problemu na liście rozwiązanych zadań" />
+                <elementDefinition Id="9fda8980-881d-4b14-8c10-8ca0996c10cb" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="184a4f8c-be6a-487c-80f7-c7446e1824b2" name="Umieszczenie problemu na liście rozwiązanych zadań" isLeaf="false">
+            <elementDefinition Id="984327df-be80-4a13-bce3-8c793a4c0fae" />
+            <flowNodeTargets>
+              <controlFlow Id="d7779e03-a0c2-45ba-9a22-abfffa090679" isLeaf="false">
+                <opaqueActionMoniker Id="7c361163-4f11-4450-a997-2eda96362050" LastKnownName="Żądanie wyświetlenia wyniku" />
+                <elementDefinition Id="adb5684a-2558-4b6c-a0b8-19373a5a8a9a" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="7c361163-4f11-4450-a997-2eda96362050" name="Żądanie wyświetlenia wyniku" isLeaf="false">
+            <elementDefinition Id="660692bf-b1df-49c3-a1b9-5bf4f2b6c199" />
+            <flowNodeTargets>
+              <controlFlow Id="8573d44b-c1dc-4c97-b671-24dfed5fa310" isLeaf="false">
+                <opaqueActionMoniker Id="9ca43df4-808c-4e5b-9cba-82bbf68475a2" LastKnownName="Wysłanie zapytania o wskazane rozwiązanie do serwera" />
+                <elementDefinition Id="eec1d41a-b85d-45a1-9d29-8881b85a94f8" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="0a2939fd-df35-4e6d-83bb-f6166c798ce9" name="Odebranie i wyświetlenie wyniku" isLeaf="false">
+            <elementDefinition Id="4ee5c063-8bdd-4126-a49b-1c90273d8db9" />
+            <flowNodeTargets>
+              <controlFlow Id="b7a727f7-b1a0-458a-8158-fb6d8572e06f" isLeaf="false">
+                <activityFinalNodeMoniker Id="18972ce5-013e-4582-8d16-e53f86db35c6" LastKnownName="ActivityFinal1" />
+                <elementDefinition Id="a4c055ec-3108-44c3-b7c7-f9f12ce32f15" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="9ca43df4-808c-4e5b-9cba-82bbf68475a2" name="Wysłanie zapytania o wskazane rozwiązanie do serwera" isLeaf="false">
+            <elementDefinition Id="63dabef0-cfa4-432e-a6b0-093afeaff1f1" />
+            <flowNodeTargets>
+              <controlFlow Id="795a3ca1-334b-4d20-8a18-725606c03596" isLeaf="false">
+                <opaqueActionMoniker Id="313f5c00-0bd7-4170-aa1d-14e315deaf67" LastKnownName="Wysłanie rozwiązania do klienta i usunięcie go z listy ukończonych zadań" />
+                <elementDefinition Id="c81df330-23be-4edc-a9f2-3288e665567f" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="313f5c00-0bd7-4170-aa1d-14e315deaf67" name="Wysłanie rozwiązania do klienta i usunięcie go z listy ukończonych zadań" isLeaf="false">
+            <elementDefinition Id="760adad9-9e0d-4cb6-aae2-e8750fefbfb0" />
+            <flowNodeTargets>
+              <controlFlow Id="c6b20085-6394-4165-912e-082682460b76" isLeaf="false">
+                <opaqueActionMoniker Id="0a2939fd-df35-4e6d-83bb-f6166c798ce9" LastKnownName="Odebranie i wyświetlenie wyniku" />
+                <elementDefinition Id="cab238d7-87b5-478d-b65b-1deb86d0a39c" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+        </nodes>
+      </activity>
+    </activityRootModelHasActivity>
+  </packagedElements>
+  <package Id="e3694319-88f2-4c2a-b67c-38e67af2b7bd" name="Diagrams">
+    <elementDefinition Id="8510b310-7a46-47cb-ac1f-4b06aa070b9d" />
+    <profileInstances>
+      <packageHasProfileInstances Id="1614e08b-fd44-4a10-98e1-621978fadc2e">
+        <profileInstance Id="0a1688ff-503a-4c03-bfa8-364cc2c91194" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="9df8dd41-df44-4b84-bff3-5afdc30246cf">
+        <profileInstance Id="2f09ae34-9c60-47ed-ba5c-20c1d89658fb" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
+  </package>
+</activityRootModel>

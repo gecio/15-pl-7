@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<activityRootModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="8fda2a6e-ae69-4593-9749-8f3db208237f" name="ComputationalClientActivityDiagram1 - zlecenie rozwiązania problemu" linkedPackageId="e3cba6c2-38b6-4161-8049-f232de3424a4" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ActivityDesigner">
+  <packagedElements>
+    <activityRootModelHasActivity>
+      <activity Id="63d9cb95-c647-4abf-8fc9-ef48ad5ac956" name="ComputationalClientActivityDiagram1 - zlecenie rozwiązania problemu" isAbstract="false" isLeaf="false" isActiveClass="false" isReentrant="false" isReadOnly="false" isSingleExecution="false">
+        <elementDefinition Id="d1840ced-0729-4ca7-9fd2-69df3c53bc79" />
+        <nodes>
+          <initialNode Id="c9df37e2-1c42-4662-949a-9a44302448c3" name="Initial1" isLeaf="false">
+            <elementDefinition Id="cf60a02d-c70c-4299-a89c-ef4170ccc56b" />
+            <flowNodeTargets>
+              <controlFlow Id="94e48b49-0841-440d-ba42-b0df0059735d" isLeaf="false">
+                <opaqueActionMoniker Id="c50212cc-c75b-4965-b137-498878565a6a" LastKnownName="Wysłanie zapytania o metadane do serwera" />
+                <elementDefinition Id="00f7af35-018b-4937-898f-abcd49693fe1" />
+              </controlFlow>
+            </flowNodeTargets>
+          </initialNode>
+          <opaqueAction Id="c50212cc-c75b-4965-b137-498878565a6a" name="Wysłanie zapytania o metadane do serwera" isLeaf="false">
+            <elementDefinition Id="b89b828f-009e-4055-9c16-98f612bd5da9" />
+            <flowNodeTargets>
+              <controlFlow Id="ddc07930-16b1-4706-8f27-db6c5253b52c" isLeaf="false">
+                <opaqueActionMoniker Id="837440ea-4519-4634-832d-a0c3b95046ab" LastKnownName="Wysłanie metadanych do klienta" />
+                <elementDefinition Id="15520f0d-5ea7-4cae-a0bf-e62ba66ca0cb" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="837440ea-4519-4634-832d-a0c3b95046ab" name="Wysłanie metadanych do klienta" isLeaf="false">
+            <elementDefinition Id="5cc5c886-6b0b-4467-bfca-0efa87349a7b" />
+            <flowNodeTargets>
+              <controlFlow Id="51091ebd-cf7d-45b4-b6a0-7e13730b0cbb" isLeaf="false">
+                <opaqueActionMoniker Id="e3cb4e7d-9195-4ff6-b9ba-8f2e21795643" LastKnownName="Odebranie metadanych" />
+                <elementDefinition Id="3992a49a-51ee-4fbd-b9db-1a4f5f9bb227" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="e3cb4e7d-9195-4ff6-b9ba-8f2e21795643" name="Odebranie metadanych" isLeaf="false">
+            <elementDefinition Id="5f368f4d-079a-468f-abe3-cf3d17753c21" />
+            <flowNodeTargets>
+              <controlFlow Id="976cb680-1598-477d-80d4-ba9912b090b7" isLeaf="false">
+                <opaqueActionMoniker Id="4e268d87-904a-4dc3-b8bc-d6183190b612" LastKnownName="Wybór typu problemu i wprowadzenie danych wejściowych" />
+                <elementDefinition Id="3219647b-5cb9-46b0-9741-d0b9faa7b5f1" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="4e268d87-904a-4dc3-b8bc-d6183190b612" name="Wybór typu problemu i wprowadzenie danych wejściowych" isLeaf="false">
+            <elementDefinition Id="19589a33-6cd7-49d8-9477-dc1e50d519f0" />
+            <flowNodeTargets>
+              <controlFlow Id="96da8f51-f071-4cd1-a25f-64683840f74b" isLeaf="false">
+                <opaqueActionMoniker Id="b4ee5b04-50e0-4877-bdb8-c9f6f0a64566" LastKnownName="Zlecenie rozwiązania problemu" />
+                <elementDefinition Id="08f732cf-56e9-444b-8a9b-e31f989a800c" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="b4ee5b04-50e0-4877-bdb8-c9f6f0a64566" name="Zlecenie rozwiązania problemu" isLeaf="false">
+            <elementDefinition Id="dae665d2-dcaa-47e6-abc2-656a82c0d1f5" />
+            <flowNodeTargets>
+              <controlFlow Id="e12d0029-556c-4d3d-8de7-9ac9bc5e6b2d" isLeaf="false">
+                <opaqueActionMoniker Id="aae3b014-3c7e-4cdc-a2e7-60366841e0ec" LastKnownName="Dodanie otrzymanego problemu do kolejki problemów oczekujących na rozwiązanie" />
+                <elementDefinition Id="f1ed39c8-475c-4ffa-887d-5847ce3a7247" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <opaqueAction Id="aae3b014-3c7e-4cdc-a2e7-60366841e0ec" name="Dodanie otrzymanego problemu do kolejki problemów oczekujących na rozwiązanie" isLeaf="false">
+            <elementDefinition Id="ead7339e-cfda-42a9-9fbe-7d6cd8851fb4" />
+            <flowNodeTargets>
+              <controlFlow Id="12701be5-e957-4563-a87a-bdd750ce2abc" isLeaf="false">
+                <activityFinalNodeMoniker Id="7645ef4d-668c-43bd-9adb-f9bf941cb0e8" LastKnownName="ActivityFinal1" />
+                <elementDefinition Id="62736044-2727-4383-b7bf-397a2134098f" />
+              </controlFlow>
+            </flowNodeTargets>
+          </opaqueAction>
+          <objectNode Id="8baacf8c-088b-42cc-a114-4eb8ff34b575" name="Klient" isLeaf="false" ordering="Unordered" isControlType="false">
+            <elementDefinition Id="f866ca85-e13d-4e7e-864f-2c8d85665f2e" />
+            <upperBound>
+              <literalInteger Id="98b7c132-4f62-4325-acd4-2e70fe46fb8c" name="2147483647" value="2147483647">
+                <elementDefinition Id="976dc14d-8525-4186-9797-c2341f15dd16" />
+              </literalInteger>
+            </upperBound>
+          </objectNode>
+          <objectNode Id="d3e2f982-1e7e-4ba4-bd44-efb69c2379f6" name="Użytkownik" isLeaf="false" ordering="Unordered" isControlType="false">
+            <elementDefinition Id="4bacb2b5-d333-4707-9139-49c42592052c" />
+            <upperBound>
+              <literalInteger Id="ed6faf10-f22f-412c-809a-44807a559601" name="2147483647" value="2147483647">
+                <elementDefinition Id="193cfc2c-2428-471a-9225-033298b8656b" />
+              </literalInteger>
+            </upperBound>
+          </objectNode>
+          <objectNode Id="e1dccf58-d7c9-4045-962c-840b1018709c" name="Serwer" isLeaf="false" ordering="Unordered" isControlType="false">
+            <elementDefinition Id="4d934d92-f6c8-4b23-83f4-657a6b33725e" />
+            <upperBound>
+              <literalInteger Id="3da5f97e-16f9-4a98-904f-713a67c9a683" name="2147483647" value="2147483647">
+                <elementDefinition Id="f2996660-7d07-42c2-b7d6-3a6b16969408" />
+              </literalInteger>
+            </upperBound>
+          </objectNode>
+          <activityFinalNode Id="7645ef4d-668c-43bd-9adb-f9bf941cb0e8" name="ActivityFinal1" isLeaf="false">
+            <elementDefinition Id="ef997a31-34f0-4fec-be51-541314da2bb3" />
+          </activityFinalNode>
+        </nodes>
+      </activity>
+    </activityRootModelHasActivity>
+  </packagedElements>
+  <package Id="e3cba6c2-38b6-4161-8049-f232de3424a4" name="Diagrams">
+    <elementDefinition Id="8510b310-7a46-47cb-ac1f-4b06aa070b9d" />
+    <profileInstances>
+      <packageHasProfileInstances Id="6287b3ba-c39d-4955-82e0-4dc96489bce5">
+        <profileInstance Id="dddf231b-34c7-4785-9d2c-c14fe608d7cc" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="16a663a3-ab01-427e-822b-3ac47ca750d3">
+        <profileInstance Id="c391127b-8e66-4297-90d8-ab3cec718765" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
+  </package>
+</activityRootModel>
