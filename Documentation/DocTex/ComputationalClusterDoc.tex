@@ -1,0 +1,39 @@
+\documentclass[12pt,a4paper,titlepage]{report}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\author{Katarzyna Węgiełek \\ Paweł Własiuk \\ Kamil Sienkiewicz\\ Marcin Wardziński}
+\title{\textbf{Computational Cluster}}
+\linespread{1.125}
+\begin{document}
+\maketitle
+\tableofcontents
+
+	\chapter{Diagramy Przypadków Użycia}
+		\section{Konfiguracja}
+			\subsection{Serwer Komunikacyjny}
+			\subsection{Menadżer Zadań}
+			\subsection{Węzeł obliczeniowy}
+			\subsection{Klient}
+	\chapter{Diagramy Aktywności}
+		\section{Zlecenie rozwiązania problemu}
+		\verb+tuDiagram1+
+		\textbf{Aplikacja kliencka} nawiązuje połączenie z serwerem głównym, używając adresu IP serwera zapisanego w pliku konfiguracyjnym. Wysyła zapytanie o metadane - adresy IP serwerów backup'owych oraz nazwy klas problemów, które mogą być rozwiązane przez ten klaster obliczeniowy (takie, że istnieje przynajmniej jeden \textit{menadżer zadań} potrafiący obsłużyć dany typ problemu). Serwer przesyła metadane do klienta. Następnie użytkownik wybiera spośród dostępnych nazw klas problemów typ zadania jakie ma zostać rozwiązane i wprowadza do programu wszystkie potrzebne dane wejściowe. Aplikacja kliencka wysyła do serwera zlecenie rozwiązania problemu i podane przez użytkownika dane w formacie XML.
+Serwer odbiera zlecenie przysłane przez klienta i umieszcza problem w kolejce problemów danego typu oczekujących na rozwiązanie. Zadanie znajduje się w kolejce, dopóki któryś z \textit{menadżerów zadań}, potrafiących rozwiązać problem tej klasy, nie zakończy obliczeń i nie będzie mógł się nim zająć.
+		\section{Odczytanie wyniku}
+		\verb+tuDiagram2+
+		Po otrzymaniu ostatecznego rozwiązania od \textit{menadżera zadań}, serwer umieszcza problem na liście ukończonych, ale jeszcze nieodczytanych rozwiązań. Następnie użytkownik wybiera z listy problem, którego rozwiązanie chce zobaczyć. Aplikacja kliencka wysyła do serwera żądanie pobrania wskazanego wyniku. Serwer wysyła rozwiązanie odpowiedniego problemu do klienta i usuwa je z listy ukończonych zadań. Klient odbiera wyniki i wyświetla je użytkownikowi.
+		\section{Węzeł obliczeniowy}
+		Węzeł obliczeniowy przy uruchomieniu zgłasza swoją obecność serwerowi komunikacyjnemu. Informacje temat serwera 
+znajdują się w pliku konfiguracyjnym węzła. Węzeł wysyła do serwera informacje na temat typów problemów które jest w stanie 
+rozwiązać, dzięki temu serwer komunikacyjny może uwzględniać go przy przesyłaniu do \textbf{Menadżera Zadań} informacji na temat
+ilości węzłów potrafiących rozwiązać dany typ problemu. \linebreak
+Węzeł obliczeniowy nie wykonujący w danym momencie obliczeń otrzymuje od serwera skolejkowany podproblem, podzielony 
+na części przez \textbf{Menadżer Zadań}. Zadaniem węzła obliczeniowego jest rozwiązanie otrzymanego zadania oraz przesłanie
+rozwiązania do serwera. Jeżeli podczas wykonywania obliczeń wystąpi błąd, węzeł ma za zadanie przygotować raport o 
+błędach a następnie wysłać go do serwera.
+
+\verb+tuDiagram+
+\end{document}
