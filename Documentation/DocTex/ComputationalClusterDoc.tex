@@ -66,12 +66,16 @@ Zadaniem \textit{aplikacji klienckiej} jest pobranie danych wejściowych od uży
 \textit{Menadżer zadań} zajmuje się organizacją obliczeń i uzyskaniem ostatecznego wyniku z rozwiązań cząstkowych. Po otrzymaniu problemu od serwera komunikacyjnego, dzieli go na mniejsze podproblemy, przeznaczone do rozwiązania przez pojedyncze węzły obliczeniowe. Następnie wysyła je do serwera i oczekuje na wyniki częściowe. Na ich podstawie oblicza rozwiązanie końcowe i przesyła je na serwer. Każdy menadżer zadań zawiera jeden lub kilka modułów, odpowiedzialnych za rozwiązanie konkretnego typu problemu. Wysyła on do serwera nazwy typów problemów, jakie potrafi obsłużyć, dzięki czemu serwer wie, które zadania może do niego kierować.\\
 Zadaniem \textit{węzła obliczeniowego} jest rozwiązywanie podproblemów otrzymanych od serwera komunikacyjnego. Węzeł nie ma dostępu do informacji o całym zadaniu i nie zna wyników uzyskanych przez inne węzły. Otrzymuje jedynie problem częściowy, wyznaczony przez menadżera zadań, rozwiązuje go i wysyła do serwera wyniki swoich obliczeń. Węzeł składa się z jednego lub więcej modułów, zawierających algorytmy do rozwiązywania konkretnych typów podproblemów. Zanim otrzyma zadanie, wysyła do serwera informację dotyczącą rodzajów problemów, które potrafi rozwiązać. Podczas wykonywania algorytmu węzły na bieżąco informują serwer, że obliczenia trwają. W przypadku awarii węzła lub przerwania połączenia, do serwera przestaną dochodzić komunikaty i będzie on mógł skierować dany problem do innego węzła, aby uzyskać brakujący wynik częściowy.\\
 Przykładowym zadaniem, które można rozwiązać korzystając z opisanego klastra obliczeniowego jest problem marszrutyzacji (Dynamic Vehicle Routing Problem).
+
+
 	\chapter{Diagramy Przypadków Użycia}
 		\section{Konfiguracja}
 			\subsection{Serwer Komunikacyjny}
 			\subsection{Menadżer Zadań}
 			\subsection{Węzeł obliczeniowy}
 			\subsection{Klient}
+			
+			
 	\chapter{Diagramy Aktywności}
 		\section{Zlecenie rozwiązania problemu}
 
@@ -79,9 +83,11 @@ Przykładowym zadaniem, które można rozwiązać korzystając z opisanego klast
 		
 		\textbf{Aplikacja kliencka} nawiązuje połączenie z serwerem głównym, używając adresu IP serwera zapisanego w pliku konfiguracyjnym. Wysyła zapytanie o metadane - adresy IP serwerów backup'owych oraz nazwy klas problemów, które mogą być rozwiązane przez ten klaster obliczeniowy (takie, że istnieje przynajmniej jeden \textit{menadżer zadań} potrafiący obsłużyć dany typ problemu). Serwer przesyła metadane do klienta. Następnie użytkownik wybiera spośród dostępnych nazw klas problemów typ zadania jakie ma zostać rozwiązane i wprowadza do programu wszystkie potrzebne dane wejściowe. Aplikacja kliencka wysyła do serwera zlecenie rozwiązania problemu i podane przez użytkownika dane w formacie XML.
 Serwer odbiera zlecenie przysłane przez klienta i umieszcza problem w kolejce problemów danego typu oczekujących na rozwiązanie. Zadanie znajduje się w kolejce, dopóki któryś z \textit{menadżerów zadań}, potrafiących rozwiązać problem tej klasy, nie zakończy obliczeń i nie będzie mógł się nim zająć.
+
 		\section{Odczytanie wyniku}
 		\includegraphics[width=\textwidth]{img/diagram2.png}
 		Po otrzymaniu ostatecznego rozwiązania od \textit{menadżera zadań}, serwer umieszcza problem na liście ukończonych, ale jeszcze nieodczytanych rozwiązań. Następnie użytkownik wybiera z listy problem, którego rozwiązanie chce zobaczyć. Aplikacja kliencka wysyła do serwera żądanie pobrania wskazanego wyniku. Serwer wysyła rozwiązanie odpowiedniego problemu do klienta i usuwa je z listy ukończonych zadań. Klient odbiera wyniki i wyświetla je użytkownikowi.
+		
 		\section{Węzeł obliczeniowy}
 		\includegraphics[width=\textwidth]{img/diagram3.png}
 		Węzeł obliczeniowy przy uruchomieniu zgłasza swoją obecność serwerowi komunikacyjnemu. Informacje temat serwera 
@@ -93,6 +99,26 @@ na części przez \textbf{Menadżer Zadań}. Zadaniem węzła obliczeniowego jes
 rozwiązania do serwera. Jeżeli podczas wykonywania obliczeń wystąpi błąd, węzeł ma za zadanie przygotować raport o 
 błędach a następnie wysłać go do serwera.
 
+		\section{Wybieranie zadania do podzielenia}
+		\includegraphics[width=\textwidth]{img/diagram_queue.png}
+		W celu przeprowadzania procesu dzielenia problemów na podproblemy w sposób optymalny z zachowaniem kolejności
+		potrzebne było opracowanie specjalnej struktury danych do ich przechowywania. (Gdzie opisać tą strukturę?
+		Tutaj to się nie nadaje. Najlepiej byłoby to umieścić oddzielnie.)
+		
+		\section{Podział zadania na podproblemy}
+		\includegraphics[width=\textwidth]{img/diagram_cstm_taskcommision.png}
+		Wybrane zadanie do przetworzenia poprzez \textbf{serwer komunikacyjny} trafia do wolnego \textbf{menadżera zadań}
+		potrafiącego rozwiązać dany problem. Po podzieleniu go na podproblemy, \textbf{menadżer zadań} odsyła definicje
+		podproblemów z powrotem do \textbf{serwera komunikacyjnego}, który umieszcza je na innej kolejce do późniejszego
+		obliczenia.
+		
+		\section{Zgłaszanie wyniku częściowego do menadżera zadań}
+		\includegraphics[width=\textwidth]{img/diagram_cstm_submitsubtasksolution.png}
+		Zaraz po otrzymaniu wyniku częściowego od \textbf{węzła obliczeniowego} \textbf{serwer komunikacyjny}
+		odsyła go do \textbf{menadżera zadań} który zajmuje się daną instancją problemu. \textbf{Menadżer zadań}
+		po analizie rozwiązania częściowego może wygenerować nowe podproblemy, które zostaną zgłoszone analogicznie
+		jak w przypadku początkowego podziału zadania. Może również oznaczyć problem jako rozwiązany i odesłać
+		pełne rozwiązanie do późniejszego pobrania przez użytkownika.
 
 	\chapter{Komunikacja}
 	\section{Przykłady wiadomości}

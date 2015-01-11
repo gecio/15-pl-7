@@ -22,6 +22,20 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\ArchitectureTools\Microsoft.VisualStudio.TeamArchitect.ModelingProject.targets" Condition="'$(VSToolsPath)' != ''" />
   <ItemGroup>
+    <Content Include="ActivityDiagrams\CommunicationServer_TaskManager_SubmitSubtaskSolution.activitydiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ActivityDiagrams\CommunicationServer_TaskManager_SubmitSubtaskSolution.activitydiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>ActivityDiagrams\CommunicationServer_TaskManager_SubmitSubtaskSolution.activitydiagram</DependentUpon>
+    </Content>
+    <Content Include="ActivityDiagrams\CommunicationServer_TaskManager_TaskCommission.activitydiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ActivityDiagrams\CommunicationServer_TaskManager_TaskCommission.activitydiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>ActivityDiagrams\CommunicationServer_TaskManager_TaskCommission.activitydiagram</DependentUpon>
+    </Content>
     <Content Include="ActivityDiagrams\ComputationalClientActivityDiagram1.activitydiagram">
       <SubType>Content</SubType>
     </Content>
@@ -46,17 +60,25 @@
     <Content Include="ActivityDiagrams\ComputationalNodeDescription.txt">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="ActivityDiagrams\TaskManagerActivityDiagram.activitydiagram">
+    <Content Include="StateDiagrams\ProblemStates.activitydiagram">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="ActivityDiagrams\TaskManagerActivityDiagram.activitydiagram.layout">
+    <Content Include="StateDiagrams\ProblemStates.activitydiagram.layout">
       <SubType>Content</SubType>
-      <DependentUpon>ActivityDiagrams\TaskManagerActivityDiagram.activitydiagram</DependentUpon>
+      <DependentUpon>StateDiagrams\ProblemStates.activitydiagram</DependentUpon>
     </Content>
     <Folder Include="ModelDefinition\" />
+    <Content Include="ActivityDiagrams\TaskQueue_TaskSelection.activitydiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ActivityDiagrams\TaskQueue_TaskSelection.activitydiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>ActivityDiagrams\TaskQueue_TaskSelection.activitydiagram</DependentUpon>
+    </Content>
     <Content Include="ModelDefinition\Diagrams.uml">
       <SubType>Content</SubType>
     </Content>
     <Folder Include="ActivityDiagrams" />
+    <Folder Include="StateDiagrams" />
   </ItemGroup>
 </Project>
