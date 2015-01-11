@@ -1,19 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <activityRootModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="f4ead47c-0335-4e8a-b551-49282d63be02" name="ComputationalNodeActivityDiagram" linkedPackageId="39158de0-8cd4-4aff-9705-1f119dc66ed9" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ActivityDesigner">
-  <profileInstances>
-    <packageHasProfileInstances Id="d0922e02-58bc-4565-9985-5aaf48bca686">
-      <profileInstance Id="21c604da-8fd6-454d-9f27-8a88259f5fe3" name="StandardProfileL2">
-        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
-      </profileInstance>
-      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
-    </packageHasProfileInstances>
-    <packageHasProfileInstances Id="bf9f922c-87a0-4760-8999-c572ca6e2793">
-      <profileInstance Id="5a6b8efa-4bf6-46b4-9f2b-d8ddd2ddffa0" name="StandardProfileL3">
-        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
-      </profileInstance>
-      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
-    </packageHasProfileInstances>
-  </profileInstances>
   <packagedElements>
     <activityRootModelHasActivity>
       <activity Id="89b77821-a2da-4b9c-a47d-90649a9723be" name="ComputationalNodeActivityDiagram" isAbstract="false" isLeaf="false" isActiveClass="false" isReentrant="false" isReadOnly="false" isSingleExecution="false">
@@ -120,5 +106,19 @@
   </packagedElements>
   <package Id="39158de0-8cd4-4aff-9705-1f119dc66ed9" name="Diagrams">
     <elementDefinition Id="8510b310-7a46-47cb-ac1f-4b06aa070b9d" />
+    <profileInstances>
+      <packageHasProfileInstances Id="d0922e02-58bc-4565-9985-5aaf48bca686">
+        <profileInstance Id="21c604da-8fd6-454d-9f27-8a88259f5fe3" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="bf9f922c-87a0-4760-8999-c572ca6e2793">
+        <profileInstance Id="5a6b8efa-4bf6-46b4-9f2b-d8ddd2ddffa0" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
   </package>
 </activityRootModel>

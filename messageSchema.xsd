@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:simpleType name="guid">
     <xs:restriction base="xs:string">
@@ -21,13 +22,13 @@
 
   <xs:element name="Message">
     <xs:complexType>
-      <xs:all>
-        <xs:element type="messageTypes" name="MessageType" />
-        <xs:element type="guid" name="problemClassId"/>
+      <xs:sequence >
+        <xs:element type="messageTypes" name="MessageType"/>
+        <xs:element type="guid" name="problemClassId" minOccurs="0"/>
         <!--To będzie ten xml-->
-        <xs:element type="xs:string" name="Data"/>
+        <xs:element type="xs:string" name="Data" minOccurs="0"/>
         <!-- != null if MessageType==ProblemsList -->
-        <xs:element name="ProblemClassList">
+        <xs:element name="ProblemClassList" minOccurs="0">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="ProblemClass" maxOccurs="unbounded" minOccurs="0">
@@ -44,9 +45,9 @@
           </xs:complexType>
         </xs:element>
         <!-- !=null if MessageType==TaskOrder (do zidentyfikowania zadania przez usera) -->
-        <xs:element type="xs:string" name="TaskName"/>
+        <xs:element type="xs:string" name="TaskName" minOccurs="0"/>
         <!-- !=null if MessageType==TaskSolvedList -->
-        <xs:element name="TasksList">
+        <xs:element name="TasksList" minOccurs="0">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="Task" maxOccurs="unbounded" minOccurs="0">
@@ -63,7 +64,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-      </xs:all>
+      </xs:sequence >
       <xs:attribute type="guid" name="messageGuid" use="required"/>
     </xs:complexType>
   </xs:element>

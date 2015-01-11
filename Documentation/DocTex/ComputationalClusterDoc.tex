@@ -4,19 +4,67 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{color}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{gray}{rgb}{0.4,0.4,0.4}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+\definecolor{lightblue}{rgb}{0.0,0.0,0.9}
+\definecolor{cyan}{rgb}{0.0,0.6,0.6}
+\definecolor{darkred}{rgb}{0.6,0.0,0.0}
+
 \author{Katarzyna Węgiełek \\ Paweł Własiuk \\ Kamil Sienkiewicz\\ Marcin Wardziński}
 \title{\textbf{Computational Cluster}}
 \linespread{1.125}
+
+	
+	\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  columns=fullflexible,
+  showstringspaces=false,
+  numbers=left,                   % where to put the line-numbers
+  numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
+  stepnumber=1,
+  numbersep=5pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{white},      % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=none,                   % adds a frame around the code
+  rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green 	here))
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  title=\lstname,                   % show the filename of files included with \lstinputlisting;
+                                  % also try caption instead of title  
+  commentstyle=\color{gray}\upshape
+}
+ \lstdefinelanguage{XML}
+{
+  morestring=[s][\color{mauve}]{"}{"},
+  morestring=[s][\color{black}]{>}{<},
+  morecomment=[s]{<?}{?>},
+  morecomment=[s][\color{dkgreen}]{<!--}{-->},
+  stringstyle=\color{black},
+  identifierstyle=\color{lightblue},
+  keywordstyle=\color{red},
+  morekeywords={xmlns,xsi,noNamespaceSchemaLocation,type,id,x,y,source,target,version,tool,transRef,roleRef,objective,eventually},
+}
+
 \begin{document}
 \maketitle
 \tableofcontents
 
 	\chapter{Wstęp}
-	Tematem projektu jest stworzenie dokumentacji dla klastra obliczeniowego, który będzie umożliwiał rozwiązywanie problemów o dużej złożoności. System składa się z serwerów komunikacyjnych, menadżerów zadań, klientów i węzłów obliczeniowych.\\
-Rolą serwera jest zapewnienie komunikacji pomiędzy wszystkimi komponentami. Elementy systemu wymieniają informacje wykorzystując protokół XML. W klastrze może być kilka serwerów. Jeden z nich jest serwerem głównym - zarządza przekazywaniem komunikatów i nadzoruje stan wszystkich elementów systemu. Pozostałe pełnią rolę pomocniczą - na nich znajdują się kopie zapasowe częściowych i ostatecznych rozwiązań problemów, zadań oczekujących na rozwiązanie i informacji o trwających obliczeniach. W przypadku awarii serwera głównego, jeden z serwerów pomocniczych przejmuje jego zadania. Wykonywaniem kopii danych zajmuje się serwer główny. On też informuje menadżerów zadań, klientów oraz węzły obliczeniowe o istnieniu serwerów pomocniczych, aby w przypadku awarii możliwa była ich zamiana.\\
-Zadaniem aplikacji klienckiej jest pobranie danych wejściowych od użytkownika i wysłanie do serwera komunikacyjnego zlecenia rozwiązania podanego problemu. Gdy obliczenia zostaną zakończone, klient odbiera od serwera rozwiązanie zadania i prezentuje otrzymane wyniki użytkownikowi.\\
-Menadżer zadań zajmuje się organizacją obliczeń i uzyskaniem ostatecznego wyniku z rozwiązań cząstkowych. Po otrzymaniu problemu od serwera komunikacyjnego, dzieli go na mniejsze podproblemy, przeznaczone do rozwiązania przez pojedyncze węzły obliczeniowe. Następnie wysyła je do serwera i oczekuje na wyniki częściowe. Na ich podstawie oblicza rozwiązanie końcowe i przesyła je na serwer. Każdy menadżer zadań zawiera jeden lub kilka modułów, odpowiedzialnych za rozwiązanie konkretnego typu problemu. Wysyła on do serwera nazwy typów problemów, jakie potrafi obsłużyć, dzięki czemu serwer wie, które zadania może do niego kierować.\\
-Zadaniem węzła obliczeniowego jest rozwiązywanie podproblemów otrzymanych od serwera komunikacyjnego. Węzeł nie ma dostępu do informacji o całym zadaniu i nie zna wyników uzyskanych przez inne węzły. Otrzymuje jedynie problem częściowy, wyznaczony przez menadżera zadań, rozwiązuje go i wysyła do serwera wyniki swoich obliczeń. Węzeł składa się z jednego lub więcej modułów, zawierających algorytmy do rozwiązywania konkretnych typów podproblemów. Zanim otrzyma zadanie, wysyła do serwera informację dotyczącą rodzajów problemów, które potrafi rozwiązać. Podczas wykonywania algorytmu węzły na bieżąco informują serwer, że obliczenia trwają. W przypadku awarii węzła lub przerwania połączenia, do serwera przestaną dochodzić komunikaty i będzie on mógł skierować dany problem do innego węzła, aby uzyskać brakujący wynik częściowy.\\
+	Tematem projektu jest stworzenie dokumentacji dla klastra obliczeniowego, który będzie umożliwiał rozwiązywanie problemów o dużej złożoności. System składa się z \textit{serwerów komunikacyjnych}, \textit{menadżerów zadań}, \textit{klientów} i \textit{węzłów obliczeniowych}.\\
+Rolą \textit{serwera} jest zapewnienie komunikacji pomiędzy wszystkimi komponentami. Elementy systemu wymieniają informacje wykorzystując protokół XML. W klastrze może być kilka serwerów. Jeden z nich jest serwerem głównym - zarządza przekazywaniem komunikatów i nadzoruje stan wszystkich elementów systemu. Pozostałe pełnią rolę pomocniczą - na nich znajdują się kopie zapasowe częściowych i ostatecznych rozwiązań problemów, zadań oczekujących na rozwiązanie i informacji o trwających obliczeniach. W przypadku awarii serwera głównego, jeden z serwerów pomocniczych przejmuje jego zadania. Wykonywaniem kopii danych zajmuje się serwer główny. On też informuje menadżerów zadań, klientów oraz węzły obliczeniowe o istnieniu serwerów pomocniczych, aby w przypadku awarii możliwa była ich zamiana.\\
+Zadaniem \textit{aplikacji klienckiej} jest pobranie danych wejściowych od użytkownika i wysłanie do serwera komunikacyjnego zlecenia rozwiązania podanego problemu. Gdy obliczenia zostaną zakończone, klient odbiera od serwera rozwiązanie zadania i prezentuje otrzymane wyniki użytkownikowi.\\
+\textit{Menadżer zadań} zajmuje się organizacją obliczeń i uzyskaniem ostatecznego wyniku z rozwiązań cząstkowych. Po otrzymaniu problemu od serwera komunikacyjnego, dzieli go na mniejsze podproblemy, przeznaczone do rozwiązania przez pojedyncze węzły obliczeniowe. Następnie wysyła je do serwera i oczekuje na wyniki częściowe. Na ich podstawie oblicza rozwiązanie końcowe i przesyła je na serwer. Każdy menadżer zadań zawiera jeden lub kilka modułów, odpowiedzialnych za rozwiązanie konkretnego typu problemu. Wysyła on do serwera nazwy typów problemów, jakie potrafi obsłużyć, dzięki czemu serwer wie, które zadania może do niego kierować.\\
+Zadaniem \textit{węzła obliczeniowego} jest rozwiązywanie podproblemów otrzymanych od serwera komunikacyjnego. Węzeł nie ma dostępu do informacji o całym zadaniu i nie zna wyników uzyskanych przez inne węzły. Otrzymuje jedynie problem częściowy, wyznaczony przez menadżera zadań, rozwiązuje go i wysyła do serwera wyniki swoich obliczeń. Węzeł składa się z jednego lub więcej modułów, zawierających algorytmy do rozwiązywania konkretnych typów podproblemów. Zanim otrzyma zadanie, wysyła do serwera informację dotyczącą rodzajów problemów, które potrafi rozwiązać. Podczas wykonywania algorytmu węzły na bieżąco informują serwer, że obliczenia trwają. W przypadku awarii węzła lub przerwania połączenia, do serwera przestaną dochodzić komunikaty i będzie on mógł skierować dany problem do innego węzła, aby uzyskać brakujący wynik częściowy.\\
 Przykładowym zadaniem, które można rozwiązać korzystając z opisanego klastra obliczeniowego jest problem marszrutyzacji (Dynamic Vehicle Routing Problem).
 	\chapter{Diagramy Przypadków Użycia}
 		\section{Konfiguracja}
@@ -26,13 +74,16 @@ Przykładowym zadaniem, które można rozwiązać korzystając z opisanego klast
 			\subsection{Klient}
 	\chapter{Diagramy Aktywności}
 		\section{Zlecenie rozwiązania problemu}
-		\verb+tuDiagram1+
+
+		\includegraphics[width=\textwidth]{img/diagram1.png}		
+		
 		\textbf{Aplikacja kliencka} nawiązuje połączenie z serwerem głównym, używając adresu IP serwera zapisanego w pliku konfiguracyjnym. Wysyła zapytanie o metadane - adresy IP serwerów backup'owych oraz nazwy klas problemów, które mogą być rozwiązane przez ten klaster obliczeniowy (takie, że istnieje przynajmniej jeden \textit{menadżer zadań} potrafiący obsłużyć dany typ problemu). Serwer przesyła metadane do klienta. Następnie użytkownik wybiera spośród dostępnych nazw klas problemów typ zadania jakie ma zostać rozwiązane i wprowadza do programu wszystkie potrzebne dane wejściowe. Aplikacja kliencka wysyła do serwera zlecenie rozwiązania problemu i podane przez użytkownika dane w formacie XML.
 Serwer odbiera zlecenie przysłane przez klienta i umieszcza problem w kolejce problemów danego typu oczekujących na rozwiązanie. Zadanie znajduje się w kolejce, dopóki któryś z \textit{menadżerów zadań}, potrafiących rozwiązać problem tej klasy, nie zakończy obliczeń i nie będzie mógł się nim zająć.
 		\section{Odczytanie wyniku}
-		\verb+tuDiagram2+
+		\includegraphics[width=\textwidth]{img/diagram2.png}
 		Po otrzymaniu ostatecznego rozwiązania od \textit{menadżera zadań}, serwer umieszcza problem na liście ukończonych, ale jeszcze nieodczytanych rozwiązań. Następnie użytkownik wybiera z listy problem, którego rozwiązanie chce zobaczyć. Aplikacja kliencka wysyła do serwera żądanie pobrania wskazanego wyniku. Serwer wysyła rozwiązanie odpowiedniego problemu do klienta i usuwa je z listy ukończonych zadań. Klient odbiera wyniki i wyświetla je użytkownikowi.
 		\section{Węzeł obliczeniowy}
+		\includegraphics[width=\textwidth]{img/diagram3.png}
 		Węzeł obliczeniowy przy uruchomieniu zgłasza swoją obecność serwerowi komunikacyjnemu. Informacje temat serwera 
 znajdują się w pliku konfiguracyjnym węzła. Węzeł wysyła do serwera informacje na temat typów problemów które jest w stanie 
 rozwiązać, dzięki temu serwer komunikacyjny może uwzględniać go przy przesyłaniu do \textbf{Menadżera Zadań} informacji na temat
@@ -42,5 +93,24 @@ na części przez \textbf{Menadżer Zadań}. Zadaniem węzła obliczeniowego jes
 rozwiązania do serwera. Jeżeli podczas wykonywania obliczeń wystąpi błąd, węzeł ma za zadanie przygotować raport o 
 błędach a następnie wysłać go do serwera.
 
-\verb+tuDiagram+
+
+	\chapter{Komunikacja}
+	\section{Przykłady wiadomości}
+		\begin{itemize}
+			\item prośba klienta o listę możliwych klas problemów do rozwiązania
+				\lstinputlisting[language=XML,firstline=1,lastline=4]{examples.xml}
+			\item odpowiedz serwera z listą dostępnych klas problemów do rozwiązania
+				\lstinputlisting[language=XML,firstline=7,lastline=14]{examples.xml}
+			\item zlecenie zadania przez klienta
+				\lstinputlisting[language=XML,firstline=16,lastline=22]{examples.xml}
+			\item lista rozwiązanych zadań przesyłana do klienta
+				\lstinputlisting[language=XML,firstline=25,lastline=32]{examples.xml}
+			\item rozwiązanie przesłane do klienta
+				\lstinputlisting[language=XML,firstline=35,lastline=41]{examples.xml}
+		\end{itemize}
+	\section{Schema}
+
+		\lstinputlisting[language=XML]{messageSchema.xsd}
+	
+	
 \end{document}
