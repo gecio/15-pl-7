@@ -69,11 +69,34 @@ Przykładowym zadaniem, które można rozwiązać korzystając z opisanego klast
 
 
 	\chapter{Diagramy Przypadków Użycia}
-		\section{Konfiguracja}
-			\subsection{Serwer Komunikacyjny}
-			\subsection{Menadżer Zadań}
-			\subsection{Węzeł obliczeniowy}
-			\subsection{Klient}
+		%\section{Konfiguracja}
+		%	\subsection{Serwer Komunikacyjny}
+		%	\subsection{Menadżer Zadań}
+		%	\subsection{Węzeł obliczeniowy}
+		%	\subsection{Klient}
+		%\section{Komunikacja z serwerem}
+		\section{Komunikacja}
+			\subsection{Komponenty z serwerem}
+			
+			\includegraphics[width=\textwidth]{img/diagram05.png}	
+			
+			Cała komunikacja musi odbywać się przez serwer, dlatego na początku swojego działania każdy komponent musi się z nim połączyć. Serwer pośredniczy w przesyłaniu informacji o problemie między klientem a Menadżerem Zadań, końcowego rozwiązania od Menadżera Zadań do Klienta, jak również rozwiązań pośrednich między Węzłami Obliczeniowymi, a Menadżerem Zadań. Jego użycie jest również wymagane do przesyłania częściowych podproblemów między Menadżerem Zadań i Węzłami obliczeniowymi.
+			
+			Do dodatkowych funkcji serwera, nie związanych bezpośrednio z komunikacją należy podanie liczby dostępnych Węzłów obliczeniowych Menadżerowi zadań oraz informowanie o istnieniu zapasowego serwera. Serwer może zażądać informacji o klasie problemu od Menadżera Zadań i Węzłów Obliczeniowych. Węzły obliczeniowe mają obowiązek informować serwer o tym, czy obliczenia nadal się odbywają.
+			\subsection{Serwer z Menadżerem Zadań}
+			
+			\includegraphics{img/diagram06.png}	
+			
+			
+			\subsection{Serwer z Węzłem obliczeniowym}
+			
+			\includegraphics{img/diagram07.png}	
+			
+			
+			\subsection{Serwer z Klientem}
+			
+			\includegraphics{img/diagram08.png}	
+			
 			
 			
 	\chapter{Diagramy Aktywności}
