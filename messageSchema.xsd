@@ -14,6 +14,7 @@
       <xs:enumeration value="TaskSolvedListRequest"/>
       <xs:enumeration value="TaskSolvedList"/>
       <xs:enumeration value="TaskSolved"/>
+      <xs:enumeration value="TaskSolvedRequest"/>
       <xs:enumeration value="SubtaskOrder"/>
       <xs:enumeration value="SubtaskSolved"/>
       <xs:enumeration value="NodeError"/>
@@ -25,9 +26,8 @@
       <xs:sequence >
         <xs:element type="messageTypes" name="MessageType"/>
         <xs:element type="guid" name="problemClassId" minOccurs="0"/>
-        <!--To będzie ten xml-->
+        <xs:element type="guid" name="problemId" minOccurs="0"/>
         <xs:element type="xs:string" name="Data" minOccurs="0"/>
-        <!-- != null if MessageType==ProblemsList -->
         <xs:element name="ProblemClassList" minOccurs="0">
           <xs:complexType>
             <xs:sequence>
@@ -44,9 +44,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <!-- !=null if MessageType==TaskOrder (do zidentyfikowania zadania przez usera) -->
         <xs:element type="xs:string" name="TaskName" minOccurs="0"/>
-        <!-- !=null if MessageType==TaskSolvedList -->
         <xs:element name="TasksList" minOccurs="0">
           <xs:complexType>
             <xs:sequence>
