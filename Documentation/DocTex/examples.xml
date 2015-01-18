@@ -36,6 +36,7 @@
 <Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" messageGuid="70c61dd5-afcb-452f-9ad4-621a0ef78e6c">
 	<MessageType>TaskSolved</MessageType>
 	<problemClassId>4fbcbba1-014e-4643-b60f-f7888a95bb54</problemClassId>
+	<problemId>d104742a-76bb-4942-92bb-9f92149f4863</problemId>
 	<Data>rozwiazaniew postacie XML</Data>
 	<TaskName>CustomTaskName</TaskName>
 </Message>

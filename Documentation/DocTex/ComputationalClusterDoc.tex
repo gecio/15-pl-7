@@ -6,6 +6,7 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{enumerate}
 \usepackage{color}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -160,19 +161,80 @@ błędach a następnie wysłać go do serwera.
 		\includegraphics[width=\textwidth]{img/state/ComputationalNode.png}
 
 	\chapter{Komunikacja}
-	\section{Przykłady wiadomości}
-		\begin{itemize}
-			\item prośba klienta o listę możliwych klas problemów do rozwiązania
-				\lstinputlisting[language=XML,firstline=1,lastline=4]{examples.xml}
-			\item odpowiedz serwera z listą dostępnych klas problemów do rozwiązania
-				\lstinputlisting[language=XML,firstline=7,lastline=14]{examples.xml}
-			\item zlecenie zadania przez klienta
-				\lstinputlisting[language=XML,firstline=16,lastline=22]{examples.xml}
-			\item lista rozwiązanych zadań przesyłana do klienta
+	\section{Lista rozwiązywalnych problemów}
+	Proces rozwiązywania zadania przez \textit{klaster obliczeniowy} rozpoczyna się na poziomie aplikacji klienckiej. Przed
+	wysłaniem problemu do rozwiązanie, aplikacja kliencka musi pobrać z serwera informację na temat klas problemów
+	rozwiązywalnych w danej chwili przez klaster obliczeniowy (wynika ona z obecnie dostępnych \textit{Menadżerów zadań} i \textit{węzłów obliczeniowych}). Aplikacja wysyła do \textit{serwera} zapytanie postaci: \\
+	
+	\lstinputlisting[language=XML,firstline=1,lastline=4]{examples.xml} 
+	gdzie wartość węzła \verb+MessageType+ (definiującego typ wiadomości) ustawiona jest na \verb+ProblemsListRequest+.  	
+
+	
+    \textit{Serwer} w odpowiedzi na to żądanie odsyła wiadomość, w której zawarte są informacje o wszystkich typach problemów rozwiązywalnych przez klaster. Informacje zostają przetworzone i przedstawione użytkownikowi.\\
+	\lstinputlisting[language=XML,firstline=7,lastline=14]{examples.xml}
+	Przedstawiony powyżej fragment kodu to przykładowa odpowiedź serwera. Dla każdego typu problemu zostają przekazane dwie informacje:
+	\begin{itemize}
+	\item \verb+problemClassName+ - nazwa problemu,
+	\item \verb+problemClassId+ - guid problemu, który w jednoznaczny sposób identyfikuje typ problemu.
+	
+	\end{itemize}   
+	
+	Ten etap komunikacji przedstawi poniższy diagram:\\
+	
+	\includegraphics[width=\textwidth]{img/communication/problemclass.png}
+    
+    \section{Rozwiązywania zadania}
+    Po wykonaniu czynności opisanych w poprzednim rozdziale, użytkownik może zlecić zadanie \textit{klastrowi obliczeniowemu}
+    Aplikacja kliencka wysyła do serwera wiadomość z informacją o typie rozwiązywanego problemu, jak też danych wejściowych.
+    Przykładem takiej wiadomości jest poniższy przykład: \\
+    
+    \lstinputlisting[language=XML,firstline=16,lastline=22]{examples.xml}
+    
+    Wiadomość zawiera 4 parametry konieczne do stworzenia, rozwiązania i zidentyfikowania zadania przez użytkownika:
+    \begin{itemize}
+    	\item \verb+MessageType+ - parametr ustawiony na \verb+TaskOrder+ informuje serwer o typie wiadomości,
+    	\item \verb+problemClassId+ - identyfikator problemu, umożliwiający rozwiązanie go przed odpowiednie części systemu,
+    	\item \verb+Data+ - parametry typu \verb+String+ zawierający dane wejściowe dla danego typu problemu. Dane te przedstawione są w formacie XML specyficznym dla danego typu problemu.
+    	\item \verb+TaskName+ - nazwa zadania zdefiniowana przez klienta, umożliwi w przyszłości wyszukanie rozwiązania.  
+    \end{itemize}
+	
+
+	\includegraphics[width=\textwidth]{img/communication/computation.png}
+
+	Klaster obliczeniowy wykonuje ciąg czynności koniecznych do otrzymania rozwiązania, tzn:
+	\begin{enumerate}[(a)]
+		\item przesłanie polecenia podziału zadania od \textit{serwera} do \textit{menadżera zadań},
+		\item podział zadania i odesłanie stworzonych podproblemów prowadzących do otrzymania rozwiązania,
+		\item przesłanie każdego z podzadań do \textit{węzłów obliczeniowych}
+		\item przeprowadzenie obliczeń i odesłanie częściowych rozwiązań do \textit{serwera}
+		\item przesłanie częsciowych rozwiązań do \textit{menadżera zadań} w celu stworzenia rozwiązania
+		\item odesłanie pełnego rozwiązania zadania do \textit{serwera}
+	\end{enumerate}
+    
+    \section{Odczytanie rozwiązania}
+     \includegraphics[width=\textwidth]{img/communication/getresult.png}
+     
+    Proces odczytania rozwiązania jest podobny do początkowego etapu obliczania. Tym razem \textit{aplikacja kliencka} musi poprosić \textit{serwer} o listę rozwiązanych zadań, wyświetlić je i umożliwić użytkownikowi wybór typu konkretnego zadania. 
+    Razem z lista rozwiązanych problemów serwer przesyła:
+    \begin{itemize}
+    	\item \verb+name+ - nazwa zadania (wcześniej zdefiniowana przez użytkownika),
+    	\item \verb+id+ - identyfikator zadania, wykorzystywany jest przy zapytaniu o rozwiązanie konkretnego zadania,
+    	\item \verb+problemClassName+ - typ klasy problemu
+    \end{itemize}
+    Następnie zostaje przesłana prośba o pobranie rozwiązania dla wybranego zadania. Rozwiązanie zostaje przesłanie w postaci
+    \verb+stringu+ w formacie XML specyficznym dla danego typu problemu.
+    Poniżej przedstawione zostały dwa inne dwa przykłady komunikatów
+    \begin{itemize}
+    \item lista rozwiązanych zadań przesyłana do klienta
 				\lstinputlisting[language=XML,firstline=25,lastline=32]{examples.xml}
-			\item rozwiązanie przesłane do klienta
-				\lstinputlisting[language=XML,firstline=35,lastline=41]{examples.xml}
-		\end{itemize}
+	\item rozwiązanie przesłane do klienta
+				\lstinputlisting[language=XML,firstline=35,lastline=42]{examples.xml}
+   \end{itemize}
+    
+   
+    
+  
+
 	\section{Schema}
 
 		\lstinputlisting[language=XML]{messageSchema.xsd}
