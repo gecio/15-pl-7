@@ -68,7 +68,6 @@ Zadaniem \textit{aplikacji klienckiej} jest pobranie danych wejściowych od uży
 Zadaniem \textit{węzła obliczeniowego} jest rozwiązywanie podproblemów otrzymanych od serwera komunikacyjnego. Węzeł nie ma dostępu do informacji o całym zadaniu i nie zna wyników uzyskanych przez inne węzły. Otrzymuje jedynie problem częściowy, wyznaczony przez menadżera zadań, rozwiązuje go i wysyła do serwera wyniki swoich obliczeń. Węzeł składa się z jednego lub więcej modułów, zawierających algorytmy do rozwiązywania konkretnych typów podproblemów. Zanim otrzyma zadanie, wysyła do serwera informację dotyczącą rodzajów problemów, które potrafi rozwiązać. Podczas wykonywania algorytmu węzły na bieżąco informują serwer, że obliczenia trwają. W przypadku awarii węzła lub przerwania połączenia, do serwera przestaną dochodzić komunikaty i będzie on mógł skierować dany problem do innego węzła, aby uzyskać brakujący wynik częściowy.\\
 Przykładowym zadaniem, które można rozwiązać korzystając z opisanego klastra obliczeniowego jest problem marszrutyzacji (Dynamic Vehicle Routing Problem).
 
-
 	\chapter{Diagramy Przypadków Użycia}
 		%\section{Konfiguracja}
 		%	\subsection{Serwer Komunikacyjny}
@@ -161,6 +160,30 @@ błędach a następnie wysłać go do serwera.
 		\includegraphics[width=\textwidth]{img/state/ComputationalNode.png}
 
 	\chapter{Komunikacja}
+	\section{Nawiązywanie połączenia}
+	Uruchomienie całego systemu rozpoczyna się od uruchomienia \textit{serwera komunikacyjnego}. Od tej chwili komponenty systemu 
+	tj. \textit{węzły obliczeniowe}
+	i \textit{menadżery zadań} mogą zgłaszać swoją obecność w klastrze. Każdy z komponentów systemu posiada w swoim pliku konfiguracyjnym adres IP i port serwera komunikacyjnego oraz jego backup'a. Zaraz po uruchomieniu komponent zgłasza swoją obecność  do głównego \textit{serwera komunikacyjnego}. Po trzech nieudanych próbach następuje wysłanie identycznej informacji do serwera zapasowego. Każdy z komponentów w takiej wiadomości informuje o swoim rodzaju podaje IP i port na którym działa. 
+	Na tej podstawie serwer będzie komunikował się z tymi elementami systemu. Przykładowa wiadomość powinna wyglądać w następujący sposób: \\
+	 \lstinputlisting[language=XML,firstline=44,lastline=49]{examples.xml} 
+
+	Parametr \verb+ComponentType+ informuje o rodzaju komponentu systemu. Wartości, które może przyjąć ten parametr to:
+	\begin{itemize}
+		\item \verb+TaskManager+ - w przypadku gdy wiadomość pochodzi od \textit{menadżera zadań},
+		\item \verb+ComputationalNode+ - gdy wiadomość pochodzi od węzła obliczeniowego
+	\end{itemize}		 
+
+	Zadaniem \textit{serwera komunikacyjnego} jest utrzymywanie listy aktywnych komponentów systemu, oraz przechowywania informacji na temat klas problemów, które dane komponenty obsługują. W tym celu serwer regularnie, co pewien określony czas
+będzie odpytywał wszystkie swoje komponenty o listę klas problemów możliwych do rozwiązania. W przypadku gdy takiej odpowiedzi nie otrzyma uznaje komponent za wyłączony i usuwa jego dane z pamięci. W przypadku gdy komponent odpowie na jego żądanie serwer 
+na podstawie otrzymanych danych uzupełnia/aktualizuje informacje o rozwiązywalnych problemach przez komponenty. 
+Przykładowa odpowiedz komponentu przedstawiona jest poniżej: \\
+	 
+	\lstinputlisting[language=XML,firstline=51,lastline=58]{examples.xml} 
+
+	Diagram przedstawiający uzyskiwanie połączenia przez komponent systemu:
+	
+		\includegraphics[width=\textwidth]{img/communication/connecting.png}	
+	
 	\section{Lista rozwiązywalnych problemów}
 	Proces rozwiązywania zadania przez \textit{klaster obliczeniowy} rozpoczyna się na poziomie aplikacji klienckiej. Przed
 	wysłaniem problemu do rozwiązanie, aplikacja kliencka musi pobrać z serwera informację na temat klas problemów
@@ -236,7 +259,9 @@ błędach a następnie wysłać go do serwera.
   
 
 	\section{Schema}
-
+		\subsection{Uzyskiwanie połączenia}
+		\lstinputlisting[language=XML]{connectionMessageSchema.xsd}
+		\subsection{Wiadomości}
 		\lstinputlisting[language=XML]{messageSchema.xsd}
 	
 	
