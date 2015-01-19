@@ -238,6 +238,13 @@ błędach a następnie wysłać go do serwera.
 	\section{Schema}
 
 		\lstinputlisting[language=XML]{messageSchema.xsd}
+		
+		\chapter{Przykład}
+		W tym miejscu działanie klastra zostanie omówione na przykładzie algorytmu DVRP. Algorytm DVRP jest rozwinięciem problemu ... i ... Z punktu początkowego może wyruszać wiele pojazdów. Na podstawie wag krawędzi optymalizowany jest czas, odległość czy cena. Dodatkowo, w trakcie wykonania mogą dochodzić nowe wierzchołki, symbolizujące przykładowo kolejnego klienta zamawiającego pizzę.
+		Klient wysyła do Serwera komunikacyjnego prośbę o rozwiązanie DVRP, listę krawędzi z wagami oraz liczbę dostawców. Serwer przekazuje problem do wolnego Menedżera zadań, który potrafi dzielić ten problem. Menedżer pyta serwer o liczbę dostępnych węzłów z Task solverem obsługującym DVRP.
+		Menedżer zadań wyznacza wszystkie możliwe drogi, z możliwymi podziałami między dostawców, a następnie dzieli zadanie wyznaczenia wagi równo między węzły.
+		W trakcie obliczeń klient może wysłać nowe informacje o problemie - listę nowych krawędzi podłączonych do nowego wierzchołka.
+		Koszty poszczególnych dróg napływają przez serwer do Menedżera. Pod koniec obliczeń wybiera on najbardziej optymalną opcję - ostateczne rozwiązanie i przesyła przez serwer do klienta.
 	
 	
 \end{document}
