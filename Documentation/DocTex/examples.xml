@@ -40,3 +40,19 @@
 	<Data>rozwiazaniew postacie XML</Data>
 	<TaskName>CustomTaskName</TaskName>
 </Message>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<ConnectionMessage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<ComponentType>TaskManager</ComponentType>
+	<IP>0.0.0.0</IP>
+	<Port>1111</Port>
+</ConnectionMessage>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" messageGuid="70c61dd5-afcb-452f-9ad4-621a0ef78e6c">
+	<MessageType>SolvableProblemsList</MessageType>
+	<ProblemClassList>
+		<ProblemClass problemClassName="name1" problemClassId="ee28fec2-6361-4a58-aaf1-b9ff0f509743" />
+		<ProblemClass problemClassName="name2" problemClassId="f9ed0a8f-a9f1-494a-aea6-68ffc533934e" />
+	</ProblemClassList>
+</Message>

@@ -18,6 +18,8 @@
       <xs:enumeration value="SubtaskOrder"/>
       <xs:enumeration value="SubtaskSolved"/>
       <xs:enumeration value="NodeError"/>
+      <xs:enumeration value="SolvableProblemsList"/>
+      <xs:enumeration value="SolvableProblemsRequest"/>
     </xs:restriction>
   </xs:simpleType>
 
