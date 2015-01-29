@@ -1,58 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" messageGuid="70c61dd5-afcb-452f-9ad4-621a0ef78e6c">
-	<MessageType>ProblemsListRequest</MessageType>
-</Message>
-
-
-<?xml version="1.0" encoding="UTF-8"?>
-<Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" messageGuid="70c61dd5-afcb-452f-9ad4-621a0ef78e6c">
-	<MessageType>ProblemsList</MessageType>
-	<ProblemClassList>
-		<ProblemClass problemClassName="name1" problemClassId="ee28fec2-6361-4a58-aaf1-b9ff0f509743" />
-		<ProblemClass problemClassName="name2" problemClassId="f9ed0a8f-a9f1-494a-aea6-68ffc533934e" />
-	</ProblemClassList>
-</Message>
-
-<?xml version="1.0" encoding="UTF-8"?>
-<Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" messageGuid="70c61dd5-afcb-452f-9ad4-621a0ef78e6c">
-	<MessageType>TaskOrder</MessageType>
-	<problemClassId>4fbcbba1-014e-4643-b60f-f7888a95bb54</problemClassId>
-	<Data>dane w postaci XML</Data>
-	<TaskName>CustomTaskName</TaskName>
-</Message>
-
-
-<?xml version="1.0" encoding="UTF-8"?>
-<Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" messageGuid="70c61dd5-afcb-452f-9ad4-621a0ef78e6c">
-	<MessageType>TaskSolvedList</MessageType>
-	<TasksList>
-		<Task name="CustomName1" id="8844d38c-ac3a-4774-9e81-957a708c6f0b" problemClassName="className1" />
-		<Task name="CistomName2" id="d104742a-76bb-4942-92bb-9f92149f4863" problemClassName="className2" />
-	</TasksList>
-</Message>
-
-
-<?xml version="1.0" encoding="UTF-8"?>
-<Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" messageGuid="70c61dd5-afcb-452f-9ad4-621a0ef78e6c">
-	<MessageType>TaskSolved</MessageType>
-	<problemClassId>4fbcbba1-014e-4643-b60f-f7888a95bb54</problemClassId>
-	<problemId>d104742a-76bb-4942-92bb-9f92149f4863</problemId>
-	<Data>rozwiazaniew postacie XML</Data>
-	<TaskName>CustomTaskName</TaskName>
-</Message>
-
-<?xml version="1.0" encoding="UTF-8"?>
 <ConnectionMessage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-	<ComponentType>TaskManager</ComponentType>
-	<IP>0.0.0.0</IP>
-	<Port>1111</Port>
+  <ComponentType>TaskManager</ComponentType>
+  <IP>0.0.0.0</IP>
+  <Port>1111</Port>
 </ConnectionMessage>
 
 <?xml version="1.0" encoding="UTF-8"?>
-<Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" messageGuid="70c61dd5-afcb-452f-9ad4-621a0ef78e6c">
-	<MessageType>SolvableProblemsList</MessageType>
-	<ProblemClassList>
-		<ProblemClass problemClassName="name1" problemClassId="ee28fec2-6361-4a58-aaf1-b9ff0f509743" />
-		<ProblemClass problemClassName="name2" problemClassId="f9ed0a8f-a9f1-494a-aea6-68ffc533934e" />
-	</ProblemClassList>
-</Message>
+<SolvableProblemListMessage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProblemClassList>
+    <ProblemClass problemClassName="name1" problemClassId="ee28fec2-6361-4a58-aaf1-b9ff0f509743"/>
+    <ProblemClass problemClassName="name2" problemClassId="f9ed0a8f-a9f1-494a-aea6-68ffc533934e"/>
+  </ProblemClassList>
+</SolvableProblemListMessage>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<TaskOrderMessage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <problemClassId>4fbcbba1-014e-4643-b60f-f7888a95bb54</problemClassId>
+  <Data>dane w postaci XML</Data>
+</TaskOrderMessage>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<TaskTokenMessage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TaskId>4fbcbba1-014e-4643-b60f-f7888a95bb54</TaskId>
+</TaskTokenMessage>
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<TaskResultMessage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <problemClassId>4fbcbba1-014e-4643-b60f-f7888a95bb54</problemClassId>
+  <TaskId>d104742a-76bb-4942-92bb-9f92149f4863</TaskId>
+  <Status>Done</Status>
+  <Data>rozwiazaniew postacie XML</Data>
+</TaskResultMessage>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<SubtaskOrderMessage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <problemClassId>4fbcbba1-014e-4643-b60f-f7888a95bb54</problemClassId>
+  <TaskId>d104742a-76bb-4942-92bb-9f92149f4863</TaskId>
+  <SubtaskId>d104742a-76bb-4942-92bb-9f92149f4863</SubtaskId>
+  <Data>dane podzadania XML</Data>
+</TaskResultMessage>
