@@ -269,7 +269,13 @@ Nowe komponenty mogą być dodawane zarówno przy tworzeniu klastra, jak i już 
 		Częściowe rozwiązania są przechowywane przez Task Managera. Łączenie zadania polega na wyborze najbardziej optymalnego rozwiązania. Odbywa się to znowu przez Task Solvera, wykorzystując metodę klasy problemu, która porównuje rozwiązania.
 	
 	\chapter{Communicational node}
-		Zadanie communicational node'a sprowadza się do uruchomienia w Task Solverze czasochłonnej metody obliczającej w pętli wydajność wszystkich rozwiązań zawartych między podanymi identyfikatorami. W trakcie obliczeń, Node informuje Serwer co określony czas, że jest zajęty. Po zakończeniu wyniki zostają wysłane przez serwer do Task Managera.
+		Zadanie \textit{Computational node'a} sprowadza się do stworzenia obiektu odpowiedniej klasy implementującej interfejs \verb+TaskSolver+ oraz uruchomienia w nim odpowiedniej metody. Podczas pracy \textit{Computational Node'a } utrzymywana jest komunikacja pomiędzy węzłem a serwerem. Po zakończeniu obliczeń węzeł wysyła do serwera odpowiedni komunikat z rozwiązaniem zadania.
+		
+	\begin{figure}[h!]
+		\centering
+		\caption{Diagram aktywności dla \textit{Computational Node'a}}
+		\includegraphics[width=0.9\textwidth]{img/diagram3.png}
+	\end{figure}
 	
 	 
 	%komunikacja + schemy
