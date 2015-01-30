@@ -70,15 +70,50 @@
 \begin{document}
 	\maketitle
 	\tableofcontents
+
+	\chapter{TaskSolver}
+		\section{Interfejs}	
+	\begin{figure}[h]
+		\centering
+		\caption{Interfejs pluginu}
+		\includegraphics[width=0.6\textwidth]{img/taskSolverInterface.png}
+	\end{figure}
 	
+	Komponenty systemu odpowiedzialne za wykonywanie obliczeń będą korzystały z interfejsu zaprezentowanego powyżej.
+	Klasa obsługiwana przez system musi implementować 3 metody konieczne do rozwiązania zadania:
+	\begin{itemize}
+		\item \verb+Divide()+ - metoda, która jako parametr przyjmuje \textit{zadanie}. Jej głównym zadaniem jest podzielenie problemu
+		na mniejsze łatwiejsze do rozwiązania podproblemy.
+		\item \verb+Combine()+ - metoda, która w parametrze przyjmuje kolekcję częściowych rozwiązań. Jej zadaniem jest scalenie rozwiązań częściowych w jedno ostateczne rozwiązanie.
+		\item \verb+Solve()+ - metoda jako parametr przyjmuje podzadanie, które powstało w wyniku działania metody \verb+Divide+. 
+		Efektem działania tej metody jest rozwiązanie problemu.
+	\end{itemize}		
+	
+	Plugin powinien również udostępniać dwa pola umożliwiające zidentyfikowanie obiektów tej samej klasy w różnych częściach systemu:
+	\begin{itemize}
+		\item \verb+Id+ - unikalne pole typu \verb+Guid+. System nie przewiduje istnienia dwóch różnych klas, rozwiązujących różne zadania identyfikujących się identycznym id. Taka sytuacja mogłaby doprowadzić system do błędu.
+		\item \verb+ProblemClassName+ - pole typu \verb+string+ zawierające informację zrozumiałą dla użytkownika o typie problemu rozwiązywalnego przez daną klasę.
+	\end{itemize}		
+
+	Rozwiązanie problemu powinno przebiegać w poniżej podany sposób:
+		\begin{enumerate}[(1)]
+			\item zadanie zostaje podzielone na podzadania,
+			\item każde z podzadań zostaje rozwiązane,
+			\item wszystkie rozwiązania częściowe zostają przekazane jako parametr metody scalającej rozwiązania
+			w wyniku czego otrzymujemy końcowe rozwiązanie naszego problemu.
+		\end{enumerate}
+	 \section{Instalacja Pluginów}
+	Komponenty klastra odpowiedzialne za obliczenia tj. \textit{Task Manager} i \textit{Computational Node} przy każdym odpytaniu serwera o listę klas problemów, które mogą rozwiązać będą przeszukiwać folder \verb+TaskSolvers+ znajdujący się w katalogu z aplikacją, w celu poszukiwania bibliotek z klasami implementującymi interfejs \verb+TaskSolver+. Gdy komponentowi zostanie zlecone zadanie, ten wykorzystując mechanizm refleksji wyszuka w katalogu odpowiednią klasę i stworzy jej instancję. Obiekt ten  umożliwi realizacją zleconego zadania.\\
+	 Instalacja nowych pluginów w komponentach systemu będzie sprowadzała się wyłącznie do wklejenie biblioteki z klasą implementującą interfejs \verb+TaskSolver+ do wyżej wymienionego katalogu.
+	 
 	%komunikacja + schemy
 	\chapter{Komunikacja}
 		\section{Nawiązywania połączenia}
-	Uruchomienie całego systemu rozpoczyna się od uruchomienia \textit{serwera komunikacyjnego}. Od tej chwili komponenty systemu tj. 
-	\textit{węzły obliczeniowe}	i \textit{menadżery zadań} mogą zgłaszać swoją obecność w klastrze. Każdy z komponentów systemu 
+	Uruchomienie całego systemu rozpoczyna się od uruchomienia \textit{Communications Server'a}. Od tej chwili komponenty systemu tj. 
+	\textit{Computational node'y}	i \textit{Task Managery} mogą zgłaszać swoją obecność w klastrze. Każdy z komponentów systemu 
 	posiada w swoim pliku konfiguracyjnym (w węzłach \verb+MainServerAddress+ i \verb+BackupServerAddress+) \textbf{adres IP} i
-	 \textbf{port} \textit{serwera komunikacyjnego} oraz serwera zapasowego. Zaraz po uruchomieniu każdy komponent
-	zgłasza swoją obecność do głównego \textit{serwera komunikacyjnego}. Po trzech nieudanych próbach nawiązania połączenia następuje
+	 \textbf{port} \textit{Communications Server'a} oraz serwera zapasowego. Zaraz po uruchomieniu każdy komponent
+	zgłasza swoją obecność do głównego serwera. Po trzech nieudanych próbach nawiązania połączenia następuje
 	wysłanie identycznej informacji do serwera backup'owego. Każdy z komponentów w takiej wiadomości informuje o swoim rodzaju podaje
 	IP i port na którym	działa. Na tej podstawie serwer będzie komunikował się z tymi elementami systemu.\\
 	
@@ -86,15 +121,15 @@
 		
 	Parametr \verb+ComponentType+ informuje o rodzaju komponentu systemu. Wartości, które może przyjąć ten parametr to:
 	\begin{itemize}
-		\item \verb+TaskManager+ - w przypadku gdy wiadomość pochodzi od \textit{menadżera zadań},
-		\item \verb+ComputationalNode+ - gdy wiadomość pochodzi od \textit{węzła obliczeniowego}
+		\item \verb+TaskManager+ - w przypadku gdy wiadomość pochodzi od \textit{Task Manager'a},
+		\item \verb+ComputationalNode+ - gdy wiadomość pochodzi od \textit{Computational Node'a}
 	\end{itemize} 
 
-	Zadaniem \textit{serwera komunikacyjnego} jest utrzymywanie listy aktywnych komponentów systemu, oraz przechowywanie informacji
+	Zadaniem \textit{Communications Server'a} jest utrzymywanie listy aktywnych komponentów systemu, oraz przechowywanie informacji
 	na temat klas problemów, które dane komponenty obsługują. W tym celu serwer regularnie, co pewien określony czas
 	będzie odpytywał wszystkie swoje komponenty prosząc o listę klas problemów możliwych do rozwiązania. W przypadku gdy takiej
 	odpowiedzi nie otrzyma uznaje komponent za wyłączony i usuwa jego dane z pamięci. W przypadku otrzymania odpowiedzi na
-	żądanie, \textit{serwer} na podstawie otrzymanych danych uzupełnia/aktualizuje informacje o rozwiązywalnych problemach
+	żądanie, serwer na podstawie otrzymanych danych uzupełnia/aktualizuje informacje o rozwiązywalnych problemach
 	przez komponenty.\\
 	
 		\lstinputlisting[caption=\footnotesize{Odpowiedź komponentu na żądanie serwera},language=XML,firstline=8,lastline=14]{examples.xml} 
@@ -112,32 +147,31 @@
 	\end{figure}
 	
 	\section{Lista rozwiązywalnych problemów}
-	Proces rozwiązywania zadania przez \textit{klaster obliczeniowy} rozpoczyna się na poziomie aplikacji klienckiej. Przed
+	Proces rozwiązywania zadania przez \textit{Computational Cluster} rozpoczyna się na poziomie \textit{Computational client'a}. Przed
 	wysłaniem problemu do rozwiązania, aplikacja kliencka musi pobrać z serwera informację na temat klas problemów
-	rozwiązywalnych w danej chwili przez klaster obliczeniowy (wynika ona z obecnie dostępnych \textit{Menadżerów zadań} i
-	\textit{węzłów obliczeniowych}). Aplikacja kliencka odpytuje \textit{serwer komunikacyjny} o potrzebne informacje. 
-	\textit{Serwer} w odpowiedzi na to żądanie odsyła wiadomość, w której zawarte są informacje o wszystkich typach problemów
+	rozwiązywalnych w danej chwili przez \textit{Computational Cluster} (wynika ona z obecnie dostępnych \textit{Menadżerów zadań} i
+	\textit{Computational Node'ów}). Aplikacja kliencka odpytuje \textit{serwer komunikacyjny} o potrzebne informacje. 
+	Serwer w odpowiedzi na to żądanie odsyła wiadomość, w której zawarte są informacje o wszystkich typach problemów
 	rozwiązywalnych przez klaster. Informacje zostają przetworzone i przedstawione użytkownikowi. Wiadomość przesłana do 
-	\textit{aplikacji klienckiej} jest identyczna z tą, którą serwer otrzymuje od pozostałych komponentów systemu.
+	\textit{Computational Clienta} jest identyczna z tą, którą serwer otrzymuje od pozostałych komponentów systemu.
 	
 	\begin{figure}[h]
 		\centering
-		\caption{Diagram sekwencji pobierania informacji z serwera przez aplikację kliencką}
+		\caption{Diagram sekwencji pobierania informacji z serwera przez \textit{Computational Client'a}}
 		\includegraphics[width=0.9\textwidth]{img/communication/problemclass.png}
 	\end{figure}	
 	
 	\section{Rozwiązywanie zadania}
 	
 	Po wykonaniu czynności opisanych w poprzednim rozdziale, użytkownik może zlecić zadanie \textit{klastrowi obliczeniowemu}
-    \textit{Aplikacja kliencka} wysyła do serwera wiadomość z informacją o typie rozwiązywanego problemu i dane wejściowe zadania.\\
+    \textit{Computational Client} wysyła do serwera wiadomość z informacją o typie rozwiązywanego problemu i dane wejściowe zadania.\\
     
-    \lstinputlisting[caption=\footnotesize{Zlecenie rozwiązania zadania przez aplikację kliencką},language=XML,firstline=16,lastline=20]{examples.xml}
+    \lstinputlisting[caption=\footnotesize{Zlecenie rozwiązania zadania przez \textit{Computational Client'a}},language=XML,firstline=16,lastline=20]{examples.xml}
     
      Wiadomość zawiera 2 parametry konieczne do stworzenia i rozwiązania zadania:
     \begin{itemize}
     	\item \verb+problemClassId+ - identyfikator klasy problemu, umożliwiający zidentyfikowanie, które części systemu są w stanie rozwiązać dany problem
-    	\item \verb+Data+ - parametry typu \verb+String+ zawierający dane wejściowe dla danego typu problemu. Dane te przedstawione 
-    					są w formacie XML odpowiednim dla danego typu problemu.  
+    	\item \verb+Data+ - parametry typu \verb+String+ zawierający dane wejściowe dla danego typu problemu. Dane te przedstawione są w formacie XML odpowiednim dla danego typu problemu.  
     \end{itemize}
     
     Serwer po otrzymaniu wiadomości generuje specjalny identyfikator, który przypisuje do zadania. Będzie on wykorzystany do 
@@ -163,16 +197,15 @@
 	
 	\begin{figure}[h]
 		\centering
-		\caption{Diagram sekwencji pobierania informacji z serwera przez aplikację kliencką}
+		\caption{Diagram sekwencji pobierania informacji z serwera przez \textit{Computational Client'a}}
 		\includegraphics[width=\textwidth]{img/communication/computation.png}
 	\end{figure}    
     
     
-    Klaster obliczeniowy wykonuje ciąg czynności koniecznych do otrzymania rozwiązania, tzn:
+    \textit{Computational Cluster} wykonuje ciąg czynności koniecznych do otrzymania rozwiązania, tzn:
 	\begin{enumerate}[(1)]
-		\item przesłanie polecenia podziału zadania od \textit{serwera} do \textit{menadżera zadań} - wiadomość w formacie otrzymanym od
-		\textit{aplikacji klienckiej},
-		\item podział zadania i odesłanie stworzonych podproblemów prowadzących do otrzymania rozwiązania. \textit{Menadżer zadań} dokonuje podziału zadania, każdemu z nich przydzielając unikalny identyfikator. Wiadomość zwrotna zawiera informacje o 
+		\item przesłanie polecenia podziału zadania od \textit{serwera} do \textit{Task Manager'a} - wiadomość w formacie otrzymanym od \textit{Computational Client'a},
+		\item podział zadania i odesłanie stworzonych podproblemów prowadzących do otrzymania rozwiązania. \textit{Task Manager} dokonuje podziału zadania, każdemu z nich przydzielając unikalny identyfikator. Wiadomość zwrotna zawiera informacje o 
 		typie rozwiązywalnego problemu, identyfikatora zadania, identyfikatora podzadania, oraz danych wejściowych potrzebnych do rozwiązania zadania.
 		
 		\lstinputlisting[caption=\footnotesize{Zlecenie podzadania},language=XML,firstline=36,lastline=42]{examples.xml}
@@ -180,11 +213,11 @@
 		\item przesłanie każdego z podzadań do \textit{węzłów obliczeniowych}
 		\item przeprowadzenie obliczeń i odesłanie częściowych rozwiązań do \textit{serwera}. Odsyłana wiadomość zawiera informacje o 
 		typie rozwiązywalnego podproblemu, identyfikatorze zadania, identyfikatorze podzadania oraz rozwiązaniu częściowym problemu.
-		\item przesłanie częsciowych rozwiązań do \textit{menadżera zadań} w celu stworzenia rozwiązania. Przesłanie waidomości wcześniej zebranych od \textit{węzłów obliczeniowych}.
-		\item odesłanie pełnego rozwiązania zadania do \textit{serwera} w identycznym formacie jak te, które serwer odsyła do \textit{aplikacji klienckiej}
+		\item przesłanie częsciowych rozwiązań do \textit{Task Managera} w celu stworzenia rozwiązania. Przesłanie wiadomości wcześniej zebranych od \textit{Computational Node'ów}.
+		\item odesłanie pełnego rozwiązania zadania do \textit{serwera} w identycznym formacie jak te, które serwer odsyła do \textit{Computational Clienta}
 	\end{enumerate}
 
-	Zadanie przesłane do podziału przez \textit{serwer komunikacyjny} jest w formacie otrzymanym od \textit{aplikacji klienckiej}    
+	Zadanie przesłane do podziału przez \textit{Communications server} jest w formacie otrzymanym od \textit{Computational Client'a}    
     
     \section{Odczytanie rozwiązania}	
 	Proces odczytywania rozwiązania zadania rozpoczyna się od załadowania listy zadań zleconych przez daną aplikację z pliku konfiguracyjnego do którego wcześniej zostały wpisane identyfikatory poszczególnych zadań. Użytkownik wybiera zadanie którego rozwiązanie
