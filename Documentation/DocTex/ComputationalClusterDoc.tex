@@ -302,6 +302,12 @@ Przykładowa odpowiedz komponentu przedstawiona jest poniżej: \\
 		\lstinputlisting[language=XML]{connectionMessageSchema.xsd}
 		\subsection{Wiadomości}
 		\lstinputlisting[language=XML]{messageSchema.xsd}
+		
+		\chapter{Przykład}
+		W tym miejscu działanie klastra zostanie omówione na przykładzie DVRP. Problem marszrutyzacji można rozpatrywać jako rozwinięcie problemu komiwojażera i chińskiego listonosza. Dostawca np. pizzy ma za zadanie rozwieść towar do klientów. Z punktu początkowego może wyruszać wiele pojazdów. Na podstawie wag krawędzi optymalizowany jest czas, odległość albo cena. Dynamic w nazwie problemu oznacza, że część klientów będzie dostępna dopiero o konkretnej godzinie.
+		Klient wysyła do Serwera komunikacyjnego prośbę o rozwiązanie DVRP, listę krawędzi z wagami oraz liczbę dostawców. Serwer przekazuje problem do wolnego Menedżera zadań, który potrafi dzielić ten problem. Menedżer pyta serwer o liczbę dostępnych węzłów z Task solverem obsługującym DVRP.
+		Menedżer zadań oblicza liczbę wszystkich możliwych dróg, z możliwymi podziałami między dostawców, a następnie przyznaje węzłom zadanie wyznaczenia kosztów poszczególnych tras. Np. pierwszy węzeł ma obliczyć trasy od pierwszej do dziesiątej.
+		Węzeł wyznacza przyznane mu trasy oraz ich koszty. Informuje też serwer, że jest w trakcie obliczeń. Gdy je zakończy, przesyła przez serwet do menadżera wszystkie pośrednie wyniki. Menadżer pod koniec obliczeń wybiera najbardziej optymalną trasę (najmniej kilometrów, najniższy koszt  itp.). Przesyła ją przez serwer do klienta.
 	
 	
 \end{document}
