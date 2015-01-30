@@ -147,15 +147,30 @@ Nowe komponenty mogą być dodawane zarówno przy tworzeniu klastra, jak i już 
 	\chapter{Computational client}
 	Zadaniem \emph{computational client'a} jest pobranie danych wejściowych od użytkownika i wysłanie do \emph{communications server'a} zlecenia rozwiązania podanego problemu. Gdy obliczenia zostaną zakończone, klient odbiera od serwera rozwiązanie zadania i prezentuje otrzymane wyniki użytkownikowi. Aby sprawdzić czy konkretne zadanie zostało już obliczone, \emph{computational client} pobiera z \emph{server'a} listę wszystkich ukończonych zleceń.\\
 	
+		\begin{figure}[h]
+		\centering
+		 \includegraphics[width=\textwidth]{img/diagram07.png}
+		 \caption{Diagram aktywności Serwer - Klient}
+	\end{figure}	
+	
 	\section{Zlecenie rozwiązania problemu}
 	Użytkownik zleca klastrowi obliczeniowemu rozwiązanie zadania za pośrednictwem \emph{computational client'a}. Określa typ problemu, jaki ma zostać obliczony oraz wprowadza dane wejściowe. \emph{Computational client} zapisuje odebrane dane w formacie XML, a następnie wysyła komunikat do \emph{communications server'a}. Aplikacja kliencka nawiązuje połączenie z \emph{server'em} używając adresu IP, zapisanego w pliku konfiguracyjnym. Po odebraniu zlecenia od \emph{client'a}, \emph{server} umieszcza nowe zadanie w kolejce problemów odpowiedniego typu oczekujących na rozwiązanie. Zadanie znajduje się w kolejce dopóki któryś z \emph{task manager'ów} potrafiących obsłużyć problem tej klasy nie zakończy wcześniejszych obliczeń i nie będzie mógł się nim zająć.\\
 	
-	\includegraphics[width=\textwidth]{img/activityDiagramClient1.png}
+	
+
+	\begin{figure}[h]
+		\centering
+		 \includegraphics[width=\textwidth]{img/activityDiagramClient1.png}
+	\end{figure}	
 	
 	\section{Pobranie rozwiązania}	
 	Po otrzymaniu rozwiązania problemu od \emph{task manager'a}, \emph{communications server} umieszcza je na liście ukończonych zadań. Gdy użytkownik chce zobaczyć rozwiązanie swojego problemu, \emph{computational client} wysyła do \emph{server'a} zapytanie i otrzymuje listę wszystkich wyników. Jeśli poszukiwane zadanie znajduje się na tej liście to znaczy, że \emph{computational cluster} skończył już jego obliczanie. \emph{Client} pobiera wtedy z \emph{server'a} rozwiązanie i wyświetla je użytkownikowi. Jeżeli obliczenia nie zostały jeszcze zakończone, użytkownik dostaje komunikat, że nadal trwa rozwiązywanie zadania.
 	
-	\includegraphics[width=\textwidth]{img/activityDiagramClient2.png}
+
+	\begin{figure}[h]
+		\centering
+		 	\includegraphics[width=\textwidth]{img/activityDiagramClient2.png}
+	\end{figure}	
 	
 \chapter{Communication server}
 		Communication server sprawuje najważniejszą rolę w działaniu całego systemu. Zajmuje się
@@ -268,14 +283,28 @@ Nowe komponenty mogą być dodawane zarówno przy tworzeniu klastra, jak i już 
 		
 		Częściowe rozwiązania są przechowywane przez \textit{Communications Server}. Gdy wszystkie zlecone zadania zostaną rozwiązanie \textit{Task Manager} otrzymuje je wszystkie w celu utworzenia końcowego rozwiązania. Łączenie zadania polega na wyborze najbardziej optymalnego rozwiązania. Odbywa się to znowu przy pomocy odpowiedniej klasy implementującej interfejs \verb+TaskSolver+, wykorzystując metodę klasy problemu, która scala rozwiązania.
 	
+	\begin{figure}[h]
+		\centering
+		 \includegraphics[width=\textwidth]{img/diagram05.png}
+		 \caption{Diagram aktywności CS - TM}
+	\end{figure}	
+	
 	\begin{figure}
 		\centering
 		\includegraphics[width=\textwidth]{img/CommunicationServer-TaskManager-SubmitSubtaskSolutions.png}
 		\caption{Diagram aktywności dla próby scalenia rozwiązania.}
 	\end{figure}
+
+ 		
 		
 	\chapter{Computational node}
 		Zadanie \textit{Computational node'a} sprowadza się do stworzenia obiektu odpowiedniej klasy implementującej interfejs \verb+TaskSolver+ oraz uruchomienia w nim odpowiedniej metody. Podczas pracy \textit{Computational Node'a } utrzymywana jest komunikacja pomiędzy węzłem a serwerem. Po zakończeniu obliczeń węzeł wysyła do serwera odpowiedni komunikat z rozwiązaniem zadania.
+		
+		\begin{figure}[h]
+		\centering
+		 \includegraphics[width=\textwidth]{img/diagram06.png}
+		 \caption{Diagram aktywności CS - CN}
+	\end{figure}			
 		
 	\begin{figure}[h!]
 		\centering
@@ -451,6 +480,12 @@ Nowe komponenty mogą być dodawane zarówno przy tworzeniu klastra, jak i już 
 		\centering
 		 \includegraphics[width=289px]{img/ClassDiagram.png}
 		 \caption{Diagram klas}
+	\end{figure} 
+	
+	\begin{figure}[h]
+		\centering
+		 \includegraphics[width=289px]{img/diagram08.png}
+		 \caption{Diagram aktywnośći}
 	\end{figure} 	
 	
 \end{document}
