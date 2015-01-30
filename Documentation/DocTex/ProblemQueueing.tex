@@ -11,15 +11,15 @@
 
 \begin{document}
 
-\chapter{Serwer komunikacyjny}
+\chapter{Communication server}
 	
-	Serwer komunikacyjny sprawuje najważniejszą rolę w działaniu całego systemu. Zajmuje się
+	Communication server sprawuje najważniejszą rolę w działaniu całego systemu. Zajmuje się
 	przyjmowaniem zadań oraz przydzielaniem zasobów potrzebnych do ich rozwiązania,
 	dba o poprawne i bezpieczne przechowywanie wyników i innych obiektów komunikacyjnych.
 	Pełni rolę swojego rodzaju pośrednika w komunikacji między innymi elementami klastra.
 	
-	Serwer komunikacyjny ze względu na swoje znaczenie ma możliwość podłączenia dodatkowego
-	serwera komunikacyjnego uruchomienia w trybie \textit{backup}, z którym będzie
+	Communication server ze względu na swoje znaczenie ma możliwość podłączenia dodatkowego
+	communication server'a uruchomienia w trybie \textit{backup}, z którym będzie
 	prowadzona dodatkowa synchronizacja danych, w celu bezproblemowego działania
 	w przypadku utraty jednego z nich.
 	
@@ -28,7 +28,7 @@
 	
 	
 \section{Cykl życia serwera}
-	Serwer komunikacyjny zaraz po uruchomieniu sprawdza poprawność własnej konfiguracji,
+	Communication server zaraz po uruchomieniu sprawdza poprawność własnej konfiguracji,
 	istnienia niezbędnych zależności (bazy danych). Gdy wszystko przebiegnie pomyślnie
 	tworzy dwa wątki - nasłuchujący oraz operacyjny.
 	
@@ -36,30 +36,30 @@
 	komunikatów z innych komponentów klastra obliczeniowego. Konkretne zachowanie zależne
 	jest od rodzaju komunikatu, jeżeli otrzymujemy zapytanie o parametry serwera
 	odpowiedź finalna jest udzielana od razu, ale jeśli jest to zlecenie podzadania,
-	poprawne przyjęcie jest sygnalizowane dopiero po synchronizacji z drugim serwerem
-	komunikacyjnym, jeśli taki jest ustawiony i dostępny.
+	poprawne przyjęcie jest sygnalizowane dopiero po synchronizacji z drugim communication server'em,
+	jeśli taki jest ustawiony i dostępny.
 	
 	Wątek operacyjny zaś, nieustannie (gdy ma taką możliwość) dba o redundancję danych wymieniając 
-	się danymi z innym serwerem komunikacyjnym 	w trybie \textit{backup} oraz rozsyła komunikaty 
+	się danymi z innym communication server'em będącym w trybie \textit{backup} oraz rozsyła komunikaty 
 	przydzielając poszczególne zadania,	ze względu na zachowanie ciągłości synchronizacji ilość 
 	przydzielonych zadań w jednym cyklu jest dobierana eksperymentalnie i całkowicie konfigurowalna.
 	Co jakiś czas wątek ten sprawdza również obecność wszystkich komponentów i aktualizuje ich listy
 	obsługiwanych wtyczek. 
 	
-	Ogólny diagram aktywności serwera komunikacyjnego można znaleźć na rysunku 
+	Ogólny diagram aktywności communication server'a można znaleźć na rysunku 
 	~\ref{CommunicationServerGeneralActivity}.
 	
 	\begin{figure}
 		\centering
 		\includegraphics[width=\textwidth]{img/CommunicationServer-General.png}
-		\caption{Ogólny diagram aktywności serwera komunikacyjnego}
+		\caption{Ogólny diagram aktywności communication server'a}
 		\label{CommunicationServerGeneralActivity}
 	\end{figure}
 	
 \section{Cykl życia zadania}
 
 	Dla każdego zadania możemy wyodrębnić kilka jego głównych stanów. Nowo zlecone zadanie
-	trafia nieprzetworzone do odpowiedniej kolejki, oczekując na przesłanie do menadżera zadań
+	trafia nieprzetworzone do odpowiedniej kolejki, oczekując na przesłanie do task manager'a
 	i podzielenie na łatwiejsze do rozwiązania podproblemy. Po podzieleniu, zadanie czeka na rozwiązanie
 	wygenerowanych podzadań, a po ich otrzymaniu wygenerowane jest rozwiązanie, które oczekuje potem na
 	pobranie przez użytkownika; lub zgłaszane są dodatkowe podzadania potrzebne do wygenerowania poprawnego
@@ -79,21 +79,21 @@
 	przechowywuje także informacje o menadżerach zadań i węzłach obliczeniowych, które potrafią
 	go obsłużyć. 
 	
-	Serwer komunikacyjny w momencie wyboru zadania filtruje rodzaje problemów w poszukiwaniu takich,
-	które są mają oczekujące zadania oraz są rozwiązywalne, czyli posiadają do dyspozycji wolny menadżer zadań 
+	Communication server w momencie wyboru zadania filtruje rodzaje problemów w poszukiwaniu takich,
+	które są mają oczekujące zadania oraz są rozwiązywalne, czyli posiadają do dyspozycji wolny task manager 
 	oraz mają zlecone jakieś zadanie. Spośród tych rodzajów wybieramy zadanie zlecone najwcześniej, by zachować
 	oczekiwaną kolejność zajmowania się z zadaniami.
 	
-	Przy przydzielaniu podzadań dla poszczególnych węzłów komunikacyjnych postępujemy analogicznie.
+	Przy przydzielaniu podzadań dla poszczególnych computational node'ów postępujemy analogicznie.
 	
-	Rozwiązania podzadań odsyłamy do menadżera zadań w celu scalenia po otrzymaniu ich wszystkich. Menadżer
+	Rozwiązania podzadań odsyłamy do task manager'a w celu scalenia po otrzymaniu ich wszystkich. Menadżer
 	po analizie odpowiedzi może zdecydować o wygenerowaniu rozwiązania końcowego lub zlecić podzadania dodatkowe
 	i odłożyć końcową odpowiedź na termin późniejszy. 
 	
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=\textwidth]{img/CommunicationServer-SelectTask.png}
-		\caption{Wybór zadania przez serwer komunikacyjny}
+		\caption{Wybór zadania przez communication server}
 	\end{figure}
 	
 	Nie należy zapominać również o zadaniach które zostały zlecone, ale z jakichś powodów
@@ -102,10 +102,10 @@
 	
 \section{Tryb backup}
 	Serwer w trybie backup zachowuje się bardzo podobnie do serwera w trybie normalnym.
-	Najistotniejszą różnicą jest to, że stara się on być jedynie nośnikiem danych,
+	Najistotniejszą różnicą jest to, że stara się on być jedynie nośnikiem danych
 	i nie wykonywać żadnych operacji na dostępnych zasobach. W przypadku próby zlecenia
-	mu zadania podczas gdy nie jest on jedynym serwerem przekierowuje je do głównego serwera
-	komunikacyjnego. Jeżeli zaś serwer komunikacyjny nie odpowiada, przejmuje jego obowiązki.
+	mu zadania podczas gdy nie jest on jedynym serwerem przekierowuje je do głównego communication server'a.
+	Jeżeli zaś communication server nie odpowiada, przejmuje jego obowiązki.
 	W momencie przywrócenia sprawności serwera głównego, synchronizują się one w normalnym
 	trybie, a serwer główny staje się w pełni operacyjny.
 	
@@ -117,6 +117,5 @@
 	Po otrzymaniu potwierdzenia odebrania są oznaczone jako zsynchronizowane. Jeśli
 	potwierdzenie nie zostanie otrzymane, wykonywana jest retransmisja po odpowiednim
 	czasie oczekiwania.
-	
 	
 \end{document}
