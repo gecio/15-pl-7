@@ -89,6 +89,16 @@ Podczas całego procesu główny \emph{communications server} synchronizuje trzy
 	\includegraphics[width=\textwidth]{img/activityDiagram.png}
 	
 	\section{Diagramy przypadków użycia}	
+	\subsection{Diagram przypadków użycia dla użytkownika}
+	Główną rolą użytkownika jest zdefiniowanie problemu do rozwiązania przez klaster obliczeniowy. Wprowadza on dane wejściowe dla zadania za pośrednictwem \emph{computational client'a}. Gdy obliczenia zostają zakończone, użytkownik pobiera z \emph{communications server'a} rozwiązanie (również za pośrednictwem aplikacji klienckiej). Użytkownik w dowolnym momencie może sprawdzić, czy prace nad jego problemem zostały już zakończone. Na jego żądanie \emph{communications server} wysyła do \emph{computational client'a} listę wszystkich zadań, które zostały już rozwiązane. Jeśli interesujący go problem znajduje się na liście, użytkownik wskazuje identyfikator zadania i pobiera rozwiązanie.\\
+	
+\includegraphics[width=\textwidth]{img/usecaseUser.png}	
+	
+	\subsection{Diagram przypadków użycia dla administratora}
+	Administrator ma za zadanie skonfigurować wszystkie elementy klastra. Najpierw uruchamia \emph{primery communications server} oraz \emph{backup server}. Następnie dołącza do sieci pozostałe komponenty - \emph{task manager'y}, \emph{computational node'y} i \emph{computational client'ów}. Aby umożliwić komunikację pomiędzy elementami systemu, administrator musi zapisać w pliku konfiguracyjnym przyłączanego elementu adresy IP obu serwerów. Żeby \emph{task manager} i \emph{computational node} mogły brać udział w rozwiązywaniu problemu, muszą mieć zainstalowany przynajmniej jeden \emph{task solver}. Zatem przy dołączaniu ich do klastra administrator powinien zainstalować odpowiednią wtyczkę.\\
+Nowe komponenty mogą być dodawane zarówno przy tworzeniu klastra, jak i już podczas jego działania. Administrator może również w każdym momencie wgrać do \emph{task manager'a} lub \emph{computational node'a} kolejne \emph{task solver'y}, odpowiadające nowym klasom problemów. Zwiększy się w ten sposób ilość typów zadań, jakie klaster jest w stanie rozwiązać.\\
+
+	\includegraphics[width=\textwidth]{img/usecaseAdmin.png}	
 	
 	%komunikacja + schemy
 	\chapter{Komunikacja}
