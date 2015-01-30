@@ -23,9 +23,12 @@
 	\chapter{Task Manager} - Paweł
 		- podział zadania 
 		- łączenie zadania
+		
+		Task Manager do podziału zadania wykorzystuje Task Solvera, który obsługuje odpowiedni dla klasy zadania plugin. Na tym etapie nie są obliczane konkretne drogi (w przypadku DVRP), a tylko ich identyfikatory. Task Manager, znając liczbę Node'ów, zamawia w Task Solverze podział zadania na odpowiednią liczbę części. Każdy Node dostaje potem polecenie obliczenia opcji między jednym a drugim identyfikatorem, pewien przedział problemów. Obliczanie konkretnych dróg nie miałoby sensu, oznaczałoby wykonanie przez Task Managera pracy Node'a.
+		Częściowe rozwiązania są przechowywane przez Task Managera. Łączenie zadania polega na wyborze najbardziej optymalnego rozwiązania. Odbywa się to znowu przez Task Solvera, wykorzystując metodę klasy problemu, która porównuje rozwiązania.
 	\chapter{Node} - Paweł
 		-obliczenie
-		
+		Zadanie Nodea sprowadza się do odpalenia w Task Solverze czasochłonnej metody obliczającej w pętli wydajność wszystkich rozwiązań zawartych między podanymi identyfikatorami. W trakcie obliczeń, Node informuje Serwer co określony czas, że jest zajęty. Po zakończeniu wyniki zostają wysłane przez serwer do Task Managera.
 	\chapter{Komunikacja} - Marcin
 		podział na wiadomości
 	\chapter{Przykładowy algorytm} - Paweł
