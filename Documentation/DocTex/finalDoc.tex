@@ -221,6 +221,7 @@ Nowe komponenty mogą być dodawane zarówno przy tworzeniu klastra, jak i już 
 	
 	\chapter{Task manager}
 		Task Manager do podziału zadania wykorzystuje Task Solvera, który obsługuje odpowiedni dla klasy zadania plugin. Na tym etapie nie są obliczane konkretne drogi (w przypadku DVRP), a tylko ich identyfikatory. Task Manager, znając liczbę Node'ów, zamawia w Task Solverze podział zadania na odpowiednią liczbę części. Każdy Node dostaje potem polecenie obliczenia opcji między jednym a drugim identyfikatorem, pewien przedział problemów. Obliczanie konkretnych dróg nie miałoby sensu, oznaczałoby wykonanie przez Task Managera pracy Node'a.
+		
 		Częściowe rozwiązania są przechowywane przez Task Managera. Łączenie zadania polega na wyborze najbardziej optymalnego rozwiązania. Odbywa się to znowu przez Task Solvera, wykorzystując metodę klasy problemu, która porównuje rozwiązania.
 	
 	\chapter{Communicational node}
@@ -363,7 +364,6 @@ Nowe komponenty mogą być dodawane zarówno przy tworzeniu klastra, jak i już 
 		w przeciwnym przypadku wartość jest pusta
 	\end{itemize}
 	
-	
 	\section{Schema}
 		\subsection{Uzyskiwanie połączenia przez komponenty}	
 			\lstinputlisting[language=XML]{schema/connectionMessageSchema.xsd}
@@ -381,4 +381,14 @@ Nowe komponenty mogą być dodawane zarówno przy tworzeniu klastra, jak i już 
 			\lstinputlisting[language=XML]{schema/SubtaskOrderMessage.xsd}
 		\subsection{Przesłanie rozwiązania podzadania}
 			\lstinputlisting[language=XML]{schema/SubtaskResultMessage.xsd}
+			
+\chapter{Przykład algorytmu}
+		W tym miejscu działanie klastra zostanie omówione na przykładzie DVRP. Problem marszrutyzacji można rozpatrywać jako rozwinięcie problemu komiwojażera i chińskiego listonosza. Dostawca np. pizzy ma za zadanie rozwieść towar do klientów. Z punktu początkowego może wyruszać wiele pojazdów. Na podstawie wag krawędzi optymalizowany jest czas, odległość albo cena. Dynamic w nazwie problemu oznacza, że część klientów będzie dostępna dopiero o konkretnej godzinie.
+		
+		Klient wysyła do Serwera komunikacyjnego prośbę o rozwiązanie DVRP, listę krawędzi z wagami oraz liczbę dostawców. Serwer przekazuje problem do wolnego Menedżera zadań, który potrafi dzielić ten problem. Menedżer pyta serwer o liczbę dostępnych węzłów z Task solverem obsługującym DVRP.
+		
+		Menedżer zadań, za pomocą Task Solvera używa metody klasy problemu, by wyznaczyć zakres identyfikatorów dróg dla poszczególnych Nodeów. Klasa problemu DVRP zawiera ściśle ustalony porządek możliwych podziałów na drogi i dostawców. Dlatego też Node będzie w stanie zrozumieć instrukcję, że ma obliczyć przykładowo możliwości między 5, a 19. W głównej pętli programu zostaną wstawione odpowiednie wartości.
+		
+		Węzeł za pomocą Task Solvera używa metody klasy problemu DVRP, by wyznaczyć przyznane mu trasy oraz ich koszty. Informuje też serwer, że jest w trakcie obliczeń. Gdy je zakończy, przesyła przez Serwer do Menadżera wszystkie pośrednie wyniki. Menadżer pod koniec obliczeń wybiera najbardziej optymalną trasę (najmniej kilometrów, najniższy koszt  itp.), znowu za pomocą metody scalającej z klasy DVRP, odpalanej przez Task Solvera. Przesyła ją przez serwer do klienta.
+		
 \end{document}
