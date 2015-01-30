@@ -268,6 +268,12 @@ Nowe komponenty mogą być dodawane zarówno przy tworzeniu klastra, jak i już 
 		
 		Częściowe rozwiązania są przechowywane przez \textit{Communications Server}. Gdy wszystkie zlecone zadania zostaną rozwiązanie \textit{Task Manager} otrzymuje je wszystkie w celu utworzenia końcowego rozwiązania. Łączenie zadania polega na wyborze najbardziej optymalnego rozwiązania. Odbywa się to znowu przy pomocy odpowiedniej klasy implementującej interfejs \verb+TaskSolver+, wykorzystując metodę klasy problemu, która scala rozwiązania.
 	
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{img/CommunicationServer-TaskManager-SubmitSubtaskSolutions.png}
+		\caption{Diagram aktywności dla próby scalenia rozwiązania.}
+	\end{figure}
+		
 	\chapter{Computational node}
 		Zadanie \textit{Computational node'a} sprowadza się do stworzenia obiektu odpowiedniej klasy implementującej interfejs \verb+TaskSolver+ oraz uruchomienia w nim odpowiedniej metody. Podczas pracy \textit{Computational Node'a } utrzymywana jest komunikacja pomiędzy węzłem a serwerem. Po zakończeniu obliczeń węzeł wysyła do serwera odpowiedni komunikat z rozwiązaniem zadania.
 		
@@ -443,7 +449,7 @@ Nowe komponenty mogą być dodawane zarówno przy tworzeniu klastra, jak i już 
 \chapter{Załączniki}
 	\begin{figure}[h]
 		\centering
-		 \includegraphics[width=\textwidth]{img/ClassDiagram.png}
+		 \includegraphics[width=289px]{img/ClassDiagram.png}
 		 \caption{Diagram klas}
 	\end{figure} 	
 	
