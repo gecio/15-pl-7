@@ -1,9 +1,0 @@
-Wêze³ obliczeniowy przy uruchomieniu zg³asza swoj¹ obecnoœæ serwerowi komunikacyjnemu. Informacje temat serera 
-znajduj¹ siê w pliku konfiguracyjnym wêz³a. Wêze³ wysy³a do serwera informacje jakiego typu problemy jest w stanie 
-rozwi¹zaæ, dziêki temu serwer komunikacyjny mo¿e uwzglêdniaæ go przy przesy³aniu do Menad¿era Zadañ informacji na temat
-iloœci wêz³ów potrafi¹cych rozwi¹zaæ dany typ problemu.
-
-Wêze³ obliczeniowy nie wykonuj¹cy w danym momencie obliczeñ otrzymuje od serwera skolejkowany podproblem, podzielony 
-na czêœci przez Menad¿er Zadañ. Zadaniem wêz³a obliczeniowego jest rozwi¹zanie otrzymanego zadania oraz przes³ania
-rozwi¹zania do serwera. Je¿eli podczas wykonaywania obliczeñ wyst¹pi b³¹d, wêze³ ma za zadanie przygotowaæ raport o 
-b³êdach a nastêpnie wys³aæ go do serwera.

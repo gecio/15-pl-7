@@ -5,13 +5,52 @@
 \usepackage[polish]{babel}
 
 \title{\textsc{Standardy kodowania}}
+\author{KS}
 
 \begin{document}
 	\maketitle
 	
 	\section{Formatowanie kodu}
+	\begin{itemize}
+		\item \textbf{Wcięcia} - spacje, długość 4 (Visual Studio: Tools $\rightarrow$ Options $\rightarrow$ Text Editor $\rightarrow$ All Languages/C\# $\rightarrow$ Tabs)
+		\item \textbf{Klamerki} - klamry \{ i \} stawiamy w oddzielnej linii dla zwiększenia czytelności, dodatek Productivity Power Tools 2013 do Visual Studio 2013 potrafi zmieniać wysokość znaków w liniach, w których jest tylko klamra 
+		\item Między sterującymi słowami kluczowymi (\texttt{if}, \texttt{for}, \texttt{while}, \texttt{switch}) a nawiasami (...) stawiamy jedną spację np.: np.: \texttt{if (\_window.IsRunning)}
+		\item \textbf{Argumenty} - między nawiasami ( ) a typem/nazwą parametrów nie stawiamy spacji, np.:\\\texttt{public async int RunAsync(int runTime, RunOptions options)}
+		\item \textbf{Kolejność słów kluczowych}:\\\texttt{accessor [async] [static/virtual/abstract/sealed]}
+	\end{itemize}
+	
 	\section{Konwencje nazewnicze}
+
+	\begin{itemize}
+		\item Staramy się nie używać skrótów
+		\item Zmienne typu \textbf{bool} zaczynają się od is, can, has lub have
+		\item Zmienne \textbf{lokalne} - camelCase
+		\item Zmienne \textbf{prywatne} rozpoczynamy od \texttt{\_} i piszemy camelCase'm, np.:\\\texttt{\_isDeadlineToday}
+		\item Zmienne \textbf{statyczne} - do ustalenia
+		\item \textbf{Klasy} - standardowy PascalCase, np.: \texttt{ConnectionManager}
+		\item \textbf{Interfejsy} - standardowy PascalCase, prefix \texttt{I}, np.: \\ \texttt{IConnectionManager}
+		\item \textbf{Testy} - \texttt{UnitOfWork\_Scenario\_ExpectedResult}, np.: \\
+		\texttt{Calculate\_EmptyString\_ReturnsZero}
+		\item \textbf{Słownik}
+		\begin{itemize}
+			\item \textbf{get} ponad retrieve, take, fetch
+			\item \textbf{set} ponad change, alter, modify
+			\item trzeba uzupełnić bo jeszcze coś musi być
+		\end{itemize}
+	\end{itemize}	
+	
 	\section{Komentowanie kodu}
+	\begin{itemize}
+		\item Kod komentujemy gdy to naprawdę konieczne.
+		\item Zauważony zakomentowany kod \textbf{WYWALAMY}, chyba że jest komentarz tłumaczący dlaczego tak jest lub jest często potrzebny (wtedy powinien być komentarz lub flaga zamiast takiego rozwiązania)
+	\end{itemize}
+	
+	\section{Dokumentowanie klas}
+	\begin{itemize}
+		\item DoxyGen/Sandcastle, do omówienia
+	\end{itemize}
+	
 	\section{Przykłady}
+	
 	
 \end{document}
