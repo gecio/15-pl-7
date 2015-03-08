@@ -1,0 +1,17 @@
+\contentsline {chapter}{\numberline {1}Wst\IeC {\k e}p}{2}
+\contentsline {chapter}{\numberline {2}Diagramy Przypadk\IeC {\'o}w U\IeC {\.z}ycia}{4}
+\contentsline {section}{\numberline {2.1}Komunikacja}{5}
+\contentsline {subsection}{\numberline {2.1.1}Komponenty z serwerem}{5}
+\contentsline {subsection}{\numberline {2.1.2}Serwer z Menad\IeC {\.z}erem Zada\IeC {\'n}}{7}
+\contentsline {subsection}{\numberline {2.1.3}Serwer z W\IeC {\k e}z\IeC {\l }em obliczeniowym}{8}
+\contentsline {subsection}{\numberline {2.1.4}Serwer z Klientem}{9}
+\contentsline {chapter}{\numberline {3}Diagramy Aktywno\IeC {\'s}ci}{10}
+\contentsline {section}{\numberline {3.1}Zlecenie rozwi\IeC {\k a}zania problemu}{10}
+\contentsline {section}{\numberline {3.2}Odczytanie wyniku}{11}
+\contentsline {section}{\numberline {3.3}W\IeC {\k e}ze\IeC {\l } obliczeniowy}{12}
+\contentsline {section}{\numberline {3.4}Wybieranie zadania do podzielenia}{14}
+\contentsline {section}{\numberline {3.5}Podzia\IeC {\l } zadania na podproblemy}{15}
+\contentsline {section}{\numberline {3.6}Zg\IeC {\l }aszanie wyniku cz\IeC {\k e}\IeC {\'s}ciowego do menad\IeC {\.z}era zada\IeC {\'n}}{16}
+\contentsline {chapter}{\numberline {4}Komunikacja}{17}
+\contentsline {section}{\numberline {4.1}Przyk\IeC {\l }ady wiadomo\IeC {\'s}ci}{17}
+\contentsline {section}{\numberline {4.2}Schema}{19}
