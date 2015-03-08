@@ -17,7 +17,7 @@
 	Do realizacji projektu klastra obliczeniowego nasz zespół wybrał model przyrostowy. Składa się on z pięciu etapów.
 	\begin{itemize}
 		\item Na początku powstaje ogólny projekt całego systemu. Nie może być zmieniany w dalszych fazach.
-		\item Następnie wybierana jest częściowa funkcjonalność, która będzie realizowana w tej iteracji.
+		\item Następnie wybierana jest częściowa funkcjonalność, która będzie realizowana w danej iteracji.
 		\item Powstaje szczegółowy projekt tej funkcjonalności (w modelu kaskadowym), a następnie jest ona implementowana.
 		\item Za pomocą testów sprawdzana jest poprawność rozwiązania. Następuje prezentacja klientowi (prowadzącemu zajęcia).
 		\item Wszystkie kroki z wyjątkiem pierwszego powtarzane są iteracyjnie, dopóki nie zostanie zaimplementowana pełna funkcjonalność.
@@ -32,17 +32,99 @@
 	\section{Technologie}
 	
 	\begin{itemize}
-		\item Środowisko: C\#.NET
+		\item Środowisko: C\# .NET
 		\item Prezentacja: Windows Presentation Foundation
 		\item Bazy danych: EntityFramework (?)
 		\item Testowanie: Moq, NUnit/XUnit
+		\item Inne: Autofac
 		\item Wersjonowanie: git
 		\item Serwisy zewnętrzne: GitHub, Trello, TravisCI
 	\end{itemize}
 	
-	\section{Kamienie milowe}	
+	\section{Kamienie milowe}
+	Na podstawie dokumentacji i deadline'ów poszczególnych funkcjonalności nasz zespół 
+	postawił sobie kilka celów, które chcemy realizować w poszczególnych iteracjach:
+	\begin{enumerate}
+		\item Komunikacja
+		\begin{itemize}
+			\item Klaster zna swoją budowę (pomijając backup), poszczególne komponenty systemu potrafią nawiązać połączenie z CS.
+		\item Klaster potrafi coś obliczyć wykorzystując wszystkie swoje elementy
+		\item Uruchomienie trybu backup
+		\end{itemize}
+		\item Algorytm DVRP
+			\begin{itemize}
+				\item Implementacja podstawowej wersji algorytmu
+				\item Optymalizacja algorytmu pod względem wydajnościowym
+			\end{itemize}		
+	\end{enumerate}
+	
 	\section{Główne zadania}
+		Z racji na wybór metodologii działania nasz zespół opracował zadania wymagające realizacji jedynie w najbliższych iteracjach. Po zakończeniu pierwszego etapu zorganizujemy spotkanie, na którym omówimy i podzielimy kolejne zagadnienia wymagające realizacji w projekcie. Poniżej przedstawiamy skrót tego co chcemy zrealizować w 3 pierwszych iteracjach oraz przybliżone czasy ich trwania.
+		
+	\begin{enumerate}
+		\item Podstawowa budowa klastra, mechanizm komunikacji\\
+				Czas trwania iteracji: 09.03.2015 - 15.03.2015
+		\begin{itemize}
+			\item Dwa moduły mogą się połączyć i wymieniać wiadomości tekstowe.
+			\item Wygenerowanie klas z XML schemes.
+			\item Serwer komunikacyjny i rejestrowanie komponentów.
+			\item Analiza XML w tekście, deserializacja do obiektu odpowiedniego typu.
+			\item Serwer komunikacyjny musi aktualizować status (życie komponentów).
+			\item Deserializacja XML - przypadki specjalne.
+		\end{itemize}
+		\item Poprawna komunikacja umożliwiająca rozwiązanie pewnego zadania, bez uwzględnienia trybu backup\\
+				Czas trwania iteracji: 16.03.2015 - 22.03.2015 
+				%może 24\25? ostatnia iteracja wydaje się prostrza, a druga bardzo duża
+		\begin{itemize}
+			\item System pluginów, rozpoznawanie i rejestrowanie w aplikacji.
+			\item Struktura kolejki zadań i algorytm wyboru zadania (również podzadań oraz rozwiązań do scalenia).
+			\item Aktualizacja "stanu wiedzy" komponentów w serwerze komunikacyjnym.
+			\item TM: Zlecenie podziału przy komunikacji statusowej.
+			\item TM: Zgłaszanie wyniku do CS.
+			\item CN: Zlecenie obliczeń przy komunikacji statusowej.
+			\item CN: Zgłaszanie wyniku do CS.
+			\item TM: Zlecenie złożenia wyników cząstkowych.
+			\item TM: Zgłaszanie wyniku finalnego do CS.
+			\item Client: Zlecanie zadania do obliczenia.
+			\item Client: Pobieranie wyników obliczeń.
+		\end{itemize}
+		\item Tryb backup\\
+				Czas trwania iteracji: 23.03.2015 - 29.03.2015
+		\begin{itemize}
+			\item Kolejka backupowa.
+			\item Łączenie się serwera i znajdowanie swojego miejsca w trybie backup.
+			\item Synchronizacja danych między serwerami.
+		\end{itemize}
+	\end{enumerate}	 
+		
 	\section{Organizacja czasu}
 	\section{Struktura projektu}
 	
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
