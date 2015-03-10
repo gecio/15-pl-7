@@ -39,7 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Deserializer.cs" />
     <Compile Include="DivideProblem.cs" />
+    <Compile Include="IMessage.cs" />
     <Compile Include="NoOperation.cs" />
     <Compile Include="PartialProblems.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
