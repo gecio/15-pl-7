@@ -10,7 +10,7 @@ namespace ComputationalCluster.NetModule
     /// <summary>
     /// Interfejs obsługi wiadomości odebranych przez inne moduły.
     /// </summary>
-    public interface IMessagesReceiver
+    public interface IMessageReceiver
     {
         /// <summary>
         /// Metoda która obsługuje wiadomości przychodzące, może wygenerować odpowiedź.
@@ -24,12 +24,12 @@ namespace ComputationalCluster.NetModule
     /// Domyślna implementacja obsługująca wiadomości przychodzące, obsługująca wiadomości
     /// za pomocą wczesniej zbudowanego zbioru konsumentów.
     /// </summary>
-    public class MessagesReceiver : IMessagesReceiver
+    public class MessageReceiver : IMessageReceiver
     {
         private readonly IMessageTranslator _messageTranslator;
         private IContainer _messageConsumersResolver;
 
-        public MessagesReceiver(IMessageTranslator messageTranslator, Module messageConsumersModule)
+        public MessageReceiver(IMessageTranslator messageTranslator, Module messageConsumersModule)
         {
             _messageTranslator = messageTranslator;
 

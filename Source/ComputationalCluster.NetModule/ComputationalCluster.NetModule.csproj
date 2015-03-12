@@ -47,8 +47,9 @@
     <Compile Include="IConsumer.cs" />
     <Compile Include="IMessage.cs" />
     <Compile Include="IMessageTranslator.cs" />
-    <Compile Include="MessagesReceiver.cs" />
-    <Compile Include="NetModule.cs" />
+    <Compile Include="MessageReceiver.cs" />
+    <Compile Include="NetClient.cs" />
+    <Compile Include="NetServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

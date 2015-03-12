@@ -66,9 +66,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fakes\FakesModule.cs" />
+    <Compile Include="Fakes\TestTextTranslator.cs" />
+    <Compile Include="Fakes\TestTextMessage.cs" />
     <Compile Include="MessagesReceiverTests.cs" />
     <Compile Include="NetModuleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerClientIntegration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

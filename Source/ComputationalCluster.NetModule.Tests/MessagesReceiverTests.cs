@@ -2,82 +2,53 @@
 using NUnit.Framework;
 using System;
 using Moq;
+using ComputationalCluster.NetModule.Tests.Fakes;
 
 namespace ComputationalCluster.NetModule.Tests
 {
-    public class DummyMessage : IMessage
-    {
-        public DummyMessage()
-        {
-        }
-
-        public DummyMessage(string content)
-        {
-            Content = content;
-        }
-
-        public string Content { get; set; }
-    }
-
-    public class DummyModule : Module
-    {
-        IMessageConsumer _dummyConsumer;
-
-        public DummyModule(IMessageConsumer dummyConsumer)
-        {
-            _dummyConsumer = dummyConsumer;
-        }
-
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterInstance<IMessageConsumer>(_dummyConsumer)
-                .As<IMessageConsumer<DummyMessage>>();
-        } 
-    }
-
     [TestFixture]
     public class MessagesReceiverTests
     {
-        readonly string dummyRequestMessageContent = "Dummy message request.";
-        readonly string dummyResponseMessageContent = "Dummy message response.";
-        IMessage dummyRequestMessage;
-        IMessage dummyResponseMessage;
+        private readonly string requestMessageContent = "Dummy message request.";
+        private readonly string responseMessageContent = "Dummy message response.";
+        private IMessage requestMessage;
+        private IMessage responseMessage;
 
-        Mock<IMessageConsumer<DummyMessage>> dummyConsumerMock;
-        Mock<IMessageTranslator> dummyTranslatorMock;
-        MessagesReceiver receiver;
+        private Mock<IMessageConsumer<TestTextMessage>> testTextConsumerMock;
+        private Mock<IMessageTranslator> translatorMock;
+        private IMessageReceiver receiver;
 
         [SetUp]
         public void SetUp()
         {
-            dummyRequestMessage = new DummyMessage(dummyRequestMessageContent);
-            dummyResponseMessage = new DummyMessage(dummyResponseMessageContent);
+            requestMessage = new TestTextMessage(requestMessageContent);
+            responseMessage = new TestTextMessage(responseMessageContent);
 
-            dummyTranslatorMock = new Mock<IMessageTranslator>();
-            dummyTranslatorMock.Setup(t => t.CreateObject(dummyRequestMessageContent))
-                .Returns(dummyRequestMessage);
-            dummyTranslatorMock.Setup(t => t.Stringify(dummyResponseMessage))
-                .Returns(dummyResponseMessageContent);
+            translatorMock = new Mock<IMessageTranslator>();
+            translatorMock.Setup(t => t.CreateObject(requestMessageContent))
+                .Returns(requestMessage);
+            translatorMock.Setup(t => t.Stringify(responseMessage))
+                .Returns(responseMessageContent);
 
-            dummyConsumerMock = new Mock<IMessageConsumer<DummyMessage>>();
-            dummyConsumerMock.As<IMessageConsumer>()
-                .Setup(t => t.Consume(dummyRequestMessage))
-                .Returns(dummyResponseMessage);
+            testTextConsumerMock = new Mock<IMessageConsumer<TestTextMessage>>();
+            testTextConsumerMock.As<IMessageConsumer>()
+                .Setup(t => t.Consume(requestMessage))
+                .Returns(responseMessage);
 
-            receiver = new MessagesReceiver(dummyTranslatorMock.Object, 
-                new DummyModule(dummyConsumerMock.Object));
+            receiver = new MessageReceiver(translatorMock.Object,
+                new FakesModule(testTextConsumerMock.Object));
         }
 
         [Test]
-        public void Dispatch_DummyMessageConsumerRegistered_ConsumedSuccessfully()
+        public void Dispatch_TestTextMessageConsumerRegistered_ConsumedSuccessfully()
         {
-            string response = receiver.Dispatch(dummyRequestMessageContent);
+            string response = receiver.Dispatch(requestMessageContent);
 
-            dummyTranslatorMock.Verify(t => t.CreateObject(dummyRequestMessageContent), Times.Once);
-            dummyTranslatorMock.Verify(t => t.Stringify(dummyResponseMessage), Times.Once);
-            dummyConsumerMock.Verify(t => t.Consume(dummyRequestMessage), Times.Once);
+            translatorMock.Verify(t => t.CreateObject(requestMessageContent), Times.Once);
+            translatorMock.Verify(t => t.Stringify(responseMessage), Times.Once);
+            testTextConsumerMock.Verify(t => t.Consume(requestMessage), Times.Once);
 
-            Assert.AreEqual(dummyResponseMessageContent, response);
+            Assert.AreEqual(responseMessageContent, response);
         }
     }
 }
