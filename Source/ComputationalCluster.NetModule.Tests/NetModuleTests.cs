@@ -11,14 +11,5 @@ namespace ComputationalCluster.NetModule.Tests
     [TestFixture]
     public class NetModuleTests
     {
-        [TestCase(3)]
-        [TestCase(4)]
-        [TestCase(8)]
-        public void NetModule_Connect_ShouldConnect(int p)
-        {
-            var netModule = new NetModule();
-            netModule.Connect("127.0.0.1");
-            Assert.IsTrue(netModule.IsConnected);
-        }
     }
 }
