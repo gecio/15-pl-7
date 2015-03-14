@@ -70,23 +70,30 @@ namespace ComputationalCluster.NetModule
 
         private void HandleIncomingConnection(IAsyncResult asyncResult)
         {
-            var listener = (TcpListener)asyncResult.AsyncState;
-            var tcpClient = (TcpClient)listener.EndAcceptTcpClient(asyncResult);
+            try
+            {
+                var listener = (TcpListener)asyncResult.AsyncState;
+                var tcpClient = (TcpClient)listener.EndAcceptTcpClient(asyncResult);
 
-            _tcpClientConnected.Set(); // run waiting for next connection
+                _tcpClientConnected.Set(); // run waiting for next connection
 
-            var stream = tcpClient.GetStream();
-            var requestBuffer = new byte[4096*4];
+                var stream = tcpClient.GetStream();
 
-            var bytesRead = stream.Read(requestBuffer, 0, requestBuffer.Length);
-            var request = _encoding.GetString(requestBuffer, 0, bytesRead);
+                var requestBuffer = stream.ReadBuffered(0);
+                var request = _encoding.GetString(requestBuffer, 0, requestBuffer.Length);
 
-            var response = _messageReceiver.Dispatch(request);
+                var response = _messageReceiver.Dispatch(request);
 
-            byte[] responseBuffer = _encoding.GetBytes(response);
-            stream.Write(responseBuffer, 0, responseBuffer.Length);
+                byte[] responseBuffer = _encoding.GetBytes(response);
+                stream.WriteBuffered(responseBuffer, 0, responseBuffer.Length);
 
-            tcpClient.Close();
+                tcpClient.Close();
+            }
+            catch(ObjectDisposedException ex)
+            {
+                //todo: connection closed, logi
+            }
         }
+
     }
 }

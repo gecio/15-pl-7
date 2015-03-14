@@ -13,32 +13,68 @@ namespace ComputationalCluster.NetModule.Tests
     [TestFixture]
     public class ServerClientIntegration
     {
+        private NetServer _server;
+        private TestTextTranslator _translator;
+        private Mock<IMessageReceiver> _receiverMock;
+        private UTF8Encoding _encoding;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _translator = new TestTextTranslator();
+            _receiverMock = new Mock<IMessageReceiver>();
+            _encoding = new UTF8Encoding();
+        }
+
         [Test]
         public void IntergationServerClient_ClientSendsOneRequest_ResponseReceived()
         {
             // todo: przez ten test leci wyjątek na sam koniec po sprawdzeniu,
             //       test przechodzi, ale problem trzeba rozwiązać, wynika on z nieco
             //       olewczego podejścia do wątków i zarządzania nimi
-
-            var translator = new TestTextTranslator();
-
             var responseMessage = "Response.";
-            var receiverMock = new Mock<IMessageReceiver>();
-            receiverMock.Setup(t => t.Dispatch(It.IsAny<string>())).Returns(responseMessage);
+            _receiverMock.Setup(t => t.Dispatch(It.IsAny<string>())).Returns(responseMessage);
 
-            var encoding = new UTF8Encoding();
-
-            var server = new NetServer(receiverMock.Object, encoding);
-            var client = new NetClient(translator, encoding);
+            var client = new NetClient(_translator, _encoding);
+            _server = new NetServer(_receiverMock.Object, _encoding);
             
-            server.Start();
+            _server.Start();
             var request = new TestTextMessage("Request.");
             var response = client.Send(new TestTextMessage("Request."));
-            server.Stop();
+            _server.Stop();
 
             Assert.IsNotNull(response);
             Assert.IsInstanceOf<TestTextMessage>(response);
             Assert.AreEqual(responseMessage, ((TestTextMessage)response).Content);
         }
+
+        [Test]
+        public void IntegrationServerClient_TwoClientsSendRequest_ResponsesReceived()
+        {
+            var requestMessageOne = "Request1.";
+            var requestMessageTwo = "Request2.";
+            var responseMessageOne = "Response1.";
+            var responseMessageTwo = "Response2.";
+
+            var receiverMock = new Mock<IMessageReceiver>();
+            _receiverMock.Setup(t => t.Dispatch(It.IsAny<string>())).Returns((string input) => input == requestMessageOne ? responseMessageOne : responseMessageTwo);
+
+            var clientOne = new NetClient(_translator, _encoding);
+            var clientTwo = new NetClient(_translator, _encoding);
+            _server = new NetServer(_receiverMock.Object, _encoding);
+
+            _server.Start();
+            var resposeOne = clientOne.Send(new TestTextMessage(requestMessageOne));
+            var responseTwo = clientTwo.Send(new TestTextMessage(requestMessageTwo));
+            _server.Stop();
+
+            Assert.IsNotNull(resposeOne);
+            Assert.IsNotNull(responseTwo);
+            Assert.IsInstanceOf<TestTextMessage>(resposeOne);
+            Assert.IsInstanceOf<TestTextMessage>(responseTwo);
+            Assert.AreEqual(responseMessageOne, ((TestTextMessage)resposeOne).Content);
+            Assert.AreEqual(responseMessageTwo, ((TestTextMessage)responseTwo).Content);
+        }
+
     }
 }

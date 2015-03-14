@@ -51,6 +51,7 @@
     <Compile Include="NetClient.cs" />
     <Compile Include="NetServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="NetworkStreamExt.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
