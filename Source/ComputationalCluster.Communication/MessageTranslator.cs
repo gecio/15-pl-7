@@ -6,15 +6,27 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using ComputationalCluster.NetModule;
+using ComputationalCluster.Communication.Messages;
 
 namespace ComputationalCluster.Communication
 {
     /// <summary>
     /// Klasa służąca do zamiany wiadomości w formacie XML na obiekty.
     /// </summary>
-    public class Deserializer
+    public class MessageTranslator : IMessageTranslator
     {
-        public IMessage DeserializeMessage(string data)
+        public IMessage CreateObject(string message)
+        {
+            return DeserializeMessage(message);
+        }
+
+        public string Stringify(IMessage message)
+        {
+            return SerializeMessage(message);
+        }
+
+        private IMessage DeserializeMessage(string data)
         {
             StringReader strReader = new StringReader(data);
             Type type = null;
@@ -67,5 +79,24 @@ namespace ComputationalCluster.Communication
                 return message;
             }
         }
+
+        private string SerializeMessage(IMessage message)
+        {
+            string result = null;
+            using(StringWriter sw = new Utf8StringWriter())
+            {
+                XmlSerializer serializer = new XmlSerializer(message.GetType());
+                serializer.Serialize(sw,message);
+                result = sw.ToString();
+            }
+            return result;
+        }
+
+
+        private sealed class Utf8StringWriter : StringWriter
+        {
+            public override Encoding Encoding { get { return Encoding.UTF8; } }
+        }
+
     }
 }

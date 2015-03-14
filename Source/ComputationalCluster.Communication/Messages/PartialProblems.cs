@@ -9,8 +9,9 @@
 //------------------------------------------------------------------------------
 
 using System.Xml.Serialization;
+using ComputationalCluster.NetModule;
 
-namespace ComputationalCluster.Communication
+namespace ComputationalCluster.Communication.Messages
 {
 
     // 
@@ -25,14 +26,33 @@ namespace ComputationalCluster.Communication
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.mini.pw.edu.pl/ucc/")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.mini.pw.edu.pl/ucc/", IsNullable = false)]
-    public partial class RegisterResponse : IMessage
+    public partial class SolvePartialProblems : IMessage
     {
+
+        private string problemTypeField;
 
         private ulong idField;
 
-        private uint timeoutField;
+        private byte[] commonDataField;
 
-        private RegisterResponseBackupCommunicationServers backupCommunicationServersField;
+        private ulong solvingTimeoutField;
+
+        private bool solvingTimeoutFieldSpecified;
+
+        private SolvePartialProblemsPartialProblem[] partialProblemsField;
+
+        /// <remarks/>
+        public string ProblemType
+        {
+            get
+            {
+                return this.problemTypeField;
+            }
+            set
+            {
+                this.problemTypeField = value;
+            }
+        }
 
         /// <remarks/>
         public ulong Id
@@ -48,111 +68,113 @@ namespace ComputationalCluster.Communication
         }
 
         /// <remarks/>
-        public uint Timeout
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
+        public byte[] CommonData
         {
             get
             {
-                return this.timeoutField;
+                return this.commonDataField;
             }
             set
             {
-                this.timeoutField = value;
+                this.commonDataField = value;
             }
         }
 
         /// <remarks/>
-        public RegisterResponseBackupCommunicationServers BackupCommunicationServers
+        public ulong SolvingTimeout
         {
             get
             {
-                return this.backupCommunicationServersField;
+                return this.solvingTimeoutField;
             }
             set
             {
-                this.backupCommunicationServersField = value;
-            }
-        }
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.mini.pw.edu.pl/ucc/")]
-    public partial class RegisterResponseBackupCommunicationServers
-    {
-
-        private RegisterResponseBackupCommunicationServersBackupCommunicationServer backupCommunicationServerField;
-
-        /// <remarks/>
-        public RegisterResponseBackupCommunicationServersBackupCommunicationServer BackupCommunicationServer
-        {
-            get
-            {
-                return this.backupCommunicationServerField;
-            }
-            set
-            {
-                this.backupCommunicationServerField = value;
-            }
-        }
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.mini.pw.edu.pl/ucc/")]
-    public partial class RegisterResponseBackupCommunicationServersBackupCommunicationServer
-    {
-
-        private string addressField;
-
-        private ushort portField;
-
-        private bool portFieldSpecified;
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "anyURI")]
-        public string address
-        {
-            get
-            {
-                return this.addressField;
-            }
-            set
-            {
-                this.addressField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public ushort port
-        {
-            get
-            {
-                return this.portField;
-            }
-            set
-            {
-                this.portField = value;
+                this.solvingTimeoutField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool portSpecified
+        public bool SolvingTimeoutSpecified
         {
             get
             {
-                return this.portFieldSpecified;
+                return this.solvingTimeoutFieldSpecified;
             }
             set
             {
-                this.portFieldSpecified = value;
+                this.solvingTimeoutFieldSpecified = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("PartialProblem", IsNullable = false)]
+        public SolvePartialProblemsPartialProblem[] PartialProblems
+        {
+            get
+            {
+                return this.partialProblemsField;
+            }
+            set
+            {
+                this.partialProblemsField = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.mini.pw.edu.pl/ucc/")]
+    public partial class SolvePartialProblemsPartialProblem
+    {
+
+        private ulong taskIdField;
+
+        private byte[] dataField;
+
+        private ulong nodeIDField;
+
+        /// <remarks/>
+        public ulong TaskId
+        {
+            get
+            {
+                return this.taskIdField;
+            }
+            set
+            {
+                this.taskIdField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
+        public byte[] Data
+        {
+            get
+            {
+                return this.dataField;
+            }
+            set
+            {
+                this.dataField = value;
+            }
+        }
+
+        /// <remarks/>
+        public ulong NodeID
+        {
+            get
+            {
+                return this.nodeIDField;
+            }
+            set
+            {
+                this.nodeIDField = value;
             }
         }
     }

@@ -9,8 +9,9 @@
 //------------------------------------------------------------------------------
 
 using System.Xml.Serialization;
+using ComputationalCluster.NetModule;
 
-namespace ComputationalCluster.Communication
+namespace ComputationalCluster.Communication.Messages
 {
 
     // 
@@ -25,33 +26,14 @@ namespace ComputationalCluster.Communication
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.mini.pw.edu.pl/ucc/")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.mini.pw.edu.pl/ucc/", IsNullable = false)]
-    public partial class SolvePartialProblems : IMessage
+    public partial class RegisterResponse : IMessage
     {
-
-        private string problemTypeField;
 
         private ulong idField;
 
-        private byte[] commonDataField;
+        private uint timeoutField;
 
-        private ulong solvingTimeoutField;
-
-        private bool solvingTimeoutFieldSpecified;
-
-        private SolvePartialProblemsPartialProblem[] partialProblemsField;
-
-        /// <remarks/>
-        public string ProblemType
-        {
-            get
-            {
-                return this.problemTypeField;
-            }
-            set
-            {
-                this.problemTypeField = value;
-            }
-        }
+        private RegisterResponseBackupCommunicationServers backupCommunicationServersField;
 
         /// <remarks/>
         public ulong Id
@@ -67,57 +49,28 @@ namespace ComputationalCluster.Communication
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
-        public byte[] CommonData
+        public uint Timeout
         {
             get
             {
-                return this.commonDataField;
+                return this.timeoutField;
             }
             set
             {
-                this.commonDataField = value;
+                this.timeoutField = value;
             }
         }
 
         /// <remarks/>
-        public ulong SolvingTimeout
+        public RegisterResponseBackupCommunicationServers BackupCommunicationServers
         {
             get
             {
-                return this.solvingTimeoutField;
+                return this.backupCommunicationServersField;
             }
             set
             {
-                this.solvingTimeoutField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool SolvingTimeoutSpecified
-        {
-            get
-            {
-                return this.solvingTimeoutFieldSpecified;
-            }
-            set
-            {
-                this.solvingTimeoutFieldSpecified = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute("PartialProblem", IsNullable = false)]
-        public SolvePartialProblemsPartialProblem[] PartialProblems
-        {
-            get
-            {
-                return this.partialProblemsField;
-            }
-            set
-            {
-                this.partialProblemsField = value;
+                this.backupCommunicationServersField = value;
             }
         }
     }
@@ -128,52 +81,79 @@ namespace ComputationalCluster.Communication
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.mini.pw.edu.pl/ucc/")]
-    public partial class SolvePartialProblemsPartialProblem
+    public partial class RegisterResponseBackupCommunicationServers
     {
 
-        private ulong taskIdField;
-
-        private byte[] dataField;
-
-        private ulong nodeIDField;
+        private RegisterResponseBackupCommunicationServersBackupCommunicationServer backupCommunicationServerField;
 
         /// <remarks/>
-        public ulong TaskId
+        public RegisterResponseBackupCommunicationServersBackupCommunicationServer BackupCommunicationServer
         {
             get
             {
-                return this.taskIdField;
+                return this.backupCommunicationServerField;
             }
             set
             {
-                this.taskIdField = value;
+                this.backupCommunicationServerField = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.mini.pw.edu.pl/ucc/")]
+    public partial class RegisterResponseBackupCommunicationServersBackupCommunicationServer
+    {
+
+        private string addressField;
+
+        private ushort portField;
+
+        private bool portFieldSpecified;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "anyURI")]
+        public string address
+        {
+            get
+            {
+                return this.addressField;
+            }
+            set
+            {
+                this.addressField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
-        public byte[] Data
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public ushort port
         {
             get
             {
-                return this.dataField;
+                return this.portField;
             }
             set
             {
-                this.dataField = value;
+                this.portField = value;
             }
         }
 
         /// <remarks/>
-        public ulong NodeID
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool portSpecified
         {
             get
             {
-                return this.nodeIDField;
+                return this.portFieldSpecified;
             }
             set
             {
-                this.nodeIDField = value;
+                this.portFieldSpecified = value;
             }
         }
     }

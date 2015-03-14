@@ -9,8 +9,9 @@
 //------------------------------------------------------------------------------
 
 using System.Xml.Serialization;
+using ComputationalCluster.NetModule;
 
-namespace ComputationalCluster.Communication
+namespace ComputationalCluster.Communication.Messages
 {
 
     // 
