@@ -20,6 +20,7 @@ namespace ComputationalCluster.NetModule
     /// </summary>
     public class NetServer : INetServer
     {
+        // todo przekazywane w parametrze
         private readonly int _port = 3000;
 
         private readonly IMessageReceiver _messageReceiver;
@@ -27,6 +28,10 @@ namespace ComputationalCluster.NetModule
 
         private TcpListener _tcpListener;
         private Thread _listeningThread;
+
+        private volatile bool _shoudStop;
+
+        private ManualResetEvent _tcpClientConnected = new ManualResetEvent(false); // thread signal
 
         public NetServer(IMessageReceiver messageReceiver, Encoding encoding)
         {
@@ -39,11 +44,15 @@ namespace ComputationalCluster.NetModule
             _tcpListener = new TcpListener(IPAddress.Any, _port);
             _listeningThread = new Thread(new ThreadStart(ListenForConnections));
 
+            _shoudStop = false;
             _listeningThread.Start();
         }
 
         public void Stop()
         {
+            _shoudStop = true;
+            _tcpClientConnected.Set(); // break waiting for connection
+            _listeningThread.Join();
             _tcpListener.Stop();
         }
 
@@ -51,20 +60,22 @@ namespace ComputationalCluster.NetModule
         {
             _tcpListener.Start();
             
-            while (true)
+            while (!_shoudStop)
             {
-                // todo: poczytać o BeginTcpAcceptClient i przerobić na rozwiązanie nieblokujące!
-                var client = _tcpListener.AcceptTcpClient();
-                var clientThread = new Thread(new ParameterizedThreadStart(HandleIncomingConnection));
-                clientThread.Start(client);
+                _tcpClientConnected.Reset();
+                _tcpListener.BeginAcceptTcpClient(new AsyncCallback(HandleIncomingConnection), _tcpListener);
+                _tcpClientConnected.WaitOne(); // wait for connection
             }
         }
 
-        private void HandleIncomingConnection(object tcpClientObject)
+        private void HandleIncomingConnection(IAsyncResult asyncResult)
         {
-            var tcpClient = (TcpClient)tcpClientObject;
-            var stream = tcpClient.GetStream();
+            var listener = (TcpListener)asyncResult.AsyncState;
+            var tcpClient = (TcpClient)listener.EndAcceptTcpClient(asyncResult);
 
+            _tcpClientConnected.Set(); // run waiting for next connection
+
+            var stream = tcpClient.GetStream();
             var requestBuffer = new byte[4096*4];
 
             var bytesRead = stream.Read(requestBuffer, 0, requestBuffer.Length);

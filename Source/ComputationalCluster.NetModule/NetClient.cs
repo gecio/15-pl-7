@@ -32,7 +32,7 @@ namespace ComputationalCluster.NetModule
 
             var client = new TcpClient();
             client.Connect(serverEndPoint);
-
+            //todo: buforowane wejście i wyjście
             var stream = client.GetStream();
 
             var request = _messageTranslator.Stringify(message);
@@ -42,7 +42,7 @@ namespace ComputationalCluster.NetModule
             byte[] encodedResponse = new byte[4096 * 4];
             int responseLength = stream.Read(encodedResponse, 0, encodedResponse.Length);
             var response = _encoding.GetString(encodedResponse, 0, responseLength);
-
+            //todo: serwer kończy połączenia?
             client.Close();
 
             var responseMessage = _messageTranslator.CreateObject(response);
