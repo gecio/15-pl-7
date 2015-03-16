@@ -26,18 +26,21 @@ namespace ComputationalCluster.NetModule
             return sendedBytes;
         }
 
-        public static byte[] ReadBuffered(this NetworkStream stream, int offset)
+        public static byte[] ReadBuffered(this NetworkStream stream, int offset )
         {
             List<byte> readData = new List<byte>();
             byte[] tempBuffer = new byte[BUFFER_SIZE];
             int actualPosition = offset;
+            int lastByte = 0;
             int length;
             do
             {
                 length = stream.Read(tempBuffer, 0, BUFFER_SIZE);
                 actualPosition += length;
                 readData.AddRange(tempBuffer.Take(length));
-            } while (stream.DataAvailable);
+                lastByte = readData[readData.Count - 1];
+            } while (stream.DataAvailable && lastByte!=23);
+            readData.RemoveAt(readData.Count - 1);
             return readData.ToArray();
         }
     }

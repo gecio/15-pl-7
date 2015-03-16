@@ -32,10 +32,9 @@ namespace ComputationalCluster.NetModule
 
             var client = new TcpClient();
             client.Connect(serverEndPoint);
-            //todo: buforowane wejście i wyjście
             var stream = client.GetStream();
             var request = _messageTranslator.Stringify(message);
-            byte[] encodedRequest = _encoding.GetBytes(request);
+            byte[] encodedRequest = _encoding.GetBytes(request + NetServer.ETB);
             stream.WriteBuffered(encodedRequest, 0, encodedRequest.Length);
 
             byte[] encodedResponse = stream.ReadBuffered(0);
