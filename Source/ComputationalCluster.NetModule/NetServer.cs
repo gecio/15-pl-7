@@ -21,6 +21,8 @@ namespace ComputationalCluster.NetModule
     /// </summary>
     public class NetServer : INetServer
     {
+        public static readonly char ETB = (char)23;
+
         private readonly IMessageReceiver _messageReceiver;
         private readonly Encoding _encoding;
         private readonly IConfigProvider _configProvider;
@@ -84,7 +86,7 @@ namespace ComputationalCluster.NetModule
 
                 var response = _messageReceiver.Dispatch(request);
 
-                byte[] responseBuffer = _encoding.GetBytes(response);
+                byte[] responseBuffer = _encoding.GetBytes(response + NetServer.ETB);
                 stream.WriteBuffered(responseBuffer, 0, responseBuffer.Length);
 
                 tcpClient.Close();
