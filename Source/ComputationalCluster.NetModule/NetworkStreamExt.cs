@@ -20,8 +20,7 @@ namespace ComputationalCluster.NetModule
                 int toWrite = size - actualPosition <= BUFFER_SIZE ? size - actualPosition : BUFFER_SIZE;
                 stream.Write(buffer, actualPosition, toWrite);
                 actualPosition += toWrite;
-                sendedBytes += toWrite;
-                
+                sendedBytes += toWrite; 
             }
             return sendedBytes;
         }

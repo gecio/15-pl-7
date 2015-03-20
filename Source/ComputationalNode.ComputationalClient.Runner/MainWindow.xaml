@@ -1,0 +1,18 @@
+﻿<Window x:Class="ComputationalNode.ComputationalClient.Runner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+     <Grid>
+         <Grid.ColumnDefinitions>
+             <ColumnDefinition Width="3*"/>
+             <ColumnDefinition Width="*"/>
+         </Grid.ColumnDefinitions>
+         
+         <TextBox Grid.Column="0" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Text="{Binding Data}"/>
+         <StackPanel Grid.Column="1" Margin="10px">
+            <Label Content="TaskType:"/>
+            <TextBox Margin="0px 0px 0px 5px" Text="{Binding ProblemType}"/>
+            <Button Content="Send" Margin="0px 5px 0px 5px" Command="{Binding SendCommand}"></Button>
+         </StackPanel>
+     </Grid>
+</Window>
