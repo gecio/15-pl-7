@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Autofac;
 using ComputationalCluster.CommunicationServer.Consumers;
 using ComputationalCluster.Communication;
+using ComputationalCluster.CommunicationServer.Database;
 using ComputationalCluster.NetModule;
 
 namespace ComputationalCluster.CommunicationServer
@@ -15,6 +16,7 @@ namespace ComputationalCluster.CommunicationServer
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<ConsumersModule>().As<Module>().AsSelf();
+           // builder.RegisterType<RepositoryModule>().As<Module>().AsSelf();
 
             builder.RegisterType<NetServer>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<NetClient>().AsImplementedInterfaces().AsSelf();

@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.Comput
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.ComputationalClient.Runner", "ComputationalNode.ComputationalClient.Runner\ComputationalCluster.ComputationalClient.Runner.csproj", "{0BB2428C-0850-4B62-94F3-2F067F64026D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.CommunicationServer.Tests", "ComputationalCluster.CommunicationServer.Tests\ComputationalCluster.CommunicationServer.Tests.csproj", "{6B344DF7-DA1D-48C0-A670-0BA235CD945D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +90,10 @@ Global
 		{0BB2428C-0850-4B62-94F3-2F067F64026D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BB2428C-0850-4B62-94F3-2F067F64026D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BB2428C-0850-4B62-94F3-2F067F64026D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B344DF7-DA1D-48C0-A670-0BA235CD945D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B344DF7-DA1D-48C0-A670-0BA235CD945D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B344DF7-DA1D-48C0-A670-0BA235CD945D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B344DF7-DA1D-48C0-A670-0BA235CD945D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

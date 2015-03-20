@@ -11,7 +11,8 @@ namespace ComputationalCluster.CommunicationServer.Database
     {
         public ServerDbContext() : base() // todo: set conection string name
         {
-
+           
+            System.Data.Entity.Database.SetInitializer<ServerDbContext>(new CreateDatabaseIfNotExists<ServerDbContext>());
         }
 
         public DbSet<Task> Tasks { get; set; }

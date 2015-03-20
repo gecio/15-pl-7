@@ -10,11 +10,13 @@ namespace ComputationalCluster.CommunicationServer.Database.Entities
     public class Task
     {
         [Key]
-        public int ProblemId { get; set; }
+        public int Id { get; set; }
+        [Required]
+        public int UniqueId { get; set; }
         [Required]
         public byte[] Data { get; set; }
         [Required]
         public string ProblemType { get; set; }
-        public int Timeout { get; set; }
+        public ulong Timeout { get; set; }
     }
 }

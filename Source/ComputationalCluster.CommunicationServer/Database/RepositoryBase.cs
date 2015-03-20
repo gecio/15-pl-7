@@ -10,12 +10,12 @@ namespace ComputationalCluster.CommunicationServer.Database
 {
     public class RepositoryBase<T> : IRepository<T> where T:class
     {
-        protected DbContext _dbContext;
+        public DbContext DbContext { get; private set; }
         protected DbSet<T> _dbSet;  
         public RepositoryBase(DbContext dbContext)
         {
-            _dbContext = dbContext;
-            _dbSet = _dbContext.Set<T>();
+            DbContext = dbContext;
+            _dbSet = DbContext.Set<T>();
         }
 
         public IQueryable<T> GetAll()
@@ -30,7 +30,7 @@ namespace ComputationalCluster.CommunicationServer.Database
 
         public void Add(T entity)
         {
-            DbEntityEntry dbEntityEntry = _dbContext.Entry(entity);
+            DbEntityEntry dbEntityEntry = DbContext.Entry(entity);
             if (dbEntityEntry.State != EntityState.Detached)
             {
                 dbEntityEntry.State = EntityState.Added;
@@ -43,7 +43,7 @@ namespace ComputationalCluster.CommunicationServer.Database
 
         public void Update(T entity)
         {
-            DbEntityEntry dbEntityEntry = _dbContext.Entry(entity);
+            DbEntityEntry dbEntityEntry = DbContext.Entry(entity);
             if (dbEntityEntry.State == EntityState.Detached)
             {
                 _dbSet.Attach(entity);
@@ -53,7 +53,7 @@ namespace ComputationalCluster.CommunicationServer.Database
 
         public void Delete(T entity)
         {
-            DbEntityEntry dbEntityEntry = _dbContext.Entry(entity);
+            DbEntityEntry dbEntityEntry = DbContext.Entry(entity);
             if (dbEntityEntry.State != EntityState.Deleted)
             {
                 dbEntityEntry.State = EntityState.Deleted;
