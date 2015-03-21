@@ -63,9 +63,9 @@
     <Compile Include="Database\IRepository.cs" />
     <Compile Include="Database\RepositoryModule.cs" />
     <Compile Include="Database\ServerDbContext.cs" />
-    <Compile Include="Database\Entities\Task.cs" />
+    <Compile Include="Database\Entities\Problem.cs" />
     <Compile Include="Database\RepositoryBase.cs" />
-    <Compile Include="Database\TasksRepository.cs" />
+    <Compile Include="Database\ProblemsRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

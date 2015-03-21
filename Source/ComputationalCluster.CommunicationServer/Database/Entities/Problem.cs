@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.CommunicationServer.Database.Entities
 {
-    public class Task
+    public class Problem
     {
         [Key]
         public int Id { get; set; }

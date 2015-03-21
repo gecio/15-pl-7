@@ -13,10 +13,10 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 {
     public class SolveRequestConsumer : IMessageConsumer<SolveRequest>
     {
-        private IRepository<Task> _repository;
-        public SolveRequestConsumer(/*IRepository<Task> repository = null*/)
+        private IRepository<Problem> _repository;
+        public SolveRequestConsumer(IRepository<Problem> repository)
         {
-            _repository = new TasksRepository(new ServerDbContext());
+            _repository = repository;
         }
 
 
@@ -43,7 +43,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         //todo: opakować w transakcje
         private int SaveData(SolveRequest solveRequest)
         {
-            var task = new Task
+            var task = new Problem
             {
                 Data = solveRequest.Data,
                 ProblemType = solveRequest.ProblemType,

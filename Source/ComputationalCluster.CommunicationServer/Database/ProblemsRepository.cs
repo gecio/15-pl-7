@@ -4,13 +4,13 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Task = ComputationalCluster.CommunicationServer.Database.Entities.Task;
+using ComputationalCluster.CommunicationServer.Database.Entities;
 
 namespace ComputationalCluster.CommunicationServer.Database
 {
-    public class TasksRepository : RepositoryBase<Task>
+    public class ProblemsRepository : RepositoryBase<Problem>
     {
-        public TasksRepository(DbContext dbContext)
+        public ProblemsRepository(DbContext dbContext)
             : base(dbContext)
         {
         }

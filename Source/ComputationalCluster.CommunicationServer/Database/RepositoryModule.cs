@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Autofac;
+using ComputationalCluster.CommunicationServer.Database.Entities;
 
 namespace ComputationalCluster.CommunicationServer.Database
 {
@@ -14,9 +14,7 @@ namespace ComputationalCluster.CommunicationServer.Database
         {
             builder.RegisterType<ServerDbContext>().As<DbContext>().AsSelf().InstancePerDependency();
 
-            builder.RegisterType<RepositoryBase<Task>>().AsSelf().InstancePerDependency();
-           // builder.RegisterType<TasksRepository>().As<RepositoryBase<Task>>().AsSelf().InstancePerDependency();
-           // builder.RegisterGeneric(typeof (RepositoryBase<>)).As(typeof (IRepository<>));
+            builder.RegisterType<ProblemsRepository>().As<RepositoryBase<Problem>>().As<IRepository<Problem>>().AsSelf();
         }
     }
 }

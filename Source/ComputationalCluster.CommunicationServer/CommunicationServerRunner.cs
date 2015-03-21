@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Autofac;
 using ComputationalCluster.CommunicationServer.Consumers;
+using ComputationalCluster.CommunicationServer.Database;
+using ComputationalCluster.CommunicationServer.Database.Entities;
 using ComputationalCluster.NetModule;
 
 namespace ComputationalCluster.CommunicationServer
