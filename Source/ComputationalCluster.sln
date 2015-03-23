@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.NetModule", "ComputationalCluster.NetModule\ComputationalCluster.NetModule.csproj", "{C646AEF9-72F4-4967-89D9-96D1A25A9A8A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.NetModule.Tests", "ComputationalCluster.NetModule.Tests\ComputationalCluster.NetModule.Tests.csproj", "{C9021D38-9BC9-40C0-8BC1-92BD28DDCEBE}"
@@ -35,6 +33,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.ComputationalClient.Runner", "ComputationalNode.ComputationalClient.Runner\ComputationalCluster.ComputationalClient.Runner.csproj", "{0BB2428C-0850-4B62-94F3-2F067F64026D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.CommunicationServer.Tests", "ComputationalCluster.CommunicationServer.Tests\ComputationalCluster.CommunicationServer.Tests.csproj", "{6B344DF7-DA1D-48C0-A670-0BA235CD945D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.Common", "ComputationalCluster.Common\ComputationalCluster.Common.csproj", "{A515B39F-4FFE-4302-88F9-4917C31CA6B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -94,6 +94,10 @@ Global
 		{6B344DF7-DA1D-48C0-A670-0BA235CD945D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B344DF7-DA1D-48C0-A670-0BA235CD945D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B344DF7-DA1D-48C0-A670-0BA235CD945D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A515B39F-4FFE-4302-88F9-4917C31CA6B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A515B39F-4FFE-4302-88F9-4917C31CA6B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A515B39F-4FFE-4302-88F9-4917C31CA6B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A515B39F-4FFE-4302-88F9-4917C31CA6B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

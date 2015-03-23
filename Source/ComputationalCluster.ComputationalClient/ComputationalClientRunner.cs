@@ -12,6 +12,8 @@ namespace ComputationalCluster.ComputationalClient
     public class ComputationalClientRunner
     {
         private INetClient _client;
+        private Encoding _encoding;
+
         public ComputationalClientRunner()
         {
             var builder = new ContainerBuilder();
@@ -19,6 +21,7 @@ namespace ComputationalCluster.ComputationalClient
             var container = builder.Build();
 
             _client = container.Resolve<INetClient>();
+            _encoding = container.Resolve<Encoding>();
         }
 
         //todo: to refactor
@@ -32,7 +35,7 @@ namespace ComputationalCluster.ComputationalClient
         public void SendSolveRequest(string data, string problemType, ulong? duration = null)
         {
             var solverRequest = new SolveRequest();
-            solverRequest.Data = Convert.FromBase64String(data);
+            solverRequest.Data = Convert.ToBase64String(_encoding.GetBytes(data));
             solverRequest.ProblemType = problemType;
             if (duration != null)
             {

@@ -33,7 +33,7 @@ namespace ComputationalCluster.Communication.Messages
 
         private ulong idField;
 
-        private byte[] commonDataField;
+        private string commonDataField;
 
         private SolutionsSolution[] solutions1Field;
 
@@ -65,7 +65,7 @@ namespace ComputationalCluster.Communication.Messages
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
-        public byte[] CommonData
+        public string CommonData
         {
             get
             {
@@ -112,7 +112,7 @@ namespace ComputationalCluster.Communication.Messages
 
         private ulong computationsTimeField;
 
-        private byte[] dataField;
+        private string dataField;
 
         /// <remarks/>
         public ulong TaskId
@@ -182,7 +182,7 @@ namespace ComputationalCluster.Communication.Messages
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
-        public byte[] Data
+        public string Data
         {
             get
             {

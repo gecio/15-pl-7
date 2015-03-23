@@ -3,6 +3,7 @@ using System.Text;
 using Autofac;
 using ComputationalCluster.Communication;
 using ComputationalCluster.NetModule;
+using ComputationalCluster.Common;
 
 namespace ComputationalCluster.ComputationalClient
 {
@@ -15,6 +16,8 @@ namespace ComputationalCluster.ComputationalClient
             builder.RegisterType<UTF8Encoding>().As<Encoding>();
             builder.RegisterType<MessageReceiver>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<MessageTranslator>().AsImplementedInterfaces().AsSelf();
+
+            builder.RegisterType<ConfigProvider>().As<IConfigProvider>();
         }
     }
 }

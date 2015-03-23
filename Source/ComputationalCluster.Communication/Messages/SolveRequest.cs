@@ -35,7 +35,7 @@ namespace ComputationalCluster.Communication.Messages
 
         private bool solvingTimeoutFieldSpecified;
 
-        private byte[] dataField;
+        private string dataField;
 
         private ulong idField;
 
@@ -83,7 +83,7 @@ namespace ComputationalCluster.Communication.Messages
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
-        public byte[] Data
+        public string Data
         {
             get
             {

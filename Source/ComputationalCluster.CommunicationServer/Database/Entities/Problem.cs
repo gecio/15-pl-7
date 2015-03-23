@@ -14,7 +14,7 @@ namespace ComputationalCluster.CommunicationServer.Database.Entities
         [Required]
         public int UniqueId { get; set; }
         [Required]
-        public byte[] Data { get; set; }
+        public string Data { get; set; }
         [Required]
         public string ProblemType { get; set; }
         public ulong Timeout { get; set; }

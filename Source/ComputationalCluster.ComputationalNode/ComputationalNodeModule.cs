@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using ComputationalCluster.Common;
 using ComputationalCluster.Communication;
 using ComputationalCluster.NetModule;
 using System;
@@ -19,6 +20,8 @@ namespace ComputationalCluster.ComputationalNode
             builder.RegisterType<UTF8Encoding>().As<Encoding>();
             builder.RegisterType<MessageReceiver>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<MessageTranslator>().AsImplementedInterfaces().AsSelf();
+
+            builder.RegisterType<ConfigProvider>().As<IConfigProvider>();
         }
     }
 }

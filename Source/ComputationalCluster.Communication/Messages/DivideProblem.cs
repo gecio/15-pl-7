@@ -33,7 +33,7 @@ namespace ComputationalCluster.Communication.Messages
 
         private ulong idField;
 
-        private byte[] dataField;
+        private string dataField;
 
         private ulong computationalNodesField;
 
@@ -67,7 +67,7 @@ namespace ComputationalCluster.Communication.Messages
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
-        public byte[] Data
+        public string Data
         {
             get
             {

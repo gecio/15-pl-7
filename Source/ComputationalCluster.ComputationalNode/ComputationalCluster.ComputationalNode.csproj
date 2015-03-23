@@ -49,6 +49,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ComputationalCluster.Common\ComputationalCluster.Common.csproj">
+      <Project>{a515b39f-4ffe-4302-88f9-4917c31ca6b6}</Project>
+      <Name>ComputationalCluster.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ComputationalCluster.Communication\ComputationalCluster.Communication.csproj">
       <Project>{c7df375d-995b-4b80-b5c6-4c9d67ca5ab5}</Project>
       <Name>ComputationalCluster.Communication</Name>
