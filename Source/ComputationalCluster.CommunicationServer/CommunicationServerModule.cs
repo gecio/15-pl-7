@@ -7,6 +7,8 @@ using Autofac;
 using ComputationalCluster.CommunicationServer.Consumers;
 using ComputationalCluster.Communication;
 using ComputationalCluster.NetModule;
+using ComputationalCluster.CommunicationServer.Repositories;
+using ComputationalCluster.Communication.Messages;
 
 namespace ComputationalCluster.CommunicationServer
 {
@@ -14,10 +16,16 @@ namespace ComputationalCluster.CommunicationServer
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ConsumersModule>().As<Module>().AsSelf();
+            builder.RegisterType<CommunicationServerModule>().As<Module>().AsSelf();
+
+            builder.RegisterType<RegisterConsumer>().As<IMessageConsumer<Register>>();
+            builder.RegisterType<StatusConsumer>().As<IMessageConsumer<Status>>();
 
             builder.RegisterType<NetServer>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<NetClient>().AsImplementedInterfaces().AsSelf();
+
+            builder.RegisterType<ComponentsInMemoryRepository>().As<IComponentsRepository>()
+                .SingleInstance();
 
             builder.RegisterType<UTF8Encoding>().As<Encoding>();
             builder.RegisterType<MessageReceiver>().AsImplementedInterfaces().AsSelf();

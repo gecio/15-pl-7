@@ -51,8 +51,12 @@
     <Compile Include="CommunicationServerRunner.cs" />
     <Compile Include="CommunicationServerModule.cs" />
     <Compile Include="Consumers\ConsumersModule.cs" />
+    <Compile Include="Consumers\RegisterConsumer.cs" />
     <Compile Include="Consumers\StatusConsumer.cs" />
+    <Compile Include="Models\Component.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ComponentsInMemoryRepository.cs" />
+    <Compile Include="Repositories\IComponentsRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ComputationalCluster.Communication\ComputationalCluster.Communication.csproj">

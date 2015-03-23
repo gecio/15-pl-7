@@ -5,13 +5,26 @@ using System.Text;
 using System.Threading.Tasks;
 using ComputationalCluster.NetModule;
 using ComputationalCluster.Communication.Messages;
+using ComputationalCluster.CommunicationServer.Repositories;
 
 namespace ComputationalCluster.CommunicationServer.Consumers
 {
     public class StatusConsumer : IMessageConsumer<Status>
     {
-        public StatusConsumer()
+        private readonly IComponentsRepository _componentsRepository;
+
+        public StatusConsumer(IComponentsRepository componentsRepository)
         {
+            _componentsRepository = componentsRepository;
+        }
+
+        public IMessage Consume(Status message)
+        {
+            System.Console.WriteLine("Status {0}", message.Id);
+
+            var noOperationResponse = new NoOperation();
+            _componentsRepository.UpdateLastStatusTimestamp(message.Id);
+            return noOperationResponse;
         }
 
         public IMessage Consume(IMessage message)
@@ -23,12 +36,6 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             }
 
             return Consume(status);
-        }
-
-        public IMessage Consume(Status message)
-        {
-            var noOperationResponse = new NoOperation();
-            return noOperationResponse;
         }
     }
 }

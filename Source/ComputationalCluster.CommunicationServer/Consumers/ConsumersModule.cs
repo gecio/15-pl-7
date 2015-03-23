@@ -13,6 +13,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<RegisterConsumer>().As<IMessageConsumer<Register>>();
             builder.RegisterType<StatusConsumer>().As<IMessageConsumer<Status>>();
         }
     }

@@ -47,6 +47,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ComputationalCluster.ComputationalNode\ComputationalCluster.ComputationalNode.csproj">
+      <Project>{3df29974-8461-4d04-87f6-ac72b6190fe0}</Project>
+      <Name>ComputationalCluster.ComputationalNode</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
