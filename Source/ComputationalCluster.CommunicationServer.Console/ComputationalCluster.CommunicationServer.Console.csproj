@@ -47,6 +47,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ComputationalCluster.CommunicationServer\ComputationalCluster.CommunicationServer.csproj">
+      <Project>{f45d4259-db28-4404-8027-57273a0455fb}</Project>
+      <Name>ComputationalCluster.CommunicationServer</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
