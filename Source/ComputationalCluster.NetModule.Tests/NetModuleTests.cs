@@ -7,6 +7,8 @@ using NUnit.Framework;
 using ComputationalCluster.NetModule;
 using ComputationalCluster.NetModule.Tests.Fakes;
 using Moq;
+using ComputationalCluster.Common;
+using System.Net;
 
 namespace ComputationalCluster.NetModule.Tests
 {
@@ -17,6 +19,7 @@ namespace ComputationalCluster.NetModule.Tests
         private TestTextTranslator _translator;
         private Mock<IMessageReceiver> _receiverMock;
         private UTF8Encoding _encoding;
+        private Mock<IConfigProvider> _configMock;
 
         [SetUp]
         public void SetUp()
@@ -24,6 +27,9 @@ namespace ComputationalCluster.NetModule.Tests
             _translator = new TestTextTranslator();
             _receiverMock = new Mock<IMessageReceiver>();
             _encoding = new UTF8Encoding();
+            _configMock = new Mock<IConfigProvider>();
+            _configMock.Setup(t => t.IP).Returns(IPAddress.Parse("127.0.0.1"));
+            _configMock.Setup(t => t.Port).Returns(3000);
         }
 
         [Test]
@@ -45,8 +51,8 @@ namespace ComputationalCluster.NetModule.Tests
                 return msg;
             });
 
-            var client = new NetClient(_translator, _encoding);
-            _server = new NetServer(_receiverMock.Object, _encoding);
+            var client = new NetClient(_translator, _encoding, _configMock.Object);
+            _server = new NetServer(_receiverMock.Object, _encoding, _configMock.Object);
             
             _server.Start();
             var response = client.Send(new TestTextMessage(message));

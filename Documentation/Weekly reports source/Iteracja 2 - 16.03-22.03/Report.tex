@@ -1,0 +1,42 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage[polish]{babel}
+
+\title{Raport tygodniowy - Iteracja 2}
+\date{16 marca - 22 marca}
+\author{Grupa 7}
+
+\begin{document}
+\maketitle
+
+\section{Zadania wykonane}
+\subsection{Szkielet \texttt{Communication Server}a. Wstępna obsługa wiadomości \texttt{Register} oraz \texttt{Status}}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Kamil Sienkiewicz
+    \item[Czas poświęciony zadaniu] \hfill \\ 5 godziny
+    \item[Krótki opis] \hfill \\ W ramach zadania został zbudowany framework dla \texttt{Communication Server}a, został skonfigurowany kontener do Dependency Injection oraz podłączono dwóch podstawowych konsumentów wiadomości: \texttt{Register} i \texttt{Status}, serwer prowadzi i aktualizuje listę obecnie podłączonych elementów do klastra.
+\end{description}
+
+\subsection{Szkielet \texttt{Client}a }
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Marcin Wardziński
+    \item[Czas poświęciony zadaniu] \hfill \\ 2 godziny
+    \item[Krótki opis] \hfill \\ Zbudowanie szkieletu \texttt{Computational Client}a. Rozpoznawanie wejścia z linii poleceń.
+\end{description}
+
+\subsection{Szkielet bazy danych}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Marcin Wardziński
+    \item[Czas poświęciony zadaniu] \hfill \\ 2 godziny
+    \item[Krótki opis] \hfill \\ Deserializacja dostarczonych danych w formie ciągu tekstu w formacie \texttt{XML} do wcześniej wygenerowanych klas. Podpięcie do mechanizmu wykorzystywanego przez moduł \texttt{Net}.
+\end{description}
+
+\subsection{Obsługa \texttt{SolveRequest}}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Marcin Wardziński
+    \item[Czas poświęciony zadaniu] \hfill \\ 2 godzin
+    \item[Krótki opis] \hfill \\ Podstawowa obsługa \texttt{SolveRequest}, próba integracji z bazą danych.
+\end{description}
+   
+\end{document}

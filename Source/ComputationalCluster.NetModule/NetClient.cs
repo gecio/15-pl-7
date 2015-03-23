@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ComputationalCluster.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,27 +16,26 @@ namespace ComputationalCluster.NetModule
 
     public class NetClient : INetClient
     {
-        private readonly int _port = 3000; // todo: refactor
-
         private readonly IMessageTranslator _messageTranslator;
         private readonly Encoding _encoding;
+        private readonly IConfigProvider _configProvider;
 
-        public NetClient(IMessageTranslator translator, Encoding encoding)
+        public NetClient(IMessageTranslator translator, Encoding encoding, IConfigProvider configProvider)
         {
             _messageTranslator = translator;
             _encoding          = encoding;
+            _configProvider = configProvider;
         }
 
         public IMessage Send(IMessage message)
         {
-            IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), _port);
+            IPEndPoint serverEndPoint = new IPEndPoint(_configProvider.IP, _configProvider.Port);
 
             var client = new TcpClient();
             client.Connect(serverEndPoint);
-            //todo: buforowane wejście i wyjście
             var stream = client.GetStream();
             var request = _messageTranslator.Stringify(message);
-            byte[] encodedRequest = _encoding.GetBytes(request);
+            byte[] encodedRequest = _encoding.GetBytes(request + NetServer.ETB);
             stream.WriteBuffered(encodedRequest, 0, encodedRequest.Length);
 
             byte[] encodedResponse = stream.ReadBuffered(0);

@@ -78,6 +78,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ComputationalCluster.Common\ComputationalCluster.Common.csproj">
+      <Project>{a515b39f-4ffe-4302-88f9-4917c31ca6b6}</Project>
+      <Name>ComputationalCluster.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ComputationalCluster.NetModule\ComputationalCluster.NetModule.csproj">
       <Project>{c646aef9-72f4-4967-89d9-96d1a25a9a8a}</Project>
       <Name>ComputationalCluster.NetModule</Name>

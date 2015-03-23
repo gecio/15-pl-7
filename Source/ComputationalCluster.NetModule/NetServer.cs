@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using ComputationalCluster.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +21,11 @@ namespace ComputationalCluster.NetModule
     /// </summary>
     public class NetServer : INetServer
     {
-        // todo przekazywane w parametrze
-        private readonly int _port = 3000;
+        public static readonly char ETB = (char)23;
 
         private readonly IMessageReceiver _messageReceiver;
         private readonly Encoding _encoding;
+        private readonly IConfigProvider _configProvider;
 
         private TcpListener _tcpListener;
         private Thread _listeningThread;
@@ -33,15 +34,16 @@ namespace ComputationalCluster.NetModule
 
         private ManualResetEvent _tcpClientConnected = new ManualResetEvent(false); // thread signal
 
-        public NetServer(IMessageReceiver messageReceiver, Encoding encoding)
+        public NetServer(IMessageReceiver messageReceiver, Encoding encoding, IConfigProvider configProvider)
         {
             _messageReceiver = messageReceiver;
             _encoding        = encoding;
+            _configProvider = configProvider;
         }
 
         public void Start()
         {
-            _tcpListener = new TcpListener(IPAddress.Any, _port);
+            _tcpListener = new TcpListener(IPAddress.Any, _configProvider.Port);
             _listeningThread = new Thread(new ThreadStart(ListenForConnections));
 
             _shoudStop = false;
@@ -84,7 +86,7 @@ namespace ComputationalCluster.NetModule
 
                 var response = _messageReceiver.Dispatch(request);
 
-                byte[] responseBuffer = _encoding.GetBytes(response);
+                byte[] responseBuffer = _encoding.GetBytes(response + NetServer.ETB);
                 stream.WriteBuffered(responseBuffer, 0, responseBuffer.Length);
 
                 tcpClient.Close();
