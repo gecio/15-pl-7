@@ -12,7 +12,8 @@ namespace ComputationalCluster.CommunicationServer
         private readonly IComponentsRepository _components;
         private readonly ILog _log;
 
-        public CommunicationServerService(INetServer server, IComponentsRepository components, ILog log)
+        public CommunicationServerService(INetServer server, IComponentsRepository components, ILog log,
+            ITaskSolversRepository repository)
         {
             _server     = server;
             _components = components;

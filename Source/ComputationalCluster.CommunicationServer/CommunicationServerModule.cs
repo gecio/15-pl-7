@@ -29,6 +29,8 @@ namespace ComputationalCluster.CommunicationServer
             builder.RegisterType<ComponentsInMemoryRepository>().As<IComponentsRepository>().SingleInstance();
             builder.RegisterType<ProblemDefinitionsInMemoryRepository>().As<IProblemDefinitionsRepository>().SingleInstance();
 
+            builder.RegisterType<TaskSolversRepository>().As<ITaskSolversRepository>().SingleInstance();
+
             builder.RegisterType<MessageReceiver>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<MessageTranslator>().AsImplementedInterfaces().AsSelf();
         }

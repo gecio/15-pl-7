@@ -9,6 +9,8 @@ using ComputationalCluster.NetModule.Tests.Fakes;
 using Moq;
 using ComputationalCluster.Common;
 using System.Net;
+using Autofac;
+using log4net;
 
 namespace ComputationalCluster.NetModule.Tests
 {
@@ -20,6 +22,7 @@ namespace ComputationalCluster.NetModule.Tests
         private Mock<IMessageReceiver> _receiverMock;
         private UTF8Encoding _encoding;
         private Mock<IConfigProvider> _configMock;
+        private Mock<ILog> _logMock;
 
         [SetUp]
         public void SetUp()
@@ -27,9 +30,12 @@ namespace ComputationalCluster.NetModule.Tests
             _translator = new TestTextTranslator();
             _receiverMock = new Mock<IMessageReceiver>();
             _encoding = new UTF8Encoding();
+
             _configMock = new Mock<IConfigProvider>();
             _configMock.Setup(t => t.IP).Returns(IPAddress.Parse("127.0.0.1"));
             _configMock.Setup(t => t.Port).Returns(3000);
+
+            _logMock = new Mock<ILog>();
         }
 
         [Test]
@@ -52,7 +58,7 @@ namespace ComputationalCluster.NetModule.Tests
             });
 
             var client = new NetClient(_translator, _encoding, _configMock.Object);
-            _server = new NetServer(_receiverMock.Object, _encoding, _configMock.Object);
+            _server = new NetServer(_receiverMock.Object, _encoding, _configMock.Object, _logMock.Object);
             
             _server.Start();
             var response = client.Send(new TestTextMessage(message));

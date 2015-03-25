@@ -53,6 +53,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UCCTaskSolver">
+      <HintPath>..\UCCTaskSolver\UCCTaskSolver.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommunicationServerService.cs" />
@@ -71,6 +74,7 @@
     <Compile Include="Repositories\ComponentsInMemoryRepository.cs" />
     <Compile Include="Repositories\IComponentsRepository.cs" />
     <Compile Include="Repositories\IProblemDefinitionsRepository.cs" />
+    <Compile Include="Repositories\TaskSolversRepository.cs" />
     <Compile Include="Repositories\ProblemDefinitionsInMemoryRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +93,10 @@
     <ProjectReference Include="..\ComputationalCluster.NetModule\ComputationalCluster.NetModule.csproj">
       <Project>{c646aef9-72f4-4967-89d9-96d1a25a9a8a}</Project>
       <Name>ComputationalCluster.NetModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ComputationalCluster.PluginManager\ComputationalCluster.PluginManager.csproj">
+      <Project>{af165ac2-8a7c-4a6a-9586-c0acc20ddcaf}</Project>
+      <Name>ComputationalCluster.PluginManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

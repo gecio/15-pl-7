@@ -2,11 +2,13 @@
 using ComputationalCluster.Common;
 using ComputationalCluster.Dependencies;
 using ComputationalCluster.NetModule;
+using ComputationalCluster.PluginManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UCCTaskSolver;
 
 namespace ComputationalCluster.Dependencies
 {
@@ -21,6 +23,8 @@ namespace ComputationalCluster.Dependencies
 
             builder.RegisterType<ConfigProvider>().As<IConfigProvider>().SingleInstance();
             builder.RegisterType<TimeProviderUtcNow>().As<ITimeProvider>();
+
+            builder.RegisterType<PluginManager<TaskSolver>>().As<IPluginManager<TaskSolver>>();
 
             builder.RegisterType<UTF8Encoding>().As<Encoding>();
         }
