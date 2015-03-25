@@ -1,5 +1,6 @@
 ﻿using ComputationalCluster.Common;
 using ComputationalCluster.CommunicationServer.Models;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,15 @@ namespace ComputationalCluster.CommunicationServer.Repositories
     public class ComponentsInMemoryRepository : IComponentsRepository
     {
         private readonly ITimeProvider _timeProvider;
+        private readonly ILog _log;
 
         private ulong _nextValidGuid = 1;
         private Dictionary<ulong, Component> _componentDictionary;
 
-        public ComponentsInMemoryRepository(ITimeProvider timeProvider)
+        public ComponentsInMemoryRepository(ITimeProvider timeProvider, ILog log)
         {
             _timeProvider = timeProvider;
+            _log          = log;
 
             _componentDictionary = new Dictionary<ulong, Component>();
         }
@@ -50,9 +53,14 @@ namespace ComputationalCluster.CommunicationServer.Repositories
             var timeout = new TimeSpan(0, 0, 30); // TODO: config?
             var minimalTime = _timeProvider.Now.Subtract(timeout);
 
-            _componentDictionary = _componentDictionary
-                .Where(t => t.Value.LastStatusTimestamp >= minimalTime)
-                .ToDictionary(t => t.Key, t => t.Value);
+            var timedOutComponents = _componentDictionary
+                .Where(t => t.Value.LastStatusTimestamp < minimalTime).ToList();
+
+            foreach (var component in timedOutComponents)
+            {
+                _log.InfoFormat("Component timed out. (Id={0})", component.Key);
+                _componentDictionary.Remove(component.Key);
+            }
         }
     }
 }

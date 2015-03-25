@@ -37,7 +37,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             var response = new RegisterResponse()
             {
                 Id = guid,
-                Timeout = 30, // todo setup
+                Timeout = 30, // todo: config
             };
 
             return response;

@@ -15,7 +15,6 @@ namespace ComputationalCluster.CommunicationServer
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<CommunicationServerModule>().As<Module>().AsSelf();
             builder.RegisterType<CommunicationServerService>().AsSelf();
 
             builder.RegisterModule<CommonModule>();
