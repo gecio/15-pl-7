@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
+using log4net;
 
 namespace ComputationalCluster.NetModule
 {
@@ -27,11 +28,14 @@ namespace ComputationalCluster.NetModule
     public class MessageReceiver : IMessageReceiver
     {
         private readonly IMessageTranslator _messageTranslator;
-        private IContainer _messageConsumersResolver;
+        private readonly IContainer _messageConsumersResolver;
+        private readonly ILog _log;
 
-        public MessageReceiver(IMessageTranslator messageTranslator, Module messageConsumersModule)
+        public MessageReceiver(IMessageTranslator messageTranslator, Module messageConsumersModule,
+            ILog log)
         {
             _messageTranslator = messageTranslator;
+            _log = log;
 
             var builder = new ContainerBuilder();
             builder.RegisterModule(messageConsumersModule);
@@ -50,6 +54,10 @@ namespace ComputationalCluster.NetModule
             {
                 var consumer = (IMessageConsumer)scope.Resolve(consumerType);
                 var response = consumer.Consume(messageObject);
+
+                _log.InfoFormat("Response received. Type={0} Contents=[{1}]", 
+                    response.GetType().Name, response.ToString());
+
                 var responseString = _messageTranslator.Stringify(response);
 
                 return responseString;

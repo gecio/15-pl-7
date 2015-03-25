@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.NetModule", "ComputationalCluster.NetModule\ComputationalCluster.NetModule.csproj", "{C646AEF9-72F4-4967-89D9-96D1A25A9A8A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.NetModule.Tests", "ComputationalCluster.NetModule.Tests\ComputationalCluster.NetModule.Tests.csproj", "{C9021D38-9BC9-40C0-8BC1-92BD28DDCEBE}"
@@ -20,8 +22,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.TaskMa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.ComputationalNode", "ComputationalCluster.ComputationalNode\ComputationalCluster.ComputationalNode.csproj", "{3DF29974-8461-4D04-87F6-AC72B6190FE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.CommunicationServer.Console", "ComputationalCluster.CommunicationServer.Console\ComputationalCluster.CommunicationServer.Console.csproj", "{83826173-0265-4A2D-8466-41640CC551A3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.ComputationalNode.Console", "ComputationalCluster.ComputationalNode.Console\ComputationalCluster.ComputationalNode.Console.csproj", "{FFAD7D50-DC78-4942-B39B-BEE606562FEC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.TaskManager.Console", "ComputationalCluster.TaskManager.Console\ComputationalCluster.TaskManager.Console.csproj", "{ADFD85CB-FEBB-4FFE-8416-E42CFAED1C0C}"
@@ -35,6 +35,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.CommunicationServer.Tests", "ComputationalCluster.CommunicationServer.Tests\ComputationalCluster.CommunicationServer.Tests.csproj", "{6B344DF7-DA1D-48C0-A670-0BA235CD945D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.Common", "ComputationalCluster.Common\ComputationalCluster.Common.csproj", "{A515B39F-4FFE-4302-88F9-4917C31CA6B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.Dependencies", "ComputationalCluster.Dependencies\ComputationalCluster.Dependencies.csproj", "{4DBFFAC5-16E6-452C-9D66-AEC9EDBC37CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.CommunicationServer.Runner", "ComputationalCluster.CommunicationServer.Runner\ComputationalCluster.CommunicationServer.Runner.csproj", "{A76386AC-9090-4DF0-94DC-244DDB4622CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,10 +70,6 @@ Global
 		{3DF29974-8461-4D04-87F6-AC72B6190FE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DF29974-8461-4D04-87F6-AC72B6190FE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DF29974-8461-4D04-87F6-AC72B6190FE0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{83826173-0265-4A2D-8466-41640CC551A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{83826173-0265-4A2D-8466-41640CC551A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{83826173-0265-4A2D-8466-41640CC551A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{83826173-0265-4A2D-8466-41640CC551A3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FFAD7D50-DC78-4942-B39B-BEE606562FEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FFAD7D50-DC78-4942-B39B-BEE606562FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFAD7D50-DC78-4942-B39B-BEE606562FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -98,6 +98,14 @@ Global
 		{A515B39F-4FFE-4302-88F9-4917C31CA6B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A515B39F-4FFE-4302-88F9-4917C31CA6B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A515B39F-4FFE-4302-88F9-4917C31CA6B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DBFFAC5-16E6-452C-9D66-AEC9EDBC37CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DBFFAC5-16E6-452C-9D66-AEC9EDBC37CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DBFFAC5-16E6-452C-9D66-AEC9EDBC37CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DBFFAC5-16E6-452C-9D66-AEC9EDBC37CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A76386AC-9090-4DF0-94DC-244DDB4622CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A76386AC-9090-4DF0-94DC-244DDB4622CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A76386AC-9090-4DF0-94DC-244DDB4622CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A76386AC-9090-4DF0-94DC-244DDB4622CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ComputationalCluster.CommunicationServer.Console")]
+[assembly: AssemblyTitle("ComputationalCluster.CommunicationServer.Runner")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ComputationalCluster.CommunicationServer.Console")]
+[assembly: AssemblyProduct("ComputationalCluster.CommunicationServer.Runner")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("4c6424ed-7e15-4dc2-8371-5b2620630e91")]
+[assembly: Guid("5ff13f54-6a58-42e3-99e2-8bf028f564e5")]
 
 // Version information for an assembly consists of the following four values:
 //
