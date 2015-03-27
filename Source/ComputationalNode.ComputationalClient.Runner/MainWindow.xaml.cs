@@ -23,33 +23,9 @@ namespace ComputationalNode.ComputationalClient.Runner
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ICommand _sendCommand;
-        private ComputationalClientRunner _computationalClient;
-        public String Data { get; set; }
-        public String ProblemType { get; set; }
-
-        public ICommand SendCommand
-        {
-            get
-            {
-                if (_sendCommand == null)
-                {
-                    _sendCommand =  new RelayCommand(Send);
-                }
-                return _sendCommand;
-            }
-        }
-
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = this;
-            _computationalClient = new ComputationalClientRunner();
-        }
-
-        private void Send()
-        {
-            _computationalClient.SendSolveRequest(Data,ProblemType);
         }
     }
 }

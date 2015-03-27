@@ -26,13 +26,14 @@ namespace ComputationalCluster.ComputationalClient
 
         //todo: to refactor
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data">argumenty wejściwe dla Task Solvera jako string</param>
-        /// <param name="problemType">Nazwa typu problemu (z Task Solvera)</param>
-        /// <param name="duration">timeout dla rozwiązywania problemu</param>
-        public void SendSolveRequest(string data, string problemType, ulong? duration = null)
+       /// <summary>
+       /// Metoda opakowuje proces przygotowania i wysłania danych do Serwera
+       /// </summary>
+       /// <param name="data">dane wejściowe</param>
+       /// <param name="problemType">typ problemu z TaskSolvera</param>
+       /// <param name="duration">maksymalny czas trawania obliczeń</param>
+       /// <returns>identyfikator zadania przypisany przez serwer</returns>
+        public ulong SendSolveRequest(string data, string problemType, ulong? duration = null)
         {
             var solverRequest = new SolveRequest();
             solverRequest.Data = Convert.ToBase64String(_encoding.GetBytes(data));
@@ -42,7 +43,8 @@ namespace ComputationalCluster.ComputationalClient
                 solverRequest.SolvingTimeout = duration.Value;
                 solverRequest.SolvingTimeoutSpecified = true;
             }
-            _client.Send(solverRequest);
+            SolveRequestResponse response = _client.Send(solverRequest) as SolveRequestResponse;
+            return response.Id;
         }
     }
 }
