@@ -22,6 +22,7 @@ namespace ComputationalCluster.CommunicationServer
             builder.RegisterType<RegisterConsumer>().As<IMessageConsumer<Register>>();
             builder.RegisterType<StatusConsumer>().As<IMessageConsumer<Status>>();
             builder.RegisterType<SolveRequestConsumer>().As<IMessageConsumer<SolveRequest>>();
+            builder.RegisterType<SolutionsConsumer>().As<IMessageConsumer<Solutions>>();
 
             builder.RegisterType<ServerDbContext>().As<DbContext>().AsSelf().InstancePerDependency();
             builder.RegisterType<ProblemsRepository>().As<RepositoryBase<Problem>>().As<IRepository<Problem>>().AsSelf();

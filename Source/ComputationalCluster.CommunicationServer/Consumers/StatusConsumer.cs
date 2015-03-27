@@ -2,6 +2,8 @@
 using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.NetModule;
 using System;
+using System.IO;
+using System.Text;
 
 namespace ComputationalCluster.CommunicationServer.Consumers
 {

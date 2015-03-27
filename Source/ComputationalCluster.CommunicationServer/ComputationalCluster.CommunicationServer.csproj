@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="CommunicationServerService.cs" />
     <Compile Include="CommunicationServerModule.cs" />
+    <Compile Include="Consumers\SolutionsConsumer.cs" />
     <Compile Include="Consumers\SolveRequestConsumer.cs" />
     <Compile Include="Consumers\RegisterConsumer.cs" />
     <Compile Include="Consumers\StatusConsumer.cs" />

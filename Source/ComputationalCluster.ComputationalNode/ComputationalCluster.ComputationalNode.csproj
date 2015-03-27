@@ -45,10 +45,15 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UCCTaskSolver">
+      <HintPath>..\UCCTaskSolver\UCCTaskSolver.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComputationalNodeModule.cs" />
     <Compile Include="ComputationalNodeRunner.cs" />
+    <Compile Include="PartialProblem.cs" />
+    <Compile Include="PartialSolution.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -56,13 +61,25 @@
       <Project>{a515b39f-4ffe-4302-88f9-4917c31ca6b6}</Project>
       <Name>ComputationalCluster.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ComputationalCluster.CommunicationServer\ComputationalCluster.CommunicationServer.csproj">
+      <Project>{f45d4259-db28-4404-8027-57273a0455fb}</Project>
+      <Name>ComputationalCluster.CommunicationServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ComputationalCluster.Communication\ComputationalCluster.Communication.csproj">
       <Project>{c7df375d-995b-4b80-b5c6-4c9d67ca5ab5}</Project>
       <Name>ComputationalCluster.Communication</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ComputationalCluster.Dependencies\ComputationalCluster.Dependencies.csproj">
+      <Project>{4dbffac5-16e6-452c-9d66-aec9edbc37ca}</Project>
+      <Name>ComputationalCluster.Dependencies</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ComputationalCluster.NetModule\ComputationalCluster.NetModule.csproj">
       <Project>{c646aef9-72f4-4967-89d9-96d1a25a9a8a}</Project>
       <Name>ComputationalCluster.NetModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ComputationalCluster.PluginManager\ComputationalCluster.PluginManager.csproj">
+      <Project>{af165ac2-8a7c-4a6a-9586-c0acc20ddcaf}</Project>
+      <Name>ComputationalCluster.PluginManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -68,7 +68,7 @@ namespace ComputationalCluster.Communication.Messages
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
+        //[System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
         public string CommonData
         {
             get
@@ -138,6 +138,8 @@ namespace ComputationalCluster.Communication.Messages
 
         private ulong nodeIDField;
 
+        public SolvePartialProblemsPartialProblem() { }
+
         /// <remarks/>
         public ulong TaskId
         {
@@ -152,7 +154,7 @@ namespace ComputationalCluster.Communication.Messages
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
+        //[System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
         public string Data
         {
             get
