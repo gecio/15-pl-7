@@ -2,6 +2,7 @@
 using ComputationalCluster.Communication.Messages;
 using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.NetModule;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,8 +40,7 @@ namespace ComputationalCluster.ComputationalNode
             {
                 Type = RegisterType.ComputationalNode,
             }) as RegisterResponse;
-
-            Console.WriteLine("Response {0}", response.Id);
+            Console.WriteLine("Register response ID={0}", response.Id);
 
             while(true)
             {
@@ -49,7 +49,6 @@ namespace ComputationalCluster.ComputationalNode
                 {
                     Id = response.Id,
                 });
-                Console.WriteLine("Response {0}", receivedMessage.GetType().Name);
 
                 Consume(receivedMessage);
                 SendPartialSolutions();
@@ -66,8 +65,10 @@ namespace ComputationalCluster.ComputationalNode
         /// <param name="receivedMessage">wiadomość odebrana od serwera</param>
         public void Consume(IMessage receivedMessage)
         {
+            Console.WriteLine("Received message: {0}", receivedMessage.GetType().Name);
             if (receivedMessage.GetType() == typeof(SolvePartialProblems))
             {
+                Console.WriteLine("Received partial problems: ID={0}", (receivedMessage as SolvePartialProblems).Id);
                 var partialProblems = (receivedMessage as SolvePartialProblems).PartialProblems;
                 for (int i = 0; i < partialProblems.Length; i++)
                 {
@@ -78,7 +79,8 @@ namespace ComputationalCluster.ComputationalNode
                         ProblemId = (receivedMessage as SolvePartialProblems).Id,
                         CommonData = (receivedMessage as SolvePartialProblems).CommonData,
                         TaskId = partialProblems[i].TaskId,
-                        Data = partialProblems[i].Data
+                        Data = partialProblems[i].Data,
+                        Timeout = ((receivedMessage as SolvePartialProblems).SolvingTimeoutSpecified == true)? (receivedMessage as SolvePartialProblems).SolvingTimeout : 0,
                     };
                     thread.Start(task);
                 }
@@ -93,15 +95,20 @@ namespace ComputationalCluster.ComputationalNode
         {
             TaskSolver solver = _taskSolversRepository.GetSolverByName((problem as PartialProblem).ProblemType);
             byte[] data = Convert.FromBase64String((problem as PartialProblem).Data);
-            byte[] solution = solver.Solve(data, new TimeSpan(1, 0, 0));
+            byte[] solution = solver.Solve(data, TimeSpan.FromMilliseconds((problem as PartialProblem).Timeout));
 
-            Thread.Sleep(new TimeSpan(0,1,30));
+            if (solver.State == TaskSolver.TaskSolverState.Error)
+                Console.WriteLine("An error occured during solving partial problem: ID={0}, TaskID={1}", (problem as PartialProblem).ProblemId, (problem as PartialProblem).TaskId);
+            else if (solver.State == TaskSolver.TaskSolverState.Timeout)
+                Console.WriteLine("Timeout occured during solving partial problem: ID={0}, TaskID={1}", (problem as PartialProblem).ProblemId, (problem as PartialProblem).TaskId);
+
             var solutionMessage = new PartialSolution()
             {
                 ProblemType = (problem as PartialProblem).ProblemType,
                 ProblemId = (problem as PartialProblem).ProblemId,
                 TaskId = (problem as PartialProblem).TaskId,
-                Data = Convert.ToBase64String(solution)
+                Data = Convert.ToBase64String(solution),
+                TimeoutOccured = (solver.State == TaskSolver.TaskSolverState.Timeout)
             };
             _semaphorePartialSolutions.WaitOne();
             _partialSolutions.AddLast(solutionMessage);
@@ -133,6 +140,7 @@ namespace ComputationalCluster.ComputationalNode
                 };
                 _partialSolutions.RemoveFirst();
 
+                Console.WriteLine("Sending partial solutions: ID={0}", solutionMessage.Id);
                 var response = _client.Send(solutionMessage);
                 Consume(response);
             }

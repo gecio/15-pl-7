@@ -13,5 +13,6 @@ namespace ComputationalCluster.ComputationalNode
         public string CommonData { get; set; }
         public ulong TaskId { get; set; }
         public string Data { get; set; }
+        public ulong Timeout { get; set; }
     }
 }

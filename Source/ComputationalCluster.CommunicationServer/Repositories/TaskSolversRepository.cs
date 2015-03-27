@@ -12,8 +12,8 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 {
     public interface ITaskSolversRepository
     {
-        ICollection<TaskSolver> GetSolvers();
-        TaskSolver GetSolverByName(string name);
+        ICollection<UCCTaskSolver.TaskSolver> GetSolvers();
+        UCCTaskSolver.TaskSolver GetSolverByName(string name);
     }
 
     public class TaskSolversRepository : ITaskSolversRepository
@@ -21,15 +21,15 @@ namespace ComputationalCluster.CommunicationServer.Repositories
         private readonly IConfigProvider _configProvider;
         private readonly ILog _log;
 
-        private Dictionary<string, TaskSolver> _taskSolvers;
+        private Dictionary<string, UCCTaskSolver.TaskSolver> _taskSolvers;
 
-        public TaskSolversRepository(IConfigProvider configProvider, IPluginManager<TaskSolver> pluginManager,
+        public TaskSolversRepository(IConfigProvider configProvider, IPluginManager<UCCTaskSolver.TaskSolver> pluginManager,
             ILog log)
         {
             _configProvider = configProvider;
             _log            = log;
 
-            _taskSolvers = new Dictionary<string, TaskSolver>();
+            _taskSolvers = new Dictionary<string, UCCTaskSolver.TaskSolver>();
 
             pluginManager.AddDirectory("plugins/");
             foreach (var plugin in pluginManager.GetPlugins())
@@ -39,12 +39,12 @@ namespace ComputationalCluster.CommunicationServer.Repositories
             }
         }
 
-        public ICollection<TaskSolver> GetSolvers()
+        public ICollection<UCCTaskSolver.TaskSolver> GetSolvers()
         {
             return _taskSolvers.Select(t => t.Value).ToList();
         }
 
-        public TaskSolver GetSolverByName(string name)
+        public UCCTaskSolver.TaskSolver GetSolverByName(string name)
         {
             return _taskSolvers[name];
         }

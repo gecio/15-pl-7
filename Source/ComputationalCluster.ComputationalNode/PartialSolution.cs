@@ -12,5 +12,6 @@ namespace ComputationalCluster.ComputationalNode
         public ulong ProblemId { get; set; }
         public ulong TaskId { get; set; }
         public string Data { get; set; }
+        public bool TimeoutOccured { get; set; }
     }
 }

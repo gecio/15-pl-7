@@ -16,6 +16,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 
         public IMessage Consume(Solutions message)
         {
+            //Console.WriteLine("partial solution {0}/{1}: {2}", message.Solutions1[0].TaskId, message.Id, message.Solutions1[0].Data);
             var noOperationResponse = new NoOperation();
             return noOperationResponse;
         }
