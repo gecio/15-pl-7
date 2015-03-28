@@ -92,14 +92,16 @@ namespace ComputationalCluster.NetModule
 
                 var response = _messageReceiver.Dispatch(request);
 
-                byte[] responseBuffer = _encoding.GetBytes(response + NetServer.ETB);
+                byte[] responseBuffer = _encoding.GetBytes(response);
+                
                 stream.WriteBuffered(responseBuffer, 0, responseBuffer.Length);
 
+                tcpClient.Client.Shutdown(SocketShutdown.Send);
                 tcpClient.Close();
             }
             catch(ObjectDisposedException ex)
             {
-                //todo: connection closed, logi
+                _log.ErrorFormat("Error in HandleIncomingConnection, StackTrace: {9}", ex.StackTrace.ToString());
             }
         }
 

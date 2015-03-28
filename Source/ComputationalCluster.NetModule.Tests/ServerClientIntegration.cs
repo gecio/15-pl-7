@@ -86,5 +86,24 @@ namespace ComputationalCluster.NetModule.Tests
             Assert.AreEqual(responseMessageTwo, ((TestTextMessage)responseTwo).Content);
         }
 
+        [Test]
+        public void IntegrationServerClient_ClientSendRequest_TwoResponsesReceived()
+        {
+            var responseMessage = "Response.";
+            _receiverMock.Setup(t => t.Dispatch(It.IsAny<string>())).Returns(String.Join(NetServer.ETB.ToString(),responseMessage,responseMessage));
+
+            var client = new NetClient(_translator, _encoding, _configMock.Object);
+            _server = new NetServer(_receiverMock.Object, _encoding, _configMock.Object, _logMock.Object);
+
+            _server.Start();
+            var request = new TestTextMessage("Request.");
+            var response = client.Send_ManyResponses(new TestTextMessage("Request."));
+            _server.Stop();
+
+            Assert.IsNotNull(response);
+            Assert.AreEqual(2, response.Count());
+            Assert.AreEqual(responseMessage, ((TestTextMessage)response.ElementAt(0)).Content);
+            Assert.AreEqual(responseMessage, ((TestTextMessage)response.ElementAt(1)).Content);
+        }
     }
 }

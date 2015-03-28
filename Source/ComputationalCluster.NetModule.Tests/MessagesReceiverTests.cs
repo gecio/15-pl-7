@@ -57,5 +57,6 @@ namespace ComputationalCluster.NetModule.Tests
 
             Assert.AreEqual(responseMessageContent, response);
         }
+
     }
 }

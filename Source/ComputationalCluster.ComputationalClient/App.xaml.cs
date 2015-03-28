@@ -7,7 +7,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace ComputationalNode.ComputationalClient.Runner
+namespace ComputationalCluster.ComputationalClient
 {
     /// <summary>
     /// Interaction logic for App.xaml

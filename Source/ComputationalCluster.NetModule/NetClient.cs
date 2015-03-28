@@ -11,6 +11,7 @@ namespace ComputationalCluster.NetModule
 {
     public interface INetClient
     {
+        IEnumerable<IMessage> Send_ManyResponses(IMessage message);
         IMessage Send(IMessage message);
     }
 
@@ -27,7 +28,7 @@ namespace ComputationalCluster.NetModule
             _configProvider = configProvider;
         }
 
-        public IMessage Send(IMessage message)
+        public IEnumerable<IMessage> Send_ManyResponses(IMessage message)
         {
             IPEndPoint serverEndPoint = new IPEndPoint(_configProvider.IP, _configProvider.Port);
 
@@ -35,16 +36,19 @@ namespace ComputationalCluster.NetModule
             client.Connect(serverEndPoint);
             var stream = client.GetStream();
             var request = _messageTranslator.Stringify(message);
-            byte[] encodedRequest = _encoding.GetBytes(request + NetServer.ETB);
+            byte[] encodedRequest = _encoding.GetBytes(request);
             stream.WriteBuffered(encodedRequest, 0, encodedRequest.Length);
-
+            client.Client.Shutdown(SocketShutdown.Send);
             byte[] encodedResponse = stream.ReadBuffered(0);
             var response = _encoding.GetString(encodedResponse, 0, encodedResponse.Length);
             client.Close();
 
-            var responseMessage = _messageTranslator.CreateObject(response);
-            return responseMessage;
+            return response.Split(NetServer.ETB).Select(msg => _messageTranslator.CreateObject(msg));
         }
 
+        public IMessage Send(IMessage message)
+        {
+            return Send_ManyResponses(message).FirstOrDefault();
+        }
     }
 }

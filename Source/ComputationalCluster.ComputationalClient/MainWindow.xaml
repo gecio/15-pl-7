@@ -1,0 +1,39 @@
+﻿<Window x:Class="ComputationalCluster.ComputationalClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="CC.Client" Height="400" Width="525"
+        DataContext="{Binding MainWindow, Source={StaticResource Locator}}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <DockPanel LastChildFill="True" Grid.Column="0">
+            <Label DockPanel.Dock="Top" Content="SolveRequest:" Margin="10px 0px 10px 0px"/>
+            <Border Margin="10px" Padding="10px" BorderThickness="1px" BorderBrush="Gray">
+                <StackPanel >
+                    <Label Content="ProblemType:"/>
+                    <TextBox Text="{Binding ProblemType}" Height="30px" FontSize="14"/>
+                    <Label Content="Timeout"/>
+                    <TextBox Text="{Binding Timeout}" Height="30px" FontSize="14"/>
+                    <Button Content="LoadFile..." Padding="10px" Margin="0px 10px 0px 0px" Command="{Binding LoadFileCommand}"/>
+                    <Button Content="Send SolveRequest" Padding="10px" Margin="0px 10px 0px 10px" Command="{Binding SendSolveRequestCommand}"  />
+                </StackPanel>
+            </Border>
+        </DockPanel>
+        <DockPanel Grid.Column="1">
+            <Label Content="SolutionRequest:" Margin="10px 0px 10px 0px" DockPanel.Dock="Top"/>
+            <Border Margin="10px" Padding="10px" BorderThickness="1px" BorderBrush="Gray">
+                <StackPanel>
+                    <Label Content="ProblemId:"/>
+                    <TextBox Height="30px" FontSize="14" Text="{Binding ProblemId}"/>
+                    <Button Content="SolutionRequest" Margin="0px 10px 0px 0px" Height="30px" Command="{Binding SendSolutionRequestCommand}" />
+                </StackPanel>
+            </Border>
+        </DockPanel>
+        
+    </Grid>   
+    
+     
+</Window>

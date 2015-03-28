@@ -16,7 +16,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 
-namespace ComputationalCluster.ComputationalClient.Runner.ViewModel
+namespace ComputationalCluster.ComputationalClient.ViewModel
 {
     /// <summary>
     /// This class contains static references to all the view models in the
@@ -42,14 +42,14 @@ namespace ComputationalCluster.ComputationalClient.Runner.ViewModel
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
 
-            SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<MainWindowViewModel>();
         }
 
-        public MainViewModel Main
+        public MainWindowViewModel MainWindow
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<MainViewModel>();
+                return ServiceLocator.Current.GetInstance<MainWindowViewModel>();
             }
         }
         

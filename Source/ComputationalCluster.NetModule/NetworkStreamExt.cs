@@ -30,16 +30,16 @@ namespace ComputationalCluster.NetModule
             List<byte> readData = new List<byte>();
             byte[] tempBuffer = new byte[BUFFER_SIZE];
             int actualPosition = offset;
-            int lastByte = 0;
             int length;
             do
             {
                 length = stream.Read(tempBuffer, 0, BUFFER_SIZE);
-                actualPosition += length;
-                readData.AddRange(tempBuffer.Take(length));
-                lastByte = readData[readData.Count - 1];
-            } while (stream.DataAvailable && lastByte!=23);
-            readData.RemoveAt(readData.Count - 1);
+                if (length > 0)
+                {
+                    actualPosition += length;
+                    readData.AddRange(tempBuffer.Take(length));
+                }
+            } while (length > 0);
             return readData.ToArray();
         }
     }
