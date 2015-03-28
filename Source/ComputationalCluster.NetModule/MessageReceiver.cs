@@ -43,22 +43,27 @@ namespace ComputationalCluster.NetModule
             //_messageConsumersResolver = builder.Build();
         }
 
+        
         public string Dispatch(string message)
         {
-            var messageObject = _messageTranslator.CreateObject(message);
-            if (messageObject == null)
-                throw new Exception("Created message cannot be null.");
+            var splitMessages = message.Split(NetServer.ETB);
+            List<String> results = new List<String>();
+            foreach (var msg in splitMessages)
+            {
+                var messageObject = _messageTranslator.CreateObject(msg);
+                if (messageObject == null)
+                    throw new Exception("Created message cannot be null.");
 
-            var consumerType = typeof(IMessageConsumer<>).MakeGenericType(new[] { messageObject.GetType() });
-            var consumer = (IMessageConsumer)_componentContext.Resolve(consumerType);
-            var response = consumer.Consume(messageObject);
+                var consumerType = typeof(IMessageConsumer<>).MakeGenericType(new[] { messageObject.GetType() });
+                var consumer = (IMessageConsumer)_componentContext.Resolve(consumerType);
+                var response = consumer.Consume(messageObject);
 
-            _log.InfoFormat("Response received. Type={0} Contents=[{1}]", 
-                response.GetType().Name, response.ToString());
+                _log.InfoFormat("Response received. Type={0} Contents=[{1}]",
+                    response.GetType().Name, response.ToString());
 
-            var responseString = _messageTranslator.Stringify(response);
-
-            return responseString;
+                results.Add(_messageTranslator.Stringify(response));
+            }
+            return String.Join(NetServer.ETB.ToString(), results.Where(msg => msg != null));  
         }
 
     }
