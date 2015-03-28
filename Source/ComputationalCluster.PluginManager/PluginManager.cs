@@ -11,20 +11,25 @@ namespace ComputationalCluster.PluginManager
     public interface IPluginManager<T>
     {
         void AddDirectory(string directoryPath);
-        ICollection<T> GetPlugins();
+        ICollection<Type> GetPlugins();
     }
 
     public class PluginManager<T> : IPluginManager<T>
     {
-        private List<T> _plugins;
+        private List<Type> _plugins;
 
         public PluginManager()
         {
-            _plugins = new List<T>();
+            _plugins = new List<Type>();
         }
 
         public void AddDirectory(string directoryPath)
         {
+            if (!Directory.Exists(directoryPath))
+            {
+                return;
+            }
+
             var directory = new DirectoryInfo(directoryPath);
             
             foreach (var file in directory.GetFiles()
@@ -36,14 +41,13 @@ namespace ComputationalCluster.PluginManager
                 {
                     if (type.BaseType == typeof(T))
                     {
-                        var pluginInstance = (T)Activator.CreateInstance(type);
-                        _plugins.Add(pluginInstance);
+                        _plugins.Add(type);
                     }
                 }
             }
         }
 
-        public ICollection<T> GetPlugins()
+        public ICollection<Type> GetPlugins()
         {
             return _plugins;
         }

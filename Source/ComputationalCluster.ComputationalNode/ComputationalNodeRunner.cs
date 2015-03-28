@@ -93,7 +93,7 @@ namespace ComputationalCluster.ComputationalNode
         /// <param name="problem">informacje o podproblemie do rozwiązania</param>
         public void SolvePartialProblem(object problem)
         {
-            TaskSolver solver = _taskSolversRepository.GetSolverByName((problem as PartialProblem).ProblemType);
+            TaskSolver solver = _taskSolversRepository.GetSolverInstance((problem as PartialProblem).ProblemType);
             byte[] data = Convert.FromBase64String((problem as PartialProblem).Data);
             byte[] solution = solver.Solve(data, TimeSpan.FromMilliseconds((problem as PartialProblem).Timeout));
 
