@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.NetModule", "ComputationalCluster.NetModule\ComputationalCluster.NetModule.csproj", "{C646AEF9-72F4-4967-89D9-96D1A25A9A8A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.NetModule.Tests", "ComputationalCluster.NetModule.Tests\ComputationalCluster.NetModule.Tests.csproj", "{C9021D38-9BC9-40C0-8BC1-92BD28DDCEBE}"
@@ -28,9 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.TaskMa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.Communication.Tests", "ComputationalCluster.Communication.Tests\ComputationalCluster.Communication.Tests.csproj", "{3651BEC2-AA6C-4201-81B6-9675B2CF5D41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.ComputationalClient", "ComputationalCluster.ComputationalClient\ComputationalCluster.ComputationalClient.csproj", "{E7778DB1-14E8-448E-AAC2-BA068C6717C1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.ComputationalClient.Runner", "ComputationalNode.ComputationalClient.Runner\ComputationalCluster.ComputationalClient.Runner.csproj", "{0BB2428C-0850-4B62-94F3-2F067F64026D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.ComputationalClient", "ComputationalNode.ComputationalClient\ComputationalCluster.ComputationalClient.csproj", "{0BB2428C-0850-4B62-94F3-2F067F64026D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.CommunicationServer.Tests", "ComputationalCluster.CommunicationServer.Tests\ComputationalCluster.CommunicationServer.Tests.csproj", "{6B344DF7-DA1D-48C0-A670-0BA235CD945D}"
 EndProject
@@ -82,10 +82,6 @@ Global
 		{3651BEC2-AA6C-4201-81B6-9675B2CF5D41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3651BEC2-AA6C-4201-81B6-9675B2CF5D41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3651BEC2-AA6C-4201-81B6-9675B2CF5D41}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E7778DB1-14E8-448E-AAC2-BA068C6717C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E7778DB1-14E8-448E-AAC2-BA068C6717C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E7778DB1-14E8-448E-AAC2-BA068C6717C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E7778DB1-14E8-448E-AAC2-BA068C6717C1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0BB2428C-0850-4B62-94F3-2F067F64026D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0BB2428C-0850-4B62-94F3-2F067F64026D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BB2428C-0850-4B62-94F3-2F067F64026D}.Release|Any CPU.ActiveCfg = Release|Any CPU

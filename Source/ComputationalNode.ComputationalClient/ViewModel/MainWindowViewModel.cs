@@ -3,9 +3,10 @@ using GalaSoft.MvvmLight.CommandWpf;
 using Microsoft.Win32;
 using System;
 using System.IO;
+using System.Windows.Forms;
 using System.Windows.Input;
 
-namespace ComputationalCluster.ComputationalClient.Runner.ViewModel
+namespace ComputationalCluster.ComputationalClient.ViewModel
 {
     public class MainWindowViewModel : ViewModelBase
     {
@@ -14,14 +15,16 @@ namespace ComputationalCluster.ComputationalClient.Runner.ViewModel
             _cClient = new ComputationalClientRunner();
         }
 
+        private ComputationalClientRunner _cClient;
         //================================
         private ICommand _loadFileCommand;
         private ICommand _sendSolveRequestCommand;
+        private ICommand _sendSolutionRequestCommand;
         public string _fileContent;
         private string _problemType;
-        private ComputationalClientRunner _cClient;
         private int _lastSolveRequestId;
         private int _timeout;
+        private int _problemId;
         //================================
 
         public string ProblemType
@@ -79,10 +82,34 @@ namespace ComputationalCluster.ComputationalClient.Runner.ViewModel
                 RaisePropertyChanged();
             }
         }
+        public int ProblemId
+        {
+            get
+            {
+                return _problemId;
+            }
+            set
+            {
+                _problemId = value;
+                RaisePropertyChanged(() => ProblemId);
+            }
+        }
+        public ICommand SendSolutionRequestCommand
+        {
+            get
+            {
+                if(_sendSolutionRequestCommand == null)
+                {
+                    _sendSolutionRequestCommand = new RelayCommand(SendSolutionRequest, () => { return ProblemId > 0; });
+                }
+                return _sendSolutionRequestCommand;
+            }
+        }
+
 
         private void LoadFile()
         {
-            var ofd = new OpenFileDialog();
+            var ofd = new Microsoft.Win32.OpenFileDialog();
             if (ofd.ShowDialog() == true)
             {
                 using (var sr = new StreamReader(ofd.OpenFile()))
@@ -91,22 +118,40 @@ namespace ComputationalCluster.ComputationalClient.Runner.ViewModel
                 }
             }
         }
-
         private void SendSolveRequest()
         {
             ulong problemId;
-            if (Timeout != 0) 
+            if (Timeout != 0)
             {
-                problemId = _cClient.SendSolveRequest(_fileContent, ProblemType,(ulong)Timeout);
+                problemId = _cClient.SendSolveRequest(_fileContent, ProblemType, (ulong)Timeout);
             }
             else
             {
                 problemId = _cClient.SendSolveRequest(_fileContent, ProblemType);
             }
-            
+
+            MessageBox.Show(String.Format("Wys³ane!\nId przdzielone przez serwer to: {0}", problemId));
+
             _fileContent = null;
             ProblemType = null;
             Timeout = 0;
+        }
+        private void SendSolutionRequest()
+        {
+            var result = _cClient.SendSolutionRequest(ProblemId);
+            if( result == null )
+            {
+                MessageBox.Show("Obliczenia nie zosta³y jeszcze zakoñczone!");
+                return;
+            }
+            var sfd = new Microsoft.Win32.SaveFileDialog();
+            if( sfd.ShowDialog() == true)
+            {
+                using(var sw = new StreamWriter(sfd.OpenFile()))
+                {
+                    sw.Write(result);
+                }
+            }
         }
     }
 }

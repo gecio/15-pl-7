@@ -16,7 +16,7 @@ using System.ComponentModel;
 using ComputationalCluster.ComputationalClient;
 using GalaSoft.MvvmLight.Command;
 
-namespace ComputationalNode.ComputationalClient.Runner
+namespace ComputationalCluster.ComputationalClient
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

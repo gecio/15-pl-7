@@ -7,8 +7,8 @@
     <ProjectGuid>{0BB2428C-0850-4B62-94F3-2F067F64026D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ComputationalCluster.ComputationalClient.Runner</RootNamespace>
-    <AssemblyName>ComputationalCluster.ComputationalClient.Runner</AssemblyName>
+    <RootNamespace>ComputationalCluster.ComputationalClient</RootNamespace>
+    <AssemblyName>ComputationalCluster.ComputationalClient</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -36,6 +36,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="GalaSoft.MvvmLight">
       <HintPath>..\packages\MvvmLightLibs.5.1.1.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
     </Reference>
@@ -50,7 +54,10 @@
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity">
       <HintPath>..\packages\MvvmLightLibs.5.1.1.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -72,6 +79,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ComputationalClientModule.cs" />
+    <Compile Include="ComputationalClientRunner.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">
@@ -116,9 +125,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ComputationalCluster.ComputationalClient\ComputationalCluster.ComputationalClient.csproj">
-      <Project>{e7778db1-14e8-448e-aac2-ba068c6717c1}</Project>
-      <Name>ComputationalCluster.ComputationalClient</Name>
+    <ProjectReference Include="..\ComputationalCluster.Common\ComputationalCluster.Common.csproj">
+      <Project>{a515b39f-4ffe-4302-88f9-4917c31ca6b6}</Project>
+      <Name>ComputationalCluster.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ComputationalCluster.Communication\ComputationalCluster.Communication.csproj">
+      <Project>{c7df375d-995b-4b80-b5c6-4c9d67ca5ab5}</Project>
+      <Name>ComputationalCluster.Communication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ComputationalCluster.NetModule\ComputationalCluster.NetModule.csproj">
+      <Project>{c646aef9-72f4-4967-89d9-96d1a25a9a8a}</Project>
+      <Name>ComputationalCluster.NetModule</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
