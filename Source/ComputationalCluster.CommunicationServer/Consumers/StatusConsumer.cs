@@ -74,9 +74,48 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 return noOperationResponse;
             }
             */
+
+            /* // przykład, żeby przetestować jak task manager dzieli na podproblemy
+            if (new Random().Next(2) == 1)
+            {
+                int firstMember = 2;
+                int difference = 3;
+                int amount = 10;
+                int threadsCount = 3;
+
+                using (var ms = new MemoryStream())
+                using (var writer = new BinaryWriter(ms))
+                {
+                    writer.Write(firstMember);
+                    writer.Write(difference);
+                    writer.Write(amount);
+
+                    var solver = new ArithmeticProgressionSumSolver(ms.GetBuffer());
+
+                    var divideProblemResponse = new DivideProblem()
+                    {
+                        ProblemType = "Arithmetic progression sum",
+                        Id = (ulong)(new Random().Next(1000)),
+                        Data = Convert.ToBase64String(ms.GetBuffer()),
+                        ComputationalNodes = (ulong)threadsCount
+                    };
+                    _componentsRepository.UpdateLastStatusTimestamp(message.Id);
+                    return divideProblemResponse;
+                }
+            }
+            else
+            {
+                var noOperationResponse = new NoOperation();
+                _componentsRepository.UpdateLastStatusTimestamp(message.Id);
+                return noOperationResponse;
+            }
+            */
+
+            
             var noOperationResponse = new NoOperation();
             _componentsRepository.UpdateLastStatusTimestamp(message.Id);
             return noOperationResponse;
+            
         }
 
         public IMessage Consume(IMessage message)

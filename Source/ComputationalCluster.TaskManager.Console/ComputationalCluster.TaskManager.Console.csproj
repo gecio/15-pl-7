@@ -47,6 +47,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ComputationalCluster.TaskManager\ComputationalCluster.TaskManager.csproj">
+      <Project>{cc1449a2-59e1-4005-aab0-1f2bf0a5b8b0}</Project>
+      <Name>ComputationalCluster.TaskManager</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -15,7 +15,7 @@ namespace ComputationalCluster.ComputationalNode
 {
     public class ComputationalNodeRunner
     {
-        private LinkedList<PartialSolution> _partialSolutions;
+        private LinkedList<Solutions> _partialSolutions;
         private Semaphore _semaphorePartialSolutions;
 
         private ITaskSolversRepository _taskSolversRepository;
@@ -27,7 +27,7 @@ namespace ComputationalCluster.ComputationalNode
             builder.RegisterModule<ComputationalNodeModule>();
             var container = builder.Build();
 
-            _partialSolutions = new LinkedList<PartialSolution>();
+            _partialSolutions = new LinkedList<Solutions>();
             _semaphorePartialSolutions = new Semaphore(1, 1);
 
             _taskSolversRepository = container.Resolve<ITaskSolversRepository>();
@@ -102,13 +102,21 @@ namespace ComputationalCluster.ComputationalNode
             else if (solver.State == TaskSolver.TaskSolverState.Timeout)
                 Console.WriteLine("Timeout occured during solving partial problem: ID={0}, TaskID={1}", (problem as PartialProblem).ProblemId, (problem as PartialProblem).TaskId);
 
-            var solutionMessage = new PartialSolution()
+            var solutionMessage = new Solutions()
             {
                 ProblemType = (problem as PartialProblem).ProblemType,
-                ProblemId = (problem as PartialProblem).ProblemId,
-                TaskId = (problem as PartialProblem).TaskId,
-                Data = Convert.ToBase64String(solution),
-                TimeoutOccured = (solver.State == TaskSolver.TaskSolverState.Timeout)
+                Id = (problem as PartialProblem).ProblemId,
+                Solutions1 = new SolutionsSolution[]
+                {
+                    new SolutionsSolution()
+                    {
+                        TaskId = (problem as PartialProblem).TaskId,
+                        TaskIdSpecified = true,
+                        Data = Convert.ToBase64String(solution),
+                        Type = SolutionsSolutionType.Partial,
+                        TimeoutOccured = (solver.State == TaskSolver.TaskSolverState.Timeout)
+                    }
+                }
             };
             _semaphorePartialSolutions.WaitOne();
             _partialSolutions.AddLast(solutionMessage);
@@ -123,25 +131,9 @@ namespace ComputationalCluster.ComputationalNode
             _semaphorePartialSolutions.WaitOne();
             while (_partialSolutions.Count != 0)
             {
-                var solutionMessage = new Solutions()
-                {
-                    ProblemType = _partialSolutions.First.Value.ProblemType,
-                    Id = _partialSolutions.First.Value.ProblemId,
-                    Solutions1 = new SolutionsSolution[]
-                    {
-                        new SolutionsSolution()
-                        {
-                            TaskId = _partialSolutions.First.Value.TaskId,
-                            TaskIdSpecified = true,
-                            Data = _partialSolutions.First.Value.Data,
-                            Type = SolutionsSolutionType.Partial
-                        }
-                    }
-                };
+                Console.WriteLine("Sending partial solutions: ID={0}, TaskID={1}", _partialSolutions.First.Value.Id, _partialSolutions.First.Value.Solutions1[0].TaskId);
+                var response = _client.Send(_partialSolutions.First.Value);
                 _partialSolutions.RemoveFirst();
-
-                Console.WriteLine("Sending partial solutions: ID={0}", solutionMessage.Id);
-                var response = _client.Send(solutionMessage);
                 Consume(response);
             }
             _semaphorePartialSolutions.Release();

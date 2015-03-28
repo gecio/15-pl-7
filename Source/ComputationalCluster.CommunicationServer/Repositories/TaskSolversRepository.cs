@@ -14,6 +14,7 @@ namespace ComputationalCluster.CommunicationServer.Repositories
     {
         ICollection<UCCTaskSolver.TaskSolver> GetSolvers();
         UCCTaskSolver.TaskSolver GetSolverByName(string name);
+        Type GetSolverType(string name);
     }
 
     public class TaskSolversRepository : ITaskSolversRepository
@@ -47,6 +48,11 @@ namespace ComputationalCluster.CommunicationServer.Repositories
         public UCCTaskSolver.TaskSolver GetSolverByName(string name)
         {
             return _taskSolvers[name];
+        }
+
+        public Type GetSolverType(string name)
+        {
+            return _taskSolvers[name].GetType();
         }
     }
 }

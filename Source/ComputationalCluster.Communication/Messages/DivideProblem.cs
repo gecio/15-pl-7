@@ -66,7 +66,7 @@ namespace ComputationalCluster.Communication.Messages
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
+        //[System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
         public string Data
         {
             get

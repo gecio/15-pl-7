@@ -10,6 +10,8 @@ namespace ComputationalCluster.TaskManager.Console
     {
         static void Main(string[] args)
         {
+            var runner = new TaskManagerRunner();
+            runner.Start();
         }
     }
 }
