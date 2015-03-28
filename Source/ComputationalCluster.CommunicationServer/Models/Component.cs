@@ -1,9 +1,6 @@
 ﻿using ComputationalCluster.Communication.Messages;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ComputationalCluster.CommunicationServer.Models
 {
@@ -16,5 +13,7 @@ namespace ComputationalCluster.CommunicationServer.Models
         public ulong Id { get; set; }
         public DateTime LastStatusTimestamp { get; set; }
         public RegisterType Type { get; set; }
+
+        public ICollection<ProblemDefinition> SolvableProblems { get; set; }
     }
 }

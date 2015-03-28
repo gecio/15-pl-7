@@ -46,5 +46,20 @@ namespace ComputationalCluster.ComputationalClient
             SolveRequestResponse response = _client.Send(solverRequest) as SolveRequestResponse;
             return response.Id;
         }
+
+        public string SendSolutionRequest(int problemId)
+        {
+            var solutionRequest = new SolutionRequest
+            {
+                Id = (ulong)problemId
+            };
+            Solutions response = _client.Send(solutionRequest) as Solutions;
+            string result =null;
+            if(response.Solutions1.Length > 0 && response.Solutions1[0].Type == SolutionsSolutionType.Final)
+            {
+                result = _encoding.GetString( Convert.FromBase64String(response.Solutions1[0].Data));
+            }
+            return result;
+        }
     }
 }

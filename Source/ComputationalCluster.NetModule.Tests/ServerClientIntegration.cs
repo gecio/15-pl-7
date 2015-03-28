@@ -9,6 +9,7 @@ using ComputationalCluster.NetModule.Tests.Fakes;
 using Moq;
 using ComputationalCluster.Common;
 using System.Net;
+using log4net;
 
 namespace ComputationalCluster.NetModule.Tests
 {
@@ -20,6 +21,7 @@ namespace ComputationalCluster.NetModule.Tests
         private Mock<IMessageReceiver> _receiverMock;
         private UTF8Encoding _encoding;
         private Mock<IConfigProvider> _configMock;
+        private Mock<ILog> _logMock;
 
         [SetUp]
         public void SetUp()
@@ -30,6 +32,7 @@ namespace ComputationalCluster.NetModule.Tests
             _configMock = new Mock<IConfigProvider>();
             _configMock.Setup(t => t.IP).Returns(IPAddress.Parse("127.0.0.1"));
             _configMock.Setup(t => t.Port).Returns(3000);
+            _logMock = new Mock<ILog>();
         }
 
         [Test]
@@ -42,7 +45,7 @@ namespace ComputationalCluster.NetModule.Tests
             _receiverMock.Setup(t => t.Dispatch(It.IsAny<string>())).Returns(responseMessage);
 
             var client = new NetClient(_translator, _encoding, _configMock.Object);
-            _server = new NetServer(_receiverMock.Object, _encoding, _configMock.Object);
+            _server = new NetServer(_receiverMock.Object, _encoding, _configMock.Object, _logMock.Object);
             
             _server.Start();
             var request = new TestTextMessage("Request.");
@@ -63,11 +66,12 @@ namespace ComputationalCluster.NetModule.Tests
             var responseMessageTwo = "Response2.";
 
             var receiverMock = new Mock<IMessageReceiver>();
-            _receiverMock.Setup(t => t.Dispatch(It.IsAny<string>())).Returns((string input) => input == requestMessageOne ? responseMessageOne : responseMessageTwo);
+            _receiverMock.Setup(t => t.Dispatch(It.IsAny<string>()))
+                .Returns((string input) => input == requestMessageOne ? responseMessageOne : responseMessageTwo);
 
             var clientOne = new NetClient(_translator, _encoding, _configMock.Object);
             var clientTwo = new NetClient(_translator, _encoding, _configMock.Object);
-            _server = new NetServer(_receiverMock.Object, _encoding, _configMock.Object);
+            _server = new NetServer(_receiverMock.Object, _encoding, _configMock.Object, _logMock.Object);
 
             _server.Start();
             var resposeOne = clientOne.Send(new TestTextMessage(requestMessageOne));

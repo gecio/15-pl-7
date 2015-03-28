@@ -26,18 +26,17 @@ namespace ComputationalCluster.ComputationalNode
             _client = container.Resolve<INetClient>();
             var response = _client.Send(new Register()
             {
-                Id = 666,
-                IdSpecified = true,
+                Type = RegisterType.ComputationalNode,
             }) as RegisterResponse;
 
             Console.WriteLine("Response {0}", response.Id);
 
             while(true)
             {
-                System.Threading.Thread.Sleep(2000);
+                System.Threading.Thread.Sleep(new TimeSpan(0, 0, (int)(response.Timeout/2)));
                 _client.Send(new Status()
                 {
-                    Id = 666,
+                    Id = response.Id,
                 });
             }
         }

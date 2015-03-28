@@ -1,40 +1,43 @@
-﻿using ComputationalCluster.Communication.Messages;
+﻿using ComputationalCluster.Common;
+using ComputationalCluster.Communication.Messages;
 using ComputationalCluster.CommunicationServer.Models;
 using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.NetModule;
+using log4net;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ComputationalCluster.CommunicationServer.Consumers
 {
     public class RegisterConsumer : IMessageConsumer<Register>
     {
         private readonly IComponentsRepository _componentsRepository;
+        private readonly ITimeProvider _timeProvider;
+        private readonly ILog _log;
 
-        public RegisterConsumer(IComponentsRepository componentsRepository)
+        public RegisterConsumer(IComponentsRepository componentsRepository, ITimeProvider timeProvider,
+            ILog log)
         {
             _componentsRepository = componentsRepository;
+            _timeProvider         = timeProvider;
+            _log                  = log;
         }
 
         public IMessage Consume(Register message)
         {
-            System.Console.WriteLine("Register {0}", message.Id);
+            _log.InfoFormat("Consuming {0} = [{1}]", message.GetType().Name, message.ToString());
 
             var component = new Component()
             {
-                Id = message.Id,
-                LastStatusTimestamp = DateTime.Now, // TODO: PROVIDER
+                LastStatusTimestamp = DateTime.Now,
                 Type = message.Type,
             };
 
-            _componentsRepository.Add(component);
+            var guid = _componentsRepository.Register(component);
 
             var response = new RegisterResponse()
             {
-                Id = message.Id,
+                Id = guid,
+                Timeout = 30, // todo: config
             };
 
             return response;

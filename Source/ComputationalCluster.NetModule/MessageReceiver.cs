@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
+using log4net;
 
 namespace ComputationalCluster.NetModule
 {
@@ -27,15 +28,19 @@ namespace ComputationalCluster.NetModule
     public class MessageReceiver : IMessageReceiver
     {
         private readonly IMessageTranslator _messageTranslator;
-        private IContainer _messageConsumersResolver;
+        private readonly IComponentContext _componentContext;
+        private readonly ILog _log;
 
-        public MessageReceiver(IMessageTranslator messageTranslator, Module messageConsumersModule)
+        public MessageReceiver(IMessageTranslator messageTranslator, IComponentContext componentContext,
+            ILog log)
         {
             _messageTranslator = messageTranslator;
+            _componentContext  = componentContext;
+            _log               = log;
 
-            var builder = new ContainerBuilder();
-            builder.RegisterModule(messageConsumersModule);
-            _messageConsumersResolver = builder.Build();
+            //var builder = new ContainerBuilder();
+            //builder.RegisterModule(messageConsumersModule);
+            //_messageConsumersResolver = builder.Build();
         }
 
         public string Dispatch(string message)
@@ -45,15 +50,15 @@ namespace ComputationalCluster.NetModule
                 throw new Exception("Created message cannot be null.");
 
             var consumerType = typeof(IMessageConsumer<>).MakeGenericType(new[] { messageObject.GetType() });
-            
-            using (var scope = _messageConsumersResolver.BeginLifetimeScope())
-            {
-                var consumer = (IMessageConsumer)scope.Resolve(consumerType);
-                var response = consumer.Consume(messageObject);
-                var responseString = _messageTranslator.Stringify(response);
+            var consumer = (IMessageConsumer)_componentContext.Resolve(consumerType);
+            var response = consumer.Consume(messageObject);
 
-                return responseString;
-            }
+            _log.InfoFormat("Response received. Type={0} Contents=[{1}]", 
+                response.GetType().Name, response.ToString());
+
+            var responseString = _messageTranslator.Stringify(response);
+
+            return responseString;
         }
 
     }

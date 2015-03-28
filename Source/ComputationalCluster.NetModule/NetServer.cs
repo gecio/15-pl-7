@@ -1,13 +1,10 @@
-﻿using Autofac;
-using ComputationalCluster.Common;
+﻿using ComputationalCluster.Common;
+using log4net;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ComputationalCluster.NetModule
 {
@@ -26,19 +23,22 @@ namespace ComputationalCluster.NetModule
         private readonly IMessageReceiver _messageReceiver;
         private readonly Encoding _encoding;
         private readonly IConfigProvider _configProvider;
+        private readonly ILog _log;
 
         private TcpListener _tcpListener;
         private Thread _listeningThread;
 
-        private volatile bool _shoudStop;
+        private volatile bool _shouldStop;
 
         private ManualResetEvent _tcpClientConnected = new ManualResetEvent(false); // thread signal
 
-        public NetServer(IMessageReceiver messageReceiver, Encoding encoding, IConfigProvider configProvider)
+        public NetServer(IMessageReceiver messageReceiver, Encoding encoding, IConfigProvider configProvider,
+            ILog log)
         {
             _messageReceiver = messageReceiver;
             _encoding        = encoding;
-            _configProvider = configProvider;
+            _configProvider  = configProvider;
+            _log             = log;
         }
 
         public void Start()
@@ -46,23 +46,27 @@ namespace ComputationalCluster.NetModule
             _tcpListener = new TcpListener(IPAddress.Any, _configProvider.Port);
             _listeningThread = new Thread(new ThreadStart(ListenForConnections));
 
-            _shoudStop = false;
+            _shouldStop = false;
             _listeningThread.Start();
+
+            _log.Info("Started.");
         }
 
         public void Stop()
         {
-            _shoudStop = true;
+            _shouldStop = true;
             _tcpClientConnected.Set(); // break waiting for connection
             _listeningThread.Join();
             _tcpListener.Stop();
+
+            _log.Info("Stopped.");
         }
 
         private void ListenForConnections()
         {
             _tcpListener.Start();
             
-            while (!_shoudStop)
+            while (!_shouldStop)
             {
                 _tcpClientConnected.Reset();
                 _tcpListener.BeginAcceptTcpClient(new AsyncCallback(HandleIncomingConnection), _tcpListener);
@@ -76,6 +80,8 @@ namespace ComputationalCluster.NetModule
             {
                 var listener = (TcpListener)asyncResult.AsyncState;
                 var tcpClient = (TcpClient)listener.EndAcceptTcpClient(asyncResult);
+
+                _log.InfoFormat("Connected: {0}", tcpClient.Client.AddressFamily.ToString());
 
                 _tcpClientConnected.Set(); // run waiting for next connection
 

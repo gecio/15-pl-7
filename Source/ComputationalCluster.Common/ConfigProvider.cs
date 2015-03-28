@@ -10,11 +10,22 @@ namespace ComputationalCluster.Common
 {
     public class ConfigProvider : IConfigProvider
     {
+        private static readonly int DefaultPort = 16987;
+
+        private int? _portCache = null;
         public int Port
         {
             get
             {
-                return Int32.Parse(ConfigurationManager.AppSettings["Port"]);
+                if (_portCache != null)
+                {
+                    var value = ConfigurationManager.AppSettings["Port"];
+                    if (value != null)
+                    {
+                        _portCache = Int32.Parse(value);
+                    }
+                }
+                return _portCache ?? DefaultPort;
             }
         }
 
@@ -22,7 +33,7 @@ namespace ComputationalCluster.Common
         {
             get
             {
-                return IPAddress.Parse(ConfigurationManager.AppSettings["IP"]);
+                return IPAddress.Parse(ConfigurationManager.AppSettings["IP"] ?? "127.0.0.1");
             }
         }
     }

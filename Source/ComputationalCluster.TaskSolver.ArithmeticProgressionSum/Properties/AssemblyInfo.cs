@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ComputationalCluster.CommunicationServer.Console")]
+[assembly: AssemblyTitle("ComputationalCluster.TaskSolver.ArithmeticProgressionSum")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ComputationalCluster.CommunicationServer.Console")]
+[assembly: AssemblyProduct("ComputationalCluster.TaskSolver.ArithmeticProgressionSum")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("4c6424ed-7e15-4dc2-8371-5b2620630e91")]
+[assembly: Guid("36665d93-8948-48dc-847b-2c5d1c0c7df2")]
 
 // Version information for an assembly consists of the following four values:
 //

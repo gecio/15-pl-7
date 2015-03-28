@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ComputationalCluster.NetModule;
-using ComputationalCluster.Communication.Messages;
+﻿using ComputationalCluster.Communication.Messages;
 using ComputationalCluster.CommunicationServer.Repositories;
+using ComputationalCluster.NetModule;
+using System;
 
 namespace ComputationalCluster.CommunicationServer.Consumers
 {
@@ -20,8 +16,6 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 
         public IMessage Consume(Status message)
         {
-            System.Console.WriteLine("Status {0}", message.Id);
-
             var noOperationResponse = new NoOperation();
             _componentsRepository.UpdateLastStatusTimestamp(message.Id);
             return noOperationResponse;

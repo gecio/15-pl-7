@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using Moq;
 using ComputationalCluster.NetModule.Tests.Fakes;
+using log4net;
 
 namespace ComputationalCluster.NetModule.Tests
 {
@@ -16,6 +17,7 @@ namespace ComputationalCluster.NetModule.Tests
 
         private Mock<IMessageConsumer<TestTextMessage>> testTextConsumerMock;
         private Mock<IMessageTranslator> translatorMock;
+        private Mock<ILog> _logMock;
         private IMessageReceiver receiver;
 
         [SetUp]
@@ -35,8 +37,13 @@ namespace ComputationalCluster.NetModule.Tests
                 .Setup(t => t.Consume(requestMessage))
                 .Returns(responseMessage);
 
-            receiver = new MessageReceiver(translatorMock.Object,
-                new FakesModule(testTextConsumerMock.Object));
+            _logMock = new Mock<ILog>();
+
+            var builder = new ContainerBuilder();
+            builder.RegisterModule(new FakesModule(testTextConsumerMock.Object));
+            var container = builder.Build();
+
+            receiver = new MessageReceiver(translatorMock.Object, container, _logMock.Object);
         }
 
         [Test]
