@@ -19,6 +19,8 @@ namespace ComputationalCluster.TaskManager
 
         private LinkedList<SolvePartialProblems> _parialProblems;
         private Semaphore _semaphorePartialProblems;
+        private LinkedList<Solutions> _finalSolutions;
+        private Semaphore _semaphoreFinalSolutions;
         private ulong _id;
 
         public TaskManagerRunner()
@@ -32,6 +34,8 @@ namespace ComputationalCluster.TaskManager
 
             _parialProblems = new LinkedList<SolvePartialProblems>();
             _semaphorePartialProblems = new Semaphore(1, 1);
+            _finalSolutions = new LinkedList<Solutions>();
+            _semaphoreFinalSolutions = new Semaphore(1, 1);
         }
 
         public void Start()
@@ -53,6 +57,7 @@ namespace ComputationalCluster.TaskManager
 
                 Consume(receivedMessage);
                 SendPartialProblems();
+                SendSolution();
             }
         }
 
@@ -67,6 +72,12 @@ namespace ComputationalCluster.TaskManager
             {
                 Console.WriteLine("Received a problem to divide: ID={0}", (receivedMessage as DivideProblem).Id);
                 Thread thread = new Thread(new ParameterizedThreadStart(Divide));
+                thread.Start(receivedMessage);
+            }
+            else if (receivedMessage.GetType() == typeof(Solutions))
+            {
+                Console.WriteLine("Received partial problems to merge: ID={0}", (receivedMessage as Solutions).Id);
+                Thread thread = new Thread(new ParameterizedThreadStart(Merge));
                 thread.Start(receivedMessage);
             }
         }
@@ -109,6 +120,50 @@ namespace ComputationalCluster.TaskManager
                 Consume(response);
             }
             _semaphorePartialProblems.Release();
+        }
+
+        public void Merge(object problems)
+        {
+            Type solverType = _taskSolversRepository.GetSolverType((problems as Solutions).ProblemType);
+            TaskSolver solver = (TaskSolver)Activator.CreateInstance(solverType);
+            
+            byte[][] partialSolutions = new byte[(problems as Solutions).Solutions1.Length][];
+            for (int i = 0; i < partialSolutions.Length; i++)
+                partialSolutions[i] = Convert.FromBase64String((problems as Solutions).Solutions1[i].Data);
+                
+            byte[] solution = solver.MergeSolution(partialSolutions);
+
+            var solutionMessage = new Solutions()
+            {
+                ProblemType = (problems as Solutions).ProblemType,
+                Id = (problems as Solutions).Id,
+                Solutions1 = new SolutionsSolution[]
+                { 
+                    new SolutionsSolution()
+                    {
+                        TaskIdSpecified = false,
+                        Data = Convert.ToBase64String(solution),
+                        Type = SolutionsSolutionType.Final
+                    }
+                }
+            };
+
+            _semaphoreFinalSolutions.WaitOne();
+            _finalSolutions.AddLast(solutionMessage);
+            _semaphoreFinalSolutions.Release();
+        }
+
+        public void SendSolution()
+        {
+            _semaphoreFinalSolutions.WaitOne();
+            while (_finalSolutions.Count != 0)
+            {
+                Console.WriteLine("Sending final solution: ID={0}", _finalSolutions.First.Value.Id);
+                var response = _client.Send(_finalSolutions.First.Value);
+                _finalSolutions.RemoveFirst();
+                Consume(response);
+            }
+            _semaphoreFinalSolutions.Release();
         }
     }
 }
