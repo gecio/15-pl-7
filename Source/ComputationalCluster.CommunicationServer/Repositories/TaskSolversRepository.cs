@@ -12,8 +12,8 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 {
     public interface ITaskSolversRepository
     {
-        ICollection<TaskSolver> GetSolvers();
-        TaskSolver GetSolverByName(string name);
+        Type GetSolverType(string name);
+        TaskSolver GetSolverInstance(string name, byte[] problemData = null);
     }
 
     public class TaskSolversRepository : ITaskSolversRepository
@@ -21,7 +21,7 @@ namespace ComputationalCluster.CommunicationServer.Repositories
         private readonly IConfigProvider _configProvider;
         private readonly ILog _log;
 
-        private Dictionary<string, TaskSolver> _taskSolvers;
+        private Dictionary<string, Type> _taskSolvers;
 
         public TaskSolversRepository(IConfigProvider configProvider, IPluginManager<TaskSolver> pluginManager,
             ILog log)
@@ -29,24 +29,25 @@ namespace ComputationalCluster.CommunicationServer.Repositories
             _configProvider = configProvider;
             _log            = log;
 
-            _taskSolvers = new Dictionary<string, TaskSolver>();
+            _taskSolvers = new Dictionary<string, Type>();
 
             pluginManager.AddDirectory("plugins/");
             foreach (var plugin in pluginManager.GetPlugins())
             {
-                _log.InfoFormat("Plugin found. Name=[{0}]", plugin.Name);
-                _taskSolvers.Add(plugin.Name, plugin);
+                var pluginInstance = (TaskSolver)Activator.CreateInstance(plugin, new object[] { null });
+                _log.InfoFormat("Plugin found. Name=[{0}]", pluginInstance.Name);
+                _taskSolvers.Add(pluginInstance.Name, plugin);
             }
         }
 
-        public ICollection<TaskSolver> GetSolvers()
-        {
-            return _taskSolvers.Select(t => t.Value).ToList();
-        }
-
-        public TaskSolver GetSolverByName(string name)
+        public Type GetSolverType(string name)
         {
             return _taskSolvers[name];
+        }
+
+        public TaskSolver GetSolverInstance(string name, byte[] problemData = null)
+        {
+            return (TaskSolver)Activator.CreateInstance(GetSolverType(name), new object[] { problemData });
         }
     }
 }
