@@ -13,11 +13,13 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 {
     public class SolvePartialProblemsConsumer : IMessageConsumer<SolvePartialProblems>
     {
-        private IPartialProblemsRepository _partialProblemsRepository;
+        private readonly IPartialProblemsRepository _partialProblemsRepository;
+        private readonly IProblemDefinitionsRepository _problemDefinitionsRepository;
 
-        public SolvePartialProblemsConsumer(IPartialProblemsRepository repository)
+        public SolvePartialProblemsConsumer(IPartialProblemsRepository partialProblemsRepository, IProblemDefinitionsRepository problemDefinitionsRepository)
         {
-            _partialProblemsRepository = repository;
+            _partialProblemsRepository = partialProblemsRepository;
+            _problemDefinitionsRepository = problemDefinitionsRepository;
         }
 
         public ICollection<IMessage> Consume(SolvePartialProblems message)
@@ -41,17 +43,14 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 
         public void SaveData(SolvePartialProblems message)
         {
-            var builder = new ContainerBuilder();
-            builder.RegisterModule<CommunicationServerModule>();
-            var container = builder.Build();
-
+            ProblemDefinition problemDefinition = _problemDefinitionsRepository.FindByName(message.ProblemType);
             for (int i = 0; i < message.PartialProblems.Length; i++)
             {
                 var partialProblem = new OrderedPartialProblem()
                 {
                     Id = message.Id,
                     TaskId = message.PartialProblems[i].TaskId,
-                    //ProblemDefinition = ???
+                    ProblemDefinition = problemDefinition,
                     CommonData = message.CommonData,
                     Data = message.PartialProblems[i].Data,
                     NodeId = message.PartialProblems[i].NodeID,

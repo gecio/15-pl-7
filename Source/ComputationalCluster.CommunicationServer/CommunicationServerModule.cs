@@ -34,6 +34,7 @@ namespace ComputationalCluster.CommunicationServer
             builder.RegisterType<ProblemDefinitionsInMemoryRepository>().As<IProblemDefinitionsRepository>().SingleInstance();
             builder.RegisterType<PartialProblemsInMemoryRepository>().As<IPartialProblemsRepository>().SingleInstance();
             builder.RegisterType<TaskQueue<OrderedPartialProblem>>().AsSelf().SingleInstance();
+            builder.RegisterType<PartialProblemsInMemoryRepository>().As<IQueuableTasksRepository<OrderedPartialProblem>>().SingleInstance();
 
             builder.RegisterType<TaskSolversRepository>().As<ITaskSolversRepository>().SingleInstance();
 
