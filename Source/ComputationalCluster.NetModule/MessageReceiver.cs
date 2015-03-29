@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Autofac;
+using log4net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
-using log4net;
 
 namespace ComputationalCluster.NetModule
 {
@@ -35,15 +33,14 @@ namespace ComputationalCluster.NetModule
             ILog log)
         {
             _messageTranslator = messageTranslator;
-            _componentContext  = componentContext;
-            _log               = log;
+            _componentContext = componentContext;
+            _log = log;
 
             //var builder = new ContainerBuilder();
             //builder.RegisterModule(messageConsumersModule);
             //_messageConsumersResolver = builder.Build();
         }
 
-        
         public string Dispatch(string message)
         {
             var splitMessages = message.Split(NetServer.ETB);
@@ -68,8 +65,7 @@ namespace ComputationalCluster.NetModule
                 }
             }
 
-            return String.Join(NetServer.ETB.ToString(), results.Where(msg => msg != null));  
+            return String.Join(NetServer.ETB.ToString(), results.Where(msg => msg != null));
         }
-
     }
 }

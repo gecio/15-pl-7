@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ComputationalCluster.NetModule
 {
@@ -12,7 +8,7 @@ namespace ComputationalCluster.NetModule
     }
 
     public interface IMessageConsumer<TMessage> : IMessageConsumer
-        where TMessage: IMessage
+        where TMessage : IMessage
     {
         ICollection<IMessage> Consume(TMessage message);
     }
