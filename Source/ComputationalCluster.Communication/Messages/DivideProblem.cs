@@ -8,6 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.ComponentModel;
+using System.Text;
 using System.Xml.Serialization;
 using ComputationalCluster.NetModule;
 
@@ -66,7 +68,14 @@ namespace ComputationalCluster.Communication.Messages
         }
 
         /// <remarks/>
-        //[System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
+        //[System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary", ElementName = "Data")]
+        //public byte[] DataBytes
+        //{
+        //    get { return Encoding.UTF8.GetBytes(Data); }
+        //    set { Data = Encoding.UTF8.GetString(value); }
+        //}
+
+       // [System.Xml.Serialization.XmlIgnore]
         public string Data
         {
             get
