@@ -15,14 +15,14 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 
         }
 
-        public IMessage Consume(SolvePartialProblems message)
+        public ICollection<IMessage> Consume(SolvePartialProblems message)
         {
             var noOperationResponse = new NoOperation();
             //Console.WriteLine("Received partial problem: number of tasks={0}, ID={1}", message.PartialProblems.Count(), message.Id);
-            return noOperationResponse;
+            return new IMessage[] { noOperationResponse };
         }
 
-        public IMessage Consume(IMessage message)
+        public ICollection<IMessage> Consume(IMessage message)
         {
             var status = message as SolvePartialProblems;
             if (status == null)

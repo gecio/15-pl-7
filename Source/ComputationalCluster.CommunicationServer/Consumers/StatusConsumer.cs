@@ -3,6 +3,7 @@ using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.NetModule;
 using ComputationalCluster.TaskSolver.ArithmeticProgressionSum;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -17,7 +18,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             _componentsRepository = componentsRepository;
         }
 
-        public IMessage Consume(Status message)
+        public ICollection<IMessage> Consume(Status message)
         {
             /* // przykład, żeby przetestować jak node'y odbierają podproblemy
             if (new Random().Next(2) == 1)
@@ -167,11 +168,11 @@ namespace ComputationalCluster.CommunicationServer.Consumers
            
             var noOperationResponse = new NoOperation();
             _componentsRepository.UpdateLastStatusTimestamp(message.Id);
-            return noOperationResponse;
+            return new IMessage[] { noOperationResponse };
             
         }
 
-        public IMessage Consume(IMessage message)
+        public ICollection<IMessage> Consume(IMessage message)
         {
             var status = message as Status;
             if (status == null)

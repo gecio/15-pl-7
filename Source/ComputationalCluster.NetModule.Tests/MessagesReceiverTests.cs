@@ -4,6 +4,7 @@ using System;
 using Moq;
 using ComputationalCluster.NetModule.Tests.Fakes;
 using log4net;
+using System.Collections.Generic;
 
 namespace ComputationalCluster.NetModule.Tests
 {
@@ -35,7 +36,7 @@ namespace ComputationalCluster.NetModule.Tests
             testTextConsumerMock = new Mock<IMessageConsumer<TestTextMessage>>();
             testTextConsumerMock.As<IMessageConsumer>()
                 .Setup(t => t.Consume(requestMessage))
-                .Returns(responseMessage);
+                .Returns(new List<IMessage> { responseMessage });
 
             _logMock = new Mock<ILog>();
 

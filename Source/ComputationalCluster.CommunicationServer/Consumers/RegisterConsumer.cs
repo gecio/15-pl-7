@@ -5,6 +5,7 @@ using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.NetModule;
 using log4net;
 using System;
+using System.Collections.Generic;
 
 namespace ComputationalCluster.CommunicationServer.Consumers
 {
@@ -22,7 +23,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             _log                  = log;
         }
 
-        public IMessage Consume(Register message)
+        public ICollection<IMessage> Consume(Register message)
         {
             _log.InfoFormat("Consuming {0} = [{1}]", message.GetType().Name, message.ToString());
 
@@ -40,10 +41,10 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 Timeout = 30, // todo: config
             };
 
-            return response;
+            return new IMessage[] { response };
         }
 
-        public IMessage Consume(IMessage message)
+        public ICollection<IMessage> Consume(IMessage message)
         {
             var status = message as Register;
             if (status == null)

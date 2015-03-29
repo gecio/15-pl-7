@@ -8,13 +8,12 @@ namespace ComputationalCluster.NetModule
 {
     public interface IMessageConsumer
     {
-        IMessage Consume(IMessage message);
-
+        ICollection<IMessage> Consume(IMessage message);
     }
 
     public interface IMessageConsumer<TMessage> : IMessageConsumer
         where TMessage: IMessage
     {
-        IMessage Consume(TMessage message);
+        ICollection<IMessage> Consume(TMessage message);
     }
 }

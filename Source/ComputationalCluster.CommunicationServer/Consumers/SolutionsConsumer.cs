@@ -14,15 +14,15 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         {
         }
 
-        public IMessage Consume(Solutions message)
+        public ICollection<IMessage> Consume(Solutions message)
         {
             //Console.WriteLine("final solution: ID={0}, final solution={1}", message.Id, BitConverter.ToInt32(Convert.FromBase64String(message.Solutions1[0].Data), 0));
             //Console.WriteLine("partial solution {0}/{1}: {2}", message.Solutions1[0].TaskId, message.Id, message.Solutions1[0].Data);
             var noOperationResponse = new NoOperation();
-            return noOperationResponse;
+            return new IMessage[] { noOperationResponse };
         }
 
-        public IMessage Consume(IMessage message)
+        public ICollection<IMessage> Consume(IMessage message)
         {
             var status = message as Solutions;
             if (status == null)

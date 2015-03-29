@@ -47,7 +47,8 @@ namespace ComputationalCluster.NetModule
         public string Dispatch(string message)
         {
             var splitMessages = message.Split(NetServer.ETB);
-            List<String> results = new List<String>();
+            var results = new List<string>();
+
             foreach (var msg in splitMessages)
             {
                 var messageObject = _messageTranslator.CreateObject(msg);
@@ -56,13 +57,17 @@ namespace ComputationalCluster.NetModule
 
                 var consumerType = typeof(IMessageConsumer<>).MakeGenericType(new[] { messageObject.GetType() });
                 var consumer = (IMessageConsumer)_componentContext.Resolve(consumerType);
-                var response = consumer.Consume(messageObject);
+                var responses = consumer.Consume(messageObject);
 
-                _log.InfoFormat("Response received. Type={0} Contents=[{1}]",
-                    response.GetType().Name, response.ToString());
+                foreach (var response in responses)
+                {
+                    _log.InfoFormat("Response received. Type={0} Contents=[{1}]",
+                        response.GetType().Name, response.ToString());
 
-                results.Add(_messageTranslator.Stringify(response));
+                    results.Add(_messageTranslator.Stringify(response));
+                }
             }
+
             return String.Join(NetServer.ETB.ToString(), results.Where(msg => msg != null));  
         }
 
