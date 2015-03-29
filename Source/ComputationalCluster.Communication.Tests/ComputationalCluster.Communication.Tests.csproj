@@ -67,12 +67,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DivideProblemValidation.cs" />
+    <Compile Include="NoOperationValidation.cs" />
+    <Compile Include="PartialProblemsValidation.cs" />
     <Compile Include="StatusMessageValidation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlSchemaValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="xsd\DivideProblem.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="xsd\NoOperation.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="xsd\PartialProblems.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="xsd\Status.xsd">
       <SubType>Designer</SubType>
     </None>

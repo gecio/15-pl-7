@@ -32,6 +32,7 @@ namespace ComputationalCluster.Communication.Tests
 
         private void ValidationEventHandler(object sender, ValidationEventArgs arg)
         {
+            throw new Exception(arg.Exception.Message);
             _isValid = false;
         }
 
