@@ -66,6 +66,7 @@
     <Compile Include="Consumers\RegisterConsumer.cs" />
     <Compile Include="Consumers\StatusConsumer.cs" />
     <Compile Include="Models\Component.cs" />
+    <Compile Include="Models\OrderedPartialProblem.cs" />
     <Compile Include="Models\OrderedProblems.cs" />
     <Compile Include="Models\ProblemDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,8 +75,10 @@
     <Compile Include="Queueing\TaskQueue.cs" />
     <Compile Include="Repositories\ComponentsInMemoryRepository.cs" />
     <Compile Include="Repositories\IComponentsRepository.cs" />
+    <Compile Include="Repositories\IPartialProblemsRepository.cs" />
     <Compile Include="Repositories\IProblemDefinitionsRepository.cs" />
     <Compile Include="Repositories\IProblemsRepository.cs" />
+    <Compile Include="Repositories\PartialProblemsInMemoryRepository.cs" />
     <Compile Include="Repositories\ProblemsInMemoryRepository.cs" />
     <Compile Include="Repositories\TaskSolversRepository.cs" />
     <Compile Include="Repositories\ProblemDefinitionsInMemoryRepository.cs" />

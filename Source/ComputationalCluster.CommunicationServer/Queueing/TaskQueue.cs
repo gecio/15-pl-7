@@ -58,5 +58,23 @@ namespace ComputationalCluster.CommunicationServer.Queueing
 
             return task;
         }
+
+        public T GetNextTask(ICollection<ProblemDefinition> problemDefinitions)
+        {
+            T task = (T)_queuableTasksRepository.GetQueuableTasks()
+                .Where(t => t.IsAwaiting)
+                .Where(t => problemDefinitions.Contains(t.ProblemDefinition))
+                .Where(t => _availabilityChecker(t.ProblemDefinition) > 0)
+                .OrderBy(t => t.RequestDate).FirstOrDefault();
+
+            if (task == null)
+            {
+                return null;
+            }
+
+            _queuableTasksRepository.DequeueTask(task);
+
+            return task;
+        }
     }
 }

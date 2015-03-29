@@ -2,6 +2,8 @@
 using ComputationalCluster.Communication;
 using ComputationalCluster.Communication.Messages;
 using ComputationalCluster.CommunicationServer.Consumers;
+using ComputationalCluster.CommunicationServer.Models;
+using ComputationalCluster.CommunicationServer.Queueing;
 using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.Dependencies;
 using ComputationalCluster.NetModule;
@@ -29,6 +31,8 @@ namespace ComputationalCluster.CommunicationServer
             builder.RegisterType<ProblemsInMemoryRepository>().As<IProblemsRepository>().SingleInstance();
             builder.RegisterType<ComponentsInMemoryRepository>().As<IComponentsRepository>().SingleInstance();
             builder.RegisterType<ProblemDefinitionsInMemoryRepository>().As<IProblemDefinitionsRepository>().SingleInstance();
+            builder.RegisterType<PartialProblemsInMemoryRepository>().As<IPartialProblemsRepository>().SingleInstance();
+            builder.RegisterType<TaskQueue<OrderedPartialProblem>>().AsSelf().SingleInstance();
 
             builder.RegisterType<TaskSolversRepository>().As<ITaskSolversRepository>().SingleInstance();
 
