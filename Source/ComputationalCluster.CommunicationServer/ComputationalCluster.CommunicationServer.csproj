@@ -71,6 +71,7 @@
     <Compile Include="Database\RepositoryBase.cs" />
     <Compile Include="Database\ProblemsRepository.cs" />
     <Compile Include="Models\Component.cs" />
+    <Compile Include="Models\OrderedProblems.cs" />
     <Compile Include="Models\ProblemDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queueing\IQueuableTasksRepository.cs" />
@@ -79,6 +80,8 @@
     <Compile Include="Repositories\ComponentsInMemoryRepository.cs" />
     <Compile Include="Repositories\IComponentsRepository.cs" />
     <Compile Include="Repositories\IProblemDefinitionsRepository.cs" />
+    <Compile Include="Repositories\IProblemsRepository.cs" />
+    <Compile Include="Repositories\ProblemsInMemoryRepository.cs" />
     <Compile Include="Repositories\TaskSolversRepository.cs" />
     <Compile Include="Repositories\ProblemDefinitionsInMemoryRepository.cs" />
   </ItemGroup>

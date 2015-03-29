@@ -8,24 +8,35 @@ using ComputationalCluster.Communication.Messages;
 using ComputationalCluster.CommunicationServer.Database;
 using ComputationalCluster.NetModule;
 using ComputationalCluster.CommunicationServer.Database.Entities;
+using ComputationalCluster.CommunicationServer.Repositories;
+using ComputationalCluster.Common;
+using log4net;
+using ComputationalCluster.CommunicationServer.Models;
 
 namespace ComputationalCluster.CommunicationServer.Consumers
 {
     public class SolveRequestConsumer : IMessageConsumer<SolveRequest>
     {
-        private IRepository<Problem> _repository;
-        public SolveRequestConsumer(IRepository<Problem> repository)
+        private readonly IProblemsRepository _problemsRepository;
+        private readonly ITimeProvider _timeProvider;
+        private readonly ILog _log;
+
+        public SolveRequestConsumer(IProblemsRepository problemRepository, ITimeProvider timeProvider,
+            ILog log)
         {
-            _repository = repository;
+            _problemsRepository = problemRepository;
+            _timeProvider = timeProvider;
+            _log = log;
         }
 
 
         public IMessage Consume(SolveRequest message)
         {
-            int unqueId = SaveData(message);
+            _log.InfoFormat("Consuming {0} = [{1}]", message.GetType().Name, message.ToString());
+            ulong unqueId = SaveData(message);
             SolveRequestResponse response = new SolveRequestResponse
             {
-                Id = (ulong)unqueId
+                Id = unqueId
             };
             return response;
         }
@@ -41,26 +52,16 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         }
 
         //todo: opakować w transakcje
-        private int SaveData(SolveRequest solveRequest)
+        private ulong SaveData(SolveRequest solveRequest)
         {
-            var task = new Problem
+            var task = new OrderedProblem
             {
                 Data = solveRequest.Data,
-                ProblemType = solveRequest.ProblemType,
-                UniqueId = GenerateUniquId(),
+                Timeout = solveRequest.SolvingTimeout
+                //TODO: ProblemDefinitio??? 
             };
-            if (solveRequest.SolvingTimeoutSpecified)
-            {
-                task.Timeout = solveRequest.SolvingTimeout;
-            }
-            _repository.Add(task);
-            return task.UniqueId;
+            return _problemsRepository.Add(task);
         }
 
-        private int GenerateUniquId()
-        {
-            var lastUid = _repository.GetAll().OrderByDescending(a => a.UniqueId).Select(a => a.UniqueId).FirstOrDefault(x => true);
-            return lastUid + 1;
-        }
     }
 }
