@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.CommunicationServer.Consumers
 {
-    public class SolutionsConsumer : IMessageConsumer<Solutions>
+    public class SolutionsConsumer : IMessageConsumer<Solutions>, IMessage
     {
         public SolutionsConsumer()
         {

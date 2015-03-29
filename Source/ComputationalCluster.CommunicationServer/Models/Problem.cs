@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using ComputationalCluster.CommunicationServer.Queueing;
 namespace ComputationalCluster.CommunicationServer.Models
 {
-    public class OrderedProblem : IQueueableTask
+    public class Problem : IQueueableTask
     {
         public ulong Id { get; set; }
-        public string Data { get; set; }
+        public string InputData { get; set; }
+        public string OutputData { get; set; }
         public ProblemDefinition ProblemType { get; set; }
         public ulong Timeout { get; set; }
 
@@ -19,5 +20,7 @@ namespace ComputationalCluster.CommunicationServer.Models
         public ProblemDefinition ProblemDefinition { get; set; }
 
         public bool IsAwaiting { get; set; }
+        public bool IsDone { get; set; }
+
     }
 }

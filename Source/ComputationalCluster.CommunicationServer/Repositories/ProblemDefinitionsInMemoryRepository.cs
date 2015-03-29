@@ -25,5 +25,10 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 
             return problemDefinition.Id;
         }
+
+        public ProblemDefinition FindByName(string name)
+        {
+            return _problemDefinitions.FirstOrDefault(item => item.Name == name);
+        }
     }
 }

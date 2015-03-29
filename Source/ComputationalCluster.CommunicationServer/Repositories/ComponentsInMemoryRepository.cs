@@ -14,7 +14,7 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 
         private ulong _nextValidGuid = 1;
         private Dictionary<ulong, Component> _componentDictionary;
-
+        
         public ComponentsInMemoryRepository(ITimeProvider timeProvider, ILog log)
         {
             _timeProvider = timeProvider;

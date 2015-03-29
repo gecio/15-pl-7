@@ -1,10 +1,11 @@
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Input;
+using ComputationalCluster.Communication.Messages;
 
 namespace ComputationalCluster.ComputationalClient.ViewModel
 {
@@ -98,7 +99,7 @@ namespace ComputationalCluster.ComputationalClient.ViewModel
         {
             get
             {
-                if(_sendSolutionRequestCommand == null)
+                if (_sendSolutionRequestCommand == null)
                 {
                     _sendSolutionRequestCommand = new RelayCommand(SendSolutionRequest, () => { return ProblemId > 0; });
                 }
@@ -130,7 +131,7 @@ namespace ComputationalCluster.ComputationalClient.ViewModel
                 problemId = _cClient.SendSolveRequest(_fileContent, ProblemType);
             }
 
-            MessageBox.Show(String.Format("Wys�ane!\nId przdzielone przez serwer to: {0}", problemId));
+            MessageBox.Show(String.Format("Wys³ane!\nId przdzielone przez serwer to: {0}", problemId));
 
             _fileContent = null;
             ProblemType = null;
@@ -139,19 +140,33 @@ namespace ComputationalCluster.ComputationalClient.ViewModel
         private void SendSolutionRequest()
         {
             var result = _cClient.SendSolutionRequest(ProblemId);
-            if( result == null )
+            if (result == null || result.Solutions1.Length <= 0)
             {
-                MessageBox.Show("Obliczenia nie zosta�y jeszcze zako�czone!");
+                MessageBox.Show("Błąd!");
                 return;
             }
-            var sfd = new Microsoft.Win32.SaveFileDialog();
-            if( sfd.ShowDialog() == true)
+            if (!result.Solutions1[0].TimeoutOccured && result.Solutions1[0].Type == SolutionsSolutionType.Ongoing)
             {
-                using(var sw = new StreamWriter(sfd.OpenFile()))
+                MessageBox.Show("Obliczenia nie zostały jeszcze zakończone!");
+                return;
+            }
+            if (result.Solutions1[0].TimeoutOccured)
+            {
+                MessageBox.Show("Obliczenia przekroczyły limit czasu!");
+                return;
+            }
+            if (result.Solutions1[0].Type == SolutionsSolutionType.Final)
+            {
+                var sfd = new Microsoft.Win32.SaveFileDialog();
+                if (sfd.ShowDialog() == true)
                 {
-                    sw.Write(result);
+                    using (var sw = new StreamWriter(sfd.OpenFile()))
+                    {
+                        sw.Write(result);
+                    }
                 }
             }
         }
+
     }
 }

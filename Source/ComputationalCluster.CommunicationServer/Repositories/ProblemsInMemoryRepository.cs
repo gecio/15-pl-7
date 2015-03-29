@@ -8,32 +8,37 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.CommunicationServer.Repositories
 {
-    public class ProblemsInMemoryRepository : IQueuableTasksRepository<OrderedProblem>, IProblemsRepository
+    public class ProblemsInMemoryRepository : IQueuableTasksRepository<Problem>, IProblemsRepository
     {
-        private Dictionary<ulong, OrderedProblem> _orderedProblems;
+        private Dictionary<ulong, Problem> _problems;
         private ulong _nextvalidId = 1;
 
-        public ProblemsInMemoryRepository()
+        public ProblemsInMemoryRepository(IProblemDefinitionsRepository problemDefinitionsRepository)
         {
-            _orderedProblems = new Dictionary<ulong, OrderedProblem>();
+            _problems = new Dictionary<ulong, Problem>();
         }
 
-        public ulong Add(OrderedProblem problem)
+        public ulong Add(Problem problem)
         {
             problem.Id = _nextvalidId++;
             problem.RequestDate = DateTime.Now;
-            _orderedProblems.Add(problem.Id, problem);
+            _problems.Add(problem.Id, problem);
             return problem.Id;
+        }
+
+        public Problem FindById(int id)
+        {
+            return _problems.ContainsKey((ulong) id) ? _problems[(ulong) id] : null;
         }
 
         public ICollection<IQueueableTask> GetQueuableTasks()
         {
-            return _orderedProblems.Values.ToArray();
+            return _problems.Values.ToArray();
         }
 
         public void DequeueTask(IQueueableTask task)
         {
-            throw new NotImplementedException();
+            return;
         }
     }
 }

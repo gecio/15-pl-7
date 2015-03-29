@@ -10,5 +10,6 @@ namespace ComputationalCluster.CommunicationServer.Repositories
     public interface IProblemDefinitionsRepository
     {
         int Add(ProblemDefinition problemDefinition);
+        ProblemDefinition FindByName(string name);
     }
 }

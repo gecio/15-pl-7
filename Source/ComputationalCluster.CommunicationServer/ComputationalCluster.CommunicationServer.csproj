@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="CommunicationServerService.cs" />
     <Compile Include="CommunicationServerModule.cs" />
+    <Compile Include="Consumers\SolutionRequestConsumer.cs" />
     <Compile Include="Consumers\SolutionsConsumer.cs" />
     <Compile Include="Consumers\SolvePartialProblemsConsumer.cs" />
     <Compile Include="Consumers\SolveRequestConsumer.cs" />
@@ -67,7 +68,7 @@
     <Compile Include="Consumers\StatusConsumer.cs" />
     <Compile Include="Models\Component.cs" />
     <Compile Include="Models\OrderedPartialProblem.cs" />
-    <Compile Include="Models\OrderedProblems.cs" />
+    <Compile Include="Models\Problem.cs" />
     <Compile Include="Models\ProblemDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queueing\IQueuableTasksRepository.cs" />

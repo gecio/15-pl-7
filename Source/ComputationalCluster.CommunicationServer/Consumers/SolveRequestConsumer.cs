@@ -16,15 +16,17 @@ namespace ComputationalCluster.CommunicationServer.Consumers
     public class SolveRequestConsumer : IMessageConsumer<SolveRequest>
     {
         private readonly IProblemsRepository _problemsRepository;
+        private readonly IProblemDefinitionsRepository _problemDefinitionsRepository;
         private readonly ITimeProvider _timeProvider;
         private readonly ILog _log;
 
-        public SolveRequestConsumer(IProblemsRepository problemRepository, ITimeProvider timeProvider,
+        public SolveRequestConsumer(IProblemsRepository problemRepository, IProblemDefinitionsRepository problemDefinitionsRepository, ITimeProvider timeProvider,
             ILog log)
         {
             _problemsRepository = problemRepository;
-            _timeProvider = timeProvider;
-            _log = log;
+            _timeProvider       = timeProvider;
+            _log                = log;
+            _problemDefinitionsRepository = problemDefinitionsRepository;
         }
 
 
@@ -44,21 +46,35 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             var solveRequest = message as SolveRequest;
             if (solveRequest == null)
             {
+                _log.Error("SolverRequestConsumer consumes SolveRequest ony");
                 throw new NotSupportedException("SolverRequestConsumer consumes SolveRequest ony.\n");
             }
             return Consume(solveRequest);
         }
 
-        //todo: opakować w transakcje
         private ulong SaveData(SolveRequest solveRequest)
         {
-            var task = new OrderedProblem
+            var problemDefinition = _problemDefinitionsRepository.FindByName(solveRequest.ProblemType);
+            if (problemDefinition == null)
             {
-                Data = solveRequest.Data,
-                Timeout = solveRequest.SolvingTimeout
-                //TODO: ProblemDefinitio??? 
+                problemDefinition = new ProblemDefinition
+                {
+                    AvailableComputationalNodes = 0,
+                    AvailableTaskManagers = 0,
+                    Name = solveRequest.ProblemType
+                };
+                _problemDefinitionsRepository.Add(problemDefinition);
+            }
+
+            var orderedProblem = new Problem
+            {
+                InputData = solveRequest.Data,
+                Timeout = solveRequest.SolvingTimeout,
+                ProblemDefinition = problemDefinition,
+                RequestDate = _timeProvider.Now,
+                IsAwaiting = true,
             };
-            return _problemsRepository.Add(task);
+            return _problemsRepository.Add(orderedProblem);
         }
 
     }
