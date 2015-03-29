@@ -9,6 +9,7 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 {
     public interface IProblemsRepository
     {
-        ulong Add(OrderedProblem problem);
+        ulong Add(Problem problem);
+        Problem FindById(int id);
     }
 }
