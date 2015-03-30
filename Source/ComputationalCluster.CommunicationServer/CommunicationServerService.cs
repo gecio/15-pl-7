@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.NetModule;
+using ComputationalCluster.PluginManager;
 using log4net;
 using System;
 

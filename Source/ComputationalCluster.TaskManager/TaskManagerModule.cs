@@ -4,6 +4,7 @@ using ComputationalCluster.Communication;
 using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.Dependencies;
 using ComputationalCluster.NetModule;
+using ComputationalCluster.PluginManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
