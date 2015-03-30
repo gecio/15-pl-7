@@ -6,6 +6,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Windows.Input;
 using ComputationalCluster.Communication.Messages;
+using System.Text;
 
 namespace ComputationalCluster.ComputationalClient.ViewModel
 {
@@ -162,7 +163,7 @@ namespace ComputationalCluster.ComputationalClient.ViewModel
                 {
                     using (var sw = new StreamWriter(sfd.OpenFile()))
                     {
-                        sw.Write(result);
+                        sw.Write(Encoding.UTF8.GetString( Convert.FromBase64String( result.Solutions1[0].Data)));
                     }
                 }
             }

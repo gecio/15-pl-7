@@ -97,7 +97,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             _problemsRepository.Update(solution);
 
             Console.WriteLine("Solution saved: id={0}, result={1}", solution.Id, BitConverter.ToInt32(Convert.FromBase64String(solution.OutputData), 0));
-            //_partialProblemsRepository.RemoveFinishedProblems(message.Id);
+            _partialProblemsRepository.RemoveFinishedProblems(message.Id);
 
         }
     }
