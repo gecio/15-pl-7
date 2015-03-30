@@ -67,5 +67,10 @@ namespace ComputationalCluster.CommunicationServer.Repositories
                 if (problem.Value.Id == problemId)
                     _orderedPartialProblems.Remove(problem.Key);
         }
+
+        public OrderedPartialProblem FindById(int id)
+        {
+            return _orderedPartialProblems.ContainsKey((ulong) id) ? _orderedPartialProblems[(ulong) id] : null;
+        }
     }
 }

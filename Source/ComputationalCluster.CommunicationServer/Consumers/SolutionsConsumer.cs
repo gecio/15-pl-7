@@ -51,37 +51,53 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         public void SavePartialSolutions(Solutions message)
         {
             ProblemDefinition problemDefinition = _problemDefinitionsRepository.FindByName(message.ProblemType);
+
             for (int i=0; i<message.Solutions1.Length; i++)
             {
-                var partialSolution = new OrderedPartialProblem()
-                {
-                    ProblemDefinition = problemDefinition,
-                    Id = message.Id,
-                    CommonData = message.CommonData,
-                    TaskId = message.Solutions1[i].TaskId,
-                    Data = message.Solutions1[i].Data,
-                    IsAwaiting = true,
-                    Done = true,
-                };
-                _partialProblemsRepository.Add(partialSolution);
+                var partialProblem = _partialProblemsRepository.FindById((int)message.Solutions1[i].TaskId);
+                partialProblem.CommonData = message.CommonData;
+                partialProblem.Data = message.Solutions1[i].Data;
+                partialProblem.Done = true;
+                partialProblem.IsAwaiting = false;
+
+
+                //var partialSolution = new OrderedPartialProblem()
+                //{
+                //    ProblemDefinition = problemDefinition,
+                //    Id = message.Id,
+                //    CommonData = message.CommonData,
+                //    TaskId = message.Solutions1[i].TaskId,
+                //    Data = message.Solutions1[i].Data,
+                //    IsAwaiting = true,
+                //    Done = true,
+                //};
+                //_partialProblemsRepository.Add(partialSolution);
             }
         }
 
         public void SaveFinalSolution(Solutions message)
         {
             ProblemDefinition problemDefinition = _problemDefinitionsRepository.FindByName(message.ProblemType);
-            var solution = new Problem()
+            var solution = _problemsRepository.FindById((int)message.Id);
+            if (solution != null)
             {
-                Id = message.Id,
-                OutputData = message.Solutions1[0].Data,
-                ProblemDefinition = problemDefinition,
-                ProblemType = problemDefinition,
-                IsAwaiting = false,
-                IsDone = true,
-            };
-            _problemsRepository.Add(solution);
+                solution.OutputData = message.Solutions1[0].Data;
+                solution.IsAwaiting = false;
+                solution.IsDone = true;
+            }
+            //var solution = new Problem()
+            //{
+            //    Id = message.Id,
+            //    OutputData = message.Solutions1[0].Data,
+            //    ProblemDefinition = problemDefinition,
+            //    ProblemType = problemDefinition,
+            //    IsAwaiting = false,
+            //    IsDone = true,
+            //};
+            _problemsRepository.Update(solution);
+
             Console.WriteLine("Solution saved: id={0}, result={1}", solution.Id, BitConverter.ToInt32(Convert.FromBase64String(solution.OutputData), 0));
-            _partialProblemsRepository.RemoveFinishedProblems(message.Id);
+            //_partialProblemsRepository.RemoveFinishedProblems(message.Id);
 
         }
     }

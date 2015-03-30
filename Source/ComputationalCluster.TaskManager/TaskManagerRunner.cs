@@ -131,8 +131,8 @@ namespace ComputationalCluster.TaskManager
                 partialProblemsMessage.PartialProblems[i] = new SolvePartialProblemsPartialProblem()
                 {
                     Data = Convert.ToBase64String(partialProblems[i]),
-                    TaskId = (ulong)i,
-                    NodeID = _id
+                    TaskId = (ulong)(i+1),
+                    NodeID = _id,
                 };
             }
 
@@ -193,6 +193,7 @@ namespace ComputationalCluster.TaskManager
             while (_finalSolutions.Count != 0)
             {
                 Console.WriteLine("Sending final solution: ID={0}", _finalSolutions.First.Value.Id);
+                
                 var response = _client.Send(_finalSolutions.First.Value);
                 _finalSolutions.RemoveFirst();
                 Consume(response);

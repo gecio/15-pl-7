@@ -31,6 +31,11 @@ namespace ComputationalCluster.CommunicationServer.Repositories
             return _problems.ContainsKey((ulong) id) ? _problems[(ulong) id] : null;
         }
 
+        public void Update(Problem problem)
+        {
+            //TODO: logi
+        }
+
         public ICollection<IQueueableTask> GetQueuableTasks()
         {
             return _problems.Values
