@@ -186,6 +186,11 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                   ///  break;
             }
 
+            if (message.Threads == null)
+            {
+                message.Threads = new StatusThread[] { };
+            }
+
             if (_componentsRepository.GetById(message.Id).Type == RegisterType.ComputationalNode)
             {
                 int threadsCount = 0;

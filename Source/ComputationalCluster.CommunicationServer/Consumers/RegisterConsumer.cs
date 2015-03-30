@@ -6,6 +6,7 @@ using ComputationalCluster.NetModule;
 using log4net;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ComputationalCluster.CommunicationServer.Consumers
 {
@@ -27,10 +28,37 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         {
             _log.InfoFormat("Consuming {0} = [{1}]", message.GetType().Name, message.ToString());
 
+            // Null object - dlaczego nie jest length=0 od razu?
+            if (message.SolvableProblems == null)
+            {
+                message.SolvableProblems = new string[] { };
+            }
+
+            /* Backup feature
+            if (message.DeregisterSpecified && message.Deregister)
+            {
+                if (!message.IdSpecified)
+                {
+                    _log.Error("Deregister requested without specified component Id.");
+                    return null;
+                }
+
+                _componentsRepository.Deregister(message.Id);
+                return null;
+            }
+            */
+
+            if (message.SolvableProblems.Length == 0)
+            {
+                _log.Warn("Registering component with no solvable problems.");
+            }
+
             var component = new Component()
             {
                 LastStatusTimestamp = DateTime.Now,
                 Type = message.Type,
+                MaxThreads = message.ParallelThreads,
+                SolvableProblems = message.SolvableProblems.Select(t => new ProblemDefinition { Name = t }).ToList(),
             };
 
             var guid = _componentsRepository.Register(component);

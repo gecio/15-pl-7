@@ -13,6 +13,7 @@ namespace ComputationalCluster.CommunicationServer.Models
         public ulong Id { get; set; }
         public DateTime LastStatusTimestamp { get; set; }
         public RegisterType Type { get; set; }
+        public int MaxThreads { get; set; }
 
         public ICollection<ProblemDefinition> SolvableProblems { get; set; }
     }
