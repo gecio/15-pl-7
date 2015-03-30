@@ -202,9 +202,10 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                         threadsCount++;
                 List<OrderedPartialProblem> partialProblems = new List<OrderedPartialProblem>();
                 OrderedPartialProblem problem = _partialProblemsQueue.GetNextTask(_componentsRepository.GetById(message.Id).SolvableProblems);
-                if (problem != null) _log.DebugFormat("GetNextTask Id: {0}", problem.Id);
+
                 while (problem != null && problem.Done==false && threadsCount > 0)
                 {
+                    _log.DebugFormat("GetNextTask Id: {0}", problem.Id);
                     partialProblems.Add(problem);
                     threadsCount--;
                     problem = _partialProblemsQueue.GetNextTask(new ProblemDefinition[] { problem.ProblemDefinition });
