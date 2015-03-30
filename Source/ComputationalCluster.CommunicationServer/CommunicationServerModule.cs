@@ -29,12 +29,12 @@ namespace ComputationalCluster.CommunicationServer
             //builder.RegisterType<ServerDbContext>().As<DbContext>().AsSelf().InstancePerDependency();
             //builder.RegisterType<ProblemsRepository>().As<RepositoryBase<Problem>>().As<IRepository<Problem>>().AsSelf();
 
-            builder.RegisterType<ProblemsInMemoryRepository>().As<IProblemsRepository>().SingleInstance();
+            builder.RegisterType<ProblemsInMemoryRepository>().As<IProblemsRepository>().As<IQueuableTasksRepository<Problem>>().SingleInstance();
             builder.RegisterType<ComponentsInMemoryRepository>().As<IComponentsRepository>().SingleInstance();
             builder.RegisterType<ProblemDefinitionsInMemoryRepository>().As<IProblemDefinitionsRepository>().SingleInstance();
-            builder.RegisterType<PartialProblemsInMemoryRepository>().As<IPartialProblemsRepository>().SingleInstance();
+            builder.RegisterType<PartialProblemsInMemoryRepository>().As<IQueuableTasksRepository<OrderedPartialProblem>>().As<IPartialProblemsRepository>().SingleInstance();
             builder.RegisterType<TaskQueue<OrderedPartialProblem>>().AsSelf().SingleInstance();
-            builder.RegisterType<PartialProblemsInMemoryRepository>().As<IQueuableTasksRepository<OrderedPartialProblem>>().SingleInstance();
+            builder.RegisterType<TaskQueue<Problem>>().AsSelf().SingleInstance();
 
             builder.RegisterType<TaskSolversRepository>().As<ITaskSolversRepository>().SingleInstance();
 
