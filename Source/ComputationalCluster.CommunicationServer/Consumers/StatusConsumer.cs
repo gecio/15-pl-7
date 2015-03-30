@@ -202,8 +202,8 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                         threadsCount++;
                 List<OrderedPartialProblem> partialProblems = new List<OrderedPartialProblem>();
                 OrderedPartialProblem problem = _partialProblemsQueue.GetNextTask(_componentsRepository.GetById(message.Id).SolvableProblems);
-                _log.DebugFormat("GetNextTask Id: {0}", problem.Id);
-                while (problem != null && threadsCount > 0)
+                if (problem != null) _log.DebugFormat("GetNextTask Id: {0}", problem.Id);
+                while (problem != null && problem.Done==false && threadsCount > 0)
                 {
                     partialProblems.Add(problem);
                     threadsCount--;
@@ -226,6 +226,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                     };
                     for (int i = 0; i < partialProblems.Count; i++)
                     {
+                        partialProblems[i].IsAwaiting = false;
                         partialProblemsMessage.PartialProblems[i] = new SolvePartialProblemsPartialProblem()
                         {
                             TaskId = partialProblems[i].TaskId,
@@ -234,7 +235,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                         };
                     }
 
-                    return new IMessage[] { noOperationResponse, partialProblemsMessage };
+                    return new IMessage[] { partialProblemsMessage, new NoOperation() };
                 }
                 else
                     return new IMessage[] { noOperationResponse };
@@ -260,6 +261,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 
         private ICollection<IMessage> ConsumeFromTaskManager(Status message)
         {
+            _componentsRepository.UpdateLastStatusTimestamp(message.Id);
             int threadsCount = message.Threads.Count(t => t.State == StatusThreadState.Idle);
 
             if (threadsCount <= 0)
@@ -277,7 +279,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             {
                 return new IMessage[] {divideMessage, new NoOperation()};
             }
-
+            
             return new IMessage[] { new NoOperation() };
 
         }
@@ -290,12 +292,14 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             var problem = _problems.GetNextTask(component.SolvableProblems);
             if (problem != null)
             {
+                problem.IsAwaiting = false;
                 return new DivideProblem
                 {
                     ProblemType = problem.ProblemDefinition.Name,
                     Id = problem.Id,
                     ComputationalNodes = (ulong) problem.ProblemDefinition.AvailableComputationalNodes,
                     NodeID = component.Id,
+                    Data = problem.InputData
                 };
             }
             return null;

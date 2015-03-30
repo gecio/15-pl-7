@@ -40,13 +40,16 @@ namespace ComputationalCluster.CommunicationServer.Repositories
                     .OrderBy(tmp => tmp.RequestDate)
                     .GroupBy(tmp => tmp.TaskId)
                     .Select(g => g);
+            
+            if (res2.FirstOrDefault() != null && res2.FirstOrDefault().FirstOrDefault(x => x.Done == true) != null)
+                return new OrderedPartialProblem[] { res2.FirstOrDefault().FirstOrDefault(x => x.Done==true) };
+            return null;
+            //IEnumerable<IGrouping<ulong, OrderedPartialProblem>> res3;
+            //res3 = res2.Where(a => a.All(x => x.Done));
 
-            IEnumerable<IGrouping<ulong, OrderedPartialProblem>> res3;
-            res3 = res2.Where(a => a.All(x => x.Done));
 
-
-            IGrouping<ulong, OrderedPartialProblem> first = res3.FirstOrDefault();
-            return first != null? res3.FirstOrDefault().ToArray(): null;
+            //IGrouping<ulong, OrderedPartialProblem> first = res3.FirstOrDefault();
+            //return first != null? res3.FirstOrDefault().ToArray(): null;
 
         }
 
@@ -55,6 +58,14 @@ namespace ComputationalCluster.CommunicationServer.Repositories
             return _orderedPartialProblems.Values
                 .Where(t => t.ProblemDefinition.AvailableComputationalNodes > 0)
                 .ToArray();
+        }
+
+
+        public void RemoveFinishedProblems(ulong problemId)
+        {
+            foreach (var problem in _orderedPartialProblems)
+                if (problem.Value.Id == problemId)
+                    _orderedPartialProblems.Remove(problem.Key);
         }
     }
 }

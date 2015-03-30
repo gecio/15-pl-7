@@ -131,7 +131,7 @@ namespace ComputationalCluster.ComputationalClient.ViewModel
                 problemId = _cClient.SendSolveRequest(_fileContent, ProblemType);
             }
 
-            MessageBox.Show(String.Format("Wys³ane!\nId przdzielone przez serwer to: {0}", problemId));
+            MessageBox.Show(String.Format("Wysłane!\nId przdzielone przez serwer to: {0}", problemId));
 
             _fileContent = null;
             ProblemType = null;

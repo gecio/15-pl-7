@@ -12,5 +12,7 @@ namespace ComputationalCluster.CommunicationServer.Repositories
         ulong Add(OrderedPartialProblem problem);
 
         ICollection<OrderedPartialProblem> GetFinishedProblem(ICollection<ProblemDefinition> problemDefinitions);
+
+        void RemoveFinishedProblems(ulong problemId);
     }
 }

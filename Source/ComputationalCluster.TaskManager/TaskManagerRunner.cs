@@ -4,6 +4,7 @@ using ComputationalCluster.Communication.Messages;
 using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.NetModule;
 using ComputationalCluster.PluginManager;
+using log4net.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,8 @@ namespace ComputationalCluster.TaskManager
 
         public TaskManagerRunner()
         {
+            BasicConfigurator.Configure();
+
             var builder = new ContainerBuilder();
             builder.RegisterModule<TaskManagerModule>();
             var container = builder.Build();
