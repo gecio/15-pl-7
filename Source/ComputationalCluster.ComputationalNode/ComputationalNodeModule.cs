@@ -26,6 +26,7 @@ namespace ComputationalCluster.ComputationalNode
             builder.RegisterType<MessageTranslator>().AsImplementedInterfaces().AsSelf();
 
             builder.RegisterType<ConfigProvider>().As<IConfigProvider>();
+            builder.RegisterType<ConfigProviderThreads>().AsSelf();
 
             builder.RegisterType<TaskSolversRepository>().As<ITaskSolversRepository>().SingleInstance();
             builder.RegisterModule<CommonModule>();

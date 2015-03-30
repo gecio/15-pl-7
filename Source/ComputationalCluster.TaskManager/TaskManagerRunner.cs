@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using ComputationalCluster.Common;
 using ComputationalCluster.Communication.Messages;
 using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.NetModule;
@@ -24,6 +25,10 @@ namespace ComputationalCluster.TaskManager
         private Semaphore _semaphoreFinalSolutions;
         private ulong _id;
 
+        private ConfigProviderThreads _configProvider;
+        private int _numberOfThreads;
+        private int _numberOfBusyThreads;
+
         public TaskManagerRunner()
         {
             var builder = new ContainerBuilder();
@@ -37,13 +42,19 @@ namespace ComputationalCluster.TaskManager
             _semaphorePartialProblems = new Semaphore(1, 1);
             _finalSolutions = new LinkedList<Solutions>();
             _semaphoreFinalSolutions = new Semaphore(1, 1);
+
+            _configProvider = container.Resolve<ConfigProviderThreads>();
         }
 
         public void Start()
         {
+            _numberOfThreads = (_configProvider as ConfigProviderThreads).ThreadsCount;
+            _numberOfBusyThreads = 0;
+
             var response = _client.Send(new Register()
             {
-                Type = RegisterType.TaskManager
+                Type = RegisterType.TaskManager,
+                ParallelThreads = (byte)_numberOfThreads
             }) as RegisterResponse;
             _id = response.Id;
             Console.WriteLine("Register response: ID={0}", _id);
@@ -51,9 +62,23 @@ namespace ComputationalCluster.TaskManager
             while (true)
             {
                 System.Threading.Thread.Sleep(new TimeSpan(0, 0, (int)(response.Timeout / 2)));
+
+                var threads = new StatusThread[_numberOfThreads];
+                for (int i=0; i<_numberOfBusyThreads; i++)
+                    threads[i] = new StatusThread()
+                    {
+                        State = StatusThreadState.Busy
+                    };
+                for (int i=_numberOfBusyThreads; i<_numberOfThreads; i++)
+                    threads[i] = new StatusThread()
+                    {
+                        State = StatusThreadState.Idle
+                    };
+
                 var receivedMessage = _client.Send(new Status()
                 {
                     Id = _id,
+                    Threads = threads
                 });
 
                 Consume(receivedMessage);
@@ -73,12 +98,14 @@ namespace ComputationalCluster.TaskManager
             {
                 Console.WriteLine("Received a problem to divide: ID={0}", (receivedMessage as DivideProblem).Id);
                 Thread thread = new Thread(new ParameterizedThreadStart(Divide));
+                _numberOfBusyThreads++;
                 thread.Start(receivedMessage);
             }
             else if (receivedMessage.GetType() == typeof(Solutions))
             {
                 Console.WriteLine("Received partial problems to merge: ID={0}", (receivedMessage as Solutions).Id);
                 Thread thread = new Thread(new ParameterizedThreadStart(Merge));
+                _numberOfBusyThreads++;
                 thread.Start(receivedMessage);
             }
         }
@@ -108,6 +135,7 @@ namespace ComputationalCluster.TaskManager
             _semaphorePartialProblems.WaitOne();
             _parialProblems.AddLast(partialProblemsMessage);
             _semaphorePartialProblems.Release();
+            _numberOfBusyThreads--;
         }
 
         public void SendPartialProblems()
@@ -152,6 +180,7 @@ namespace ComputationalCluster.TaskManager
             _semaphoreFinalSolutions.WaitOne();
             _finalSolutions.AddLast(solutionMessage);
             _semaphoreFinalSolutions.Release();
+            _numberOfBusyThreads--;
         }
 
         public void SendSolution()
