@@ -59,7 +59,7 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 
                 solvableProblems.Add(def);
             }
-
+            component.SolvableProblems = solvableProblems;
             _componentDictionary.Add(component.Id, component);
 
             return component.Id;

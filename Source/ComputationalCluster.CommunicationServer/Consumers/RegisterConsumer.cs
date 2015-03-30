@@ -55,7 +55,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 
             var component = new Component()
             {
-                LastStatusTimestamp = DateTime.Now,
+                LastStatusTimestamp = _timeProvider.Now,
                 Type = message.Type,
                 MaxThreads = message.ParallelThreads,
                 SolvableProblems = message.SolvableProblems.Select(t => new ProblemDefinition { Name = t }).ToList(),

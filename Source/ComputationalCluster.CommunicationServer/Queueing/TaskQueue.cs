@@ -41,6 +41,7 @@ namespace ComputationalCluster.CommunicationServer.Queueing
 
         public T GetNextTask(ICollection<ProblemDefinition> problemDefinitions)
         {
+            _log.DebugFormat("{0}",_queuableTasksRepository.GetQueuableTasks().Count);
             return (T) _queuableTasksRepository.GetQueuableTasks()
                 .Where(t => t.IsAwaiting)
                 .Where(t => problemDefinitions.Contains(t.ProblemDefinition))

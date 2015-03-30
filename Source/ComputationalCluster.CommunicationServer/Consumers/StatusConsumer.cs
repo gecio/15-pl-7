@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using log4net;
 
 namespace ComputationalCluster.CommunicationServer.Consumers
 {
@@ -18,14 +19,16 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         private TaskQueue<OrderedPartialProblem> _partialProblemsQueue;
         private TaskQueue<Problem> _problems;
         private IPartialProblemsRepository _partialProblemsRepository;
+        private ILog _log;
 
         public StatusConsumer(IComponentsRepository componentsRepository, TaskQueue<OrderedPartialProblem> partialProblemsQueue, TaskQueue<Problem> problemsQueue,
-            IPartialProblemsRepository partialProblemsRepository)
+            IPartialProblemsRepository partialProblemsRepository, ILog log)
         {
             _componentsRepository = componentsRepository;
             _partialProblemsQueue = partialProblemsQueue;
             _problems = problemsQueue;
             _partialProblemsRepository = partialProblemsRepository;
+            _log = log;
         }
 
         public ICollection<IMessage> Consume(Status message)
@@ -197,9 +200,9 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 for (int i = 0; i < message.Threads.Length; i++)
                     if (message.Threads[i].State == StatusThreadState.Idle)
                         threadsCount++;
-
                 List<OrderedPartialProblem> partialProblems = new List<OrderedPartialProblem>();
                 OrderedPartialProblem problem = _partialProblemsQueue.GetNextTask(_componentsRepository.GetById(message.Id).SolvableProblems);
+                _log.DebugFormat("GetNextTask Id: {0}", problem.Id);
                 while (problem != null && threadsCount > 0)
                 {
                     partialProblems.Add(problem);

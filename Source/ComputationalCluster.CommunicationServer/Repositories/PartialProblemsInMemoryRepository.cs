@@ -46,7 +46,7 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 
 
             IGrouping<ulong, OrderedPartialProblem> first = res3.FirstOrDefault();
-            return first == null? res3.FirstOrDefault().ToArray(): null;
+            return first != null? res3.FirstOrDefault().ToArray(): null;
 
         }
 

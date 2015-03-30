@@ -54,7 +54,8 @@ namespace ComputationalCluster.TaskManager
             var response = _client.Send(new Register()
             {
                 Type = RegisterType.TaskManager,
-                ParallelThreads = (byte)_numberOfThreads
+                ParallelThreads = (byte)_numberOfThreads,
+                SolvableProblems = _taskSolversRepository.GetSolversNames().ToArray(),
             }) as RegisterResponse;
             _id = response.Id;
             Console.WriteLine("Register response: ID={0}", _id);
