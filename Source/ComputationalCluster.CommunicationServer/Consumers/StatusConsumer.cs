@@ -296,6 +296,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                     Id = problem.Id,
                     ComputationalNodes = (ulong) problem.ProblemDefinition.AvailableComputationalNodes,
                     NodeID = component.Id,
+                    Data = problem.InputData
                 };
             }
             return null;
