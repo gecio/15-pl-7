@@ -7,6 +7,7 @@ using ComputationalCluster.TaskSolver.ArithmeticProgressionSum;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace ComputationalCluster.CommunicationServer.Consumers
@@ -15,15 +16,21 @@ namespace ComputationalCluster.CommunicationServer.Consumers
     {
         private readonly IComponentsRepository _componentsRepository;
         private TaskQueue<OrderedPartialProblem> _partialProblemsQueue;
+        private TaskQueue<Problem> _problems;
+        private IPartialProblemsRepository _partialProblemsRepository;
 
-        public StatusConsumer(IComponentsRepository componentsRepository, TaskQueue<OrderedPartialProblem> partialProblemsQueue)
+        public StatusConsumer(IComponentsRepository componentsRepository, TaskQueue<OrderedPartialProblem> partialProblemsQueue, TaskQueue<Problem> problemsQueue,
+            IPartialProblemsRepository partialProblemsRepository)
         {
             _componentsRepository = componentsRepository;
             _partialProblemsQueue = partialProblemsQueue;
+            _problems = problemsQueue;
+            _partialProblemsRepository = partialProblemsRepository;
         }
 
         public ICollection<IMessage> Consume(Status message)
         {
+            #region test
             /* // przykład, żeby przetestować jak node'y odbierają podproblemy
             if (new Random().Next(2) == 1)
             {
@@ -115,8 +122,8 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 return noOperationResponse;
             }
             */
-            
-            
+
+
             /*// przykład, testujący czy task manager poprawnie łączy rozwiązania częściowe
             if (new Random().Next(2) == 0)
             {
@@ -168,6 +175,16 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 return noOperationResponse;
             }
             */
+            #endregion
+
+            switch (_componentsRepository.GetById(message.Id).Type)
+            {
+                case RegisterType.TaskManager:
+                    return ConsumeFromTaskManager(message);
+                //case RegisterType.ComputationalNode:
+                   //TODO: przenieść!!
+                  ///  break;
+            }
 
             if (_componentsRepository.GetById(message.Id).Type == RegisterType.ComputationalNode)
             {
@@ -232,5 +249,83 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 
             return Consume(status);
         }
+
+        private ICollection<IMessage> ConsumeFromTaskManager(Status message)
+        {
+            int threadsCount = message.Threads.Count(t => t.State == StatusThreadState.Idle);
+
+            if (threadsCount <= 0)
+            {
+                return new IMessage[] {new NoOperation() };
+            }
+            var mergeSolution = GetSolution(message.Id, threadsCount);
+            if (mergeSolution != null)
+            {
+                return new IMessage[] {mergeSolution, new NoOperation()};
+            }
+
+            var divideMessage = GetProblems(message.Id, threadsCount);
+            if (divideMessage != null)
+            {
+                return new IMessage[] {divideMessage, new NoOperation()};
+            }
+
+            return new IMessage[] { new NoOperation() };
+
+        }
+
+        private DivideProblem GetProblems(ulong componentId, int thredCount)
+        {
+            if (thredCount <= 0) return null;
+            var component = _componentsRepository.GetById(componentId);
+
+            var problem = _problems.GetNextTask(component.SolvableProblems);
+            if (problem != null)
+            {
+                return new DivideProblem
+                {
+                    ProblemType = problem.ProblemDefinition.Name,
+                    Id = problem.Id,
+                    ComputationalNodes = (ulong) problem.ProblemDefinition.AvailableComputationalNodes,
+                    NodeID = component.Id,
+                };
+            }
+            return null;
+        }
+
+        private Solutions GetSolution(ulong componentId, int threadCount)
+        {
+            if (threadCount <= 0) return null;
+            var component = _componentsRepository.GetById(componentId);
+            var partialSolutions = _partialProblemsRepository.GetFinishedProblem(component.SolvableProblems);
+
+            if (partialSolutions != null && partialSolutions.Count > 0)
+            {
+                Solutions solution = new Solutions
+                {
+                    ProblemType = partialSolutions.ElementAt(0).ProblemDefinition.Name,
+                    CommonData = partialSolutions.ElementAt(0).CommonData,
+                    Id = partialSolutions.ElementAt(0).TaskId,
+                };
+
+                var solutionsList = new List<SolutionsSolution>();
+                foreach (var orderedPartialProblem in partialSolutions)
+                {
+                    solutionsList.Add(new SolutionsSolution
+                    {
+                        Data = orderedPartialProblem.Data,
+                        TaskId = orderedPartialProblem.TaskId,
+                        TaskIdSpecified = true,
+                        Type = SolutionsSolutionType.Partial,
+                        //TODO: timeout i computatonTime
+                    });
+                }
+                solution.Solutions1 = solutionsList.ToArray();
+
+                return solution;
+            }
+            return null;
+        }
+
     }
 }
