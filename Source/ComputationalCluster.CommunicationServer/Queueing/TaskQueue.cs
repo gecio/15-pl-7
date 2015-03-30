@@ -10,19 +10,18 @@ namespace ComputationalCluster.CommunicationServer.Queueing
 {
     public interface ITaskQueue<T> where T : class, IQueueableTask
     {
-        T GetNextTask(); 
+        T GetNextTask(ICollection<ProblemDefinition> problemDefinitions); 
     }
 
     /// <summary>
     /// Kolejka zadań danego typu.
     /// </summary>
     /// <typeparam name="T">Typ zadania</typeparam>
-    public class TaskQueue<T> where T : class, IQueueableTask
+    public class TaskQueue<T> : ITaskQueue<T> where T : class, IQueueableTask
     {
         public delegate int AvailabilityChecker(ProblemDefinition problemDefinition);
 
         private readonly IQueuableTasksRepository<T> _queuableTasksRepository;
-        //private readonly AvailabilityChecker _availabilityChecker;
         private readonly ILog _log;
 
         /// <summary
@@ -37,43 +36,16 @@ namespace ComputationalCluster.CommunicationServer.Queueing
         public TaskQueue(IQueuableTasksRepository<T> queuableTasksRepository, ILog log)
         {
             _queuableTasksRepository = queuableTasksRepository;
-            //_availabilityChecker     = availabilityChecker;
             _log                     = log;
-        }
-
-        public T GetNextTask()
-        {
-            T task =  (T) _queuableTasksRepository.GetQueuableTasks()
-                .Where(t => t.IsAwaiting)
-                //.Where(t => _availabilityChecker(t.ProblemDefinition) > 0)
-                .OrderBy(t => t.RequestDate).FirstOrDefault();
-
-            if (task == null)
-            {
-                return null;
-            }
-
-            _queuableTasksRepository.DequeueTask(task);
-
-            return task;
         }
 
         public T GetNextTask(ICollection<ProblemDefinition> problemDefinitions)
         {
-            T task = (T)_queuableTasksRepository.GetQueuableTasks()
+            return (T) _queuableTasksRepository.GetQueuableTasks()
                 .Where(t => t.IsAwaiting)
                 .Where(t => problemDefinitions.Contains(t.ProblemDefinition))
-                //.Where(t => _availabilityChecker(t.ProblemDefinition) > 0)
-                .OrderBy(t => t.RequestDate).FirstOrDefault();
-
-            if (task == null)
-            {
-                return null;
-            }
-
-            _queuableTasksRepository.DequeueTask(task);
-
-            return task;
+                .OrderBy(t => t.RequestDate)
+                .FirstOrDefault();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace ComputationalCluster.CommunicationServer.Tests.Queueing
     class TaskQueueTests
     {
         [Test]
-        public void GetNextTask_QueueOneAwaitingAndAvailableThenDequeueOne_ShouldDequeue()
+        public void GetNextTask_QueueOneAwaitingAndAvailableThenDequeueOne_ShouldReturnOne()
         {
             var problemDefinition = new ProblemDefinition
             {
@@ -36,10 +36,9 @@ namespace ComputationalCluster.CommunicationServer.Tests.Queueing
 
             var queue = new TaskQueue<IQueueableTask>(repository.Object, new Mock<ILog>().Object);
 
-            var task = queue.GetNextTask();
+            var task = queue.GetNextTask(new [] { problemDefinition });
 
             repository.Verify(t => t.GetQueuableTasks(), Times.Once);
-            repository.Verify(t => t.DequeueTask(queuableTaskMock.Object), Times.Once);
             Assert.AreEqual(task, queuableTaskMock.Object);
         }
     }

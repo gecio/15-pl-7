@@ -33,12 +33,9 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 
         public ICollection<IQueueableTask> GetQueuableTasks()
         {
-            return _problems.Values.ToArray();
-        }
-
-        public void DequeueTask(IQueueableTask task)
-        {
-            return;
+            return _problems.Values
+                .Where(t => t.ProblemDefinition.AvailableTaskManagers > 0)
+                .ToArray();
         }
     }
 }

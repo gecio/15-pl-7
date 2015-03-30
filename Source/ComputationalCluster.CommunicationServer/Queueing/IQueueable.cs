@@ -25,6 +25,6 @@ namespace ComputationalCluster.CommunicationServer.Queueing
         /// <summary>
         /// Czy zadanie oczekuje na przydzielenie zasobu.
         /// </summary>
-        bool IsAwaiting { get; set; }
+        bool IsAwaiting { get; }
     }
 }
