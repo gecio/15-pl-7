@@ -10,5 +10,7 @@ namespace ComputationalCluster.CommunicationServer.Repositories
     public interface IPartialProblemsRepository
     {
         ulong Add(OrderedPartialProblem problem);
+
+        ICollection<OrderedPartialProblem> GetFinishedProblem(ICollection<ProblemDefinition> problemDefinitions);
     }
 }

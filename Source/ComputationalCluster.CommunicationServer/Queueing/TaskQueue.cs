@@ -34,8 +34,7 @@ namespace ComputationalCluster.CommunicationServer.Queueing
         /// Wyrażenie zwracające ilość zasobów obsługujących dany typ zadania.
         /// </param>
         /// <param name="log">Log</param>
-        public TaskQueue(IQueuableTasksRepository<T> queuableTasksRepository, 
-            ILog log)
+        public TaskQueue(IQueuableTasksRepository<T> queuableTasksRepository, ILog log)
         {
             _queuableTasksRepository = queuableTasksRepository;
             //_availabilityChecker     = availabilityChecker;
