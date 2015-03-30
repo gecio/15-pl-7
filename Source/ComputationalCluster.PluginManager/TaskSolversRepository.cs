@@ -8,10 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using UCCTaskSolver;
 
-namespace ComputationalCluster.CommunicationServer.Repositories
+namespace ComputationalCluster.PluginManager
 {
     public interface ITaskSolversRepository
     {
+        ICollection<string> GetSolversNames();
         Type GetSolverType(string name);
         UCCTaskSolver.TaskSolver GetSolverInstance(string name, byte[] problemData = null);
     }
@@ -31,6 +32,8 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 
             _taskSolvers = new Dictionary<string, Type>();
 
+            _log.Info("Looking for plugins...");
+
             pluginManager.AddDirectory("plugins/");
             foreach (var plugin in pluginManager.GetPlugins())
             {
@@ -38,6 +41,11 @@ namespace ComputationalCluster.CommunicationServer.Repositories
                 _log.InfoFormat("Plugin found. Name=[{0}]", pluginInstance.Name);
                 _taskSolvers.Add(pluginInstance.Name, plugin);
             }
+        }
+
+        public ICollection<string> GetSolversNames()
+        {
+            return _taskSolvers.Keys.ToList();
         }
 
         public Type GetSolverType(string name)

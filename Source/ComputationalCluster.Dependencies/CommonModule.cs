@@ -25,6 +25,7 @@ namespace ComputationalCluster.Dependencies
             builder.RegisterType<TimeProviderUtcNow>().As<ITimeProvider>();
 
             builder.RegisterType<PluginManager<TaskSolver>>().As<IPluginManager<TaskSolver>>();
+            builder.RegisterType<TaskSolversRepository>().As<ITaskSolversRepository>().SingleInstance();
 
             builder.RegisterType<UTF8Encoding>().As<Encoding>();
         }

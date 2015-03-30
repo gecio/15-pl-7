@@ -79,6 +79,10 @@
       <Project>{c646aef9-72f4-4967-89d9-96d1a25a9a8a}</Project>
       <Name>ComputationalCluster.NetModule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ComputationalCluster.PluginManager\ComputationalCluster.PluginManager.csproj">
+      <Project>{af165ac2-8a7c-4a6a-9586-c0acc20ddcaf}</Project>
+      <Name>ComputationalCluster.PluginManager</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

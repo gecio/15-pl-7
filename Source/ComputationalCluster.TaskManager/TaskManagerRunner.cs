@@ -2,6 +2,7 @@
 using ComputationalCluster.Communication.Messages;
 using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.NetModule;
+using ComputationalCluster.PluginManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;

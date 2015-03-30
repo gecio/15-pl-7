@@ -81,7 +81,6 @@
     <Compile Include="Repositories\IProblemsRepository.cs" />
     <Compile Include="Repositories\PartialProblemsInMemoryRepository.cs" />
     <Compile Include="Repositories\ProblemsInMemoryRepository.cs" />
-    <Compile Include="Repositories\TaskSolversRepository.cs" />
     <Compile Include="Repositories\ProblemDefinitionsInMemoryRepository.cs" />
   </ItemGroup>
   <ItemGroup>

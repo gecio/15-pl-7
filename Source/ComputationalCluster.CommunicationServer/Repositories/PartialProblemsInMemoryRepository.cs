@@ -52,13 +52,9 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 
         public ICollection<IQueueableTask> GetQueuableTasks()
         {
-            return _orderedPartialProblems.Values.ToArray();
+            return _orderedPartialProblems.Values
+                .Where(t => t.ProblemDefinition.AvailableComputationalNodes > 0)
+                .ToArray();
         }
-
-        public void DequeueTask(IQueueableTask task)
-        {
-            task.IsAwaiting = false;
-        }
-
     }
 }

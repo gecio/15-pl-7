@@ -2,7 +2,9 @@
 using ComputationalCluster.Communication.Messages;
 using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.NetModule;
+using ComputationalCluster.PluginManager;
 using log4net;
+using log4net.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +20,15 @@ namespace ComputationalCluster.ComputationalNode
         private LinkedList<Solutions> _partialSolutions;
         private Semaphore _semaphorePartialSolutions;
 
-        private ITaskSolversRepository _taskSolversRepository;
-        private INetClient _client;
+        private readonly ITaskSolversRepository _taskSolversRepository;
+        private readonly INetClient _client;
+
         
         public ComputationalNodeRunner()
         {
+            // log4net configuration - log on console
+            BasicConfigurator.Configure();
+
             var builder = new ContainerBuilder();
             builder.RegisterModule<ComputationalNodeModule>();
             var container = builder.Build();
@@ -39,6 +45,7 @@ namespace ComputationalCluster.ComputationalNode
             var response = _client.Send(new Register()
             {
                 Type = RegisterType.ComputationalNode,
+                SolvableProblems = _taskSolversRepository.GetSolversNames().ToArray(),
             }) as RegisterResponse;
             Console.WriteLine("Register response ID={0}", response.Id);
 

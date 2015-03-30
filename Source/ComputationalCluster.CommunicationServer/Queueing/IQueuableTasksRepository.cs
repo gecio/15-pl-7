@@ -12,6 +12,5 @@ namespace ComputationalCluster.CommunicationServer.Queueing
     public interface IQueuableTasksRepository<T> where T : class, IQueueableTask
     {
         ICollection<IQueueableTask> GetQueuableTasks();
-        void DequeueTask(IQueueableTask task);
     }
 }

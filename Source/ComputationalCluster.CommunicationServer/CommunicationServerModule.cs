@@ -7,6 +7,7 @@ using ComputationalCluster.CommunicationServer.Queueing;
 using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.Dependencies;
 using ComputationalCluster.NetModule;
+using ComputationalCluster.PluginManager;
 using System.Data.Entity;
 
 namespace ComputationalCluster.CommunicationServer
@@ -35,8 +36,6 @@ namespace ComputationalCluster.CommunicationServer
             builder.RegisterType<PartialProblemsInMemoryRepository>().As<IQueuableTasksRepository<OrderedPartialProblem>>().As<IPartialProblemsRepository>().SingleInstance();
             builder.RegisterType<TaskQueue<OrderedPartialProblem>>().AsSelf().SingleInstance();
             builder.RegisterType<TaskQueue<Problem>>().AsSelf().SingleInstance();
-
-            builder.RegisterType<TaskSolversRepository>().As<ITaskSolversRepository>().SingleInstance();
 
             builder.RegisterType<MessageReceiver>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<MessageTranslator>().AsImplementedInterfaces().AsSelf();
