@@ -22,7 +22,7 @@ namespace ComputationalCluster.CommunicationServer.Queueing
         public delegate int AvailabilityChecker(ProblemDefinition problemDefinition);
 
         private readonly IQueuableTasksRepository<T> _queuableTasksRepository;
-        private readonly AvailabilityChecker _availabilityChecker;
+        //private readonly AvailabilityChecker _availabilityChecker;
         private readonly ILog _log;
 
         /// <summary
@@ -35,10 +35,10 @@ namespace ComputationalCluster.CommunicationServer.Queueing
         /// </param>
         /// <param name="log">Log</param>
         public TaskQueue(IQueuableTasksRepository<T> queuableTasksRepository, 
-            AvailabilityChecker availabilityChecker, ILog log)
+            ILog log)
         {
             _queuableTasksRepository = queuableTasksRepository;
-            _availabilityChecker     = availabilityChecker;
+            //_availabilityChecker     = availabilityChecker;
             _log                     = log;
         }
 
@@ -46,7 +46,7 @@ namespace ComputationalCluster.CommunicationServer.Queueing
         {
             T task =  (T) _queuableTasksRepository.GetQueuableTasks()
                 .Where(t => t.IsAwaiting)
-                .Where(t => _availabilityChecker(t.ProblemDefinition) > 0)
+                //.Where(t => _availabilityChecker(t.ProblemDefinition) > 0)
                 .OrderBy(t => t.RequestDate).FirstOrDefault();
 
             if (task == null)
@@ -64,7 +64,7 @@ namespace ComputationalCluster.CommunicationServer.Queueing
             T task = (T)_queuableTasksRepository.GetQueuableTasks()
                 .Where(t => t.IsAwaiting)
                 .Where(t => problemDefinitions.Contains(t.ProblemDefinition))
-                .Where(t => _availabilityChecker(t.ProblemDefinition) > 0)
+                //.Where(t => _availabilityChecker(t.ProblemDefinition) > 0)
                 .OrderBy(t => t.RequestDate).FirstOrDefault();
 
             if (task == null)

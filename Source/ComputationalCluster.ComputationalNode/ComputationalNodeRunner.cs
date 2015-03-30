@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using ComputationalCluster.Common;
 using ComputationalCluster.Communication.Messages;
 using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.NetModule;
@@ -20,7 +21,11 @@ namespace ComputationalCluster.ComputationalNode
 
         private ITaskSolversRepository _taskSolversRepository;
         private INetClient _client;
-        
+        private ConfigProviderThreads _configProvider;
+
+        private int _numberOfThreads;
+        private int _numberOfBusyThreads;
+
         public ComputationalNodeRunner()
         {
             var builder = new ContainerBuilder();
@@ -32,22 +37,41 @@ namespace ComputationalCluster.ComputationalNode
 
             _taskSolversRepository = container.Resolve<ITaskSolversRepository>();
             _client = container.Resolve<INetClient>();
+            _configProvider = container.Resolve<ConfigProviderThreads>();
         }
 
         public void Start()
         {
+            _numberOfThreads = (_configProvider as ConfigProviderThreads).ThreadsCount;
+            _numberOfBusyThreads = 0;
+
             var response = _client.Send(new Register()
             {
                 Type = RegisterType.ComputationalNode,
+                ParallelThreads = (byte)(_configProvider as ConfigProviderThreads).ThreadsCount
             }) as RegisterResponse;
             Console.WriteLine("Register response ID={0}", response.Id);
 
             while(true)
             {
                 System.Threading.Thread.Sleep(new TimeSpan(0, 0, (int)(response.Timeout/2)));
+
+                var threads = new StatusThread[_numberOfThreads];
+                for (int i = 0; i < _numberOfBusyThreads; i++)
+                    threads[i] = new StatusThread()
+                    {
+                        State = StatusThreadState.Busy
+                    };
+                for (int i = _numberOfBusyThreads; i < _numberOfThreads; i++)
+                    threads[i] = new StatusThread()
+                    {
+                        State = StatusThreadState.Idle
+                    };
+
                 var receivedMessage = _client.Send(new Status()
                 {
                     Id = response.Id,
+                    Threads = threads
                 });
 
                 Consume(receivedMessage);
@@ -82,6 +106,7 @@ namespace ComputationalCluster.ComputationalNode
                         Data = partialProblems[i].Data,
                         Timeout = ((receivedMessage as SolvePartialProblems).SolvingTimeoutSpecified == true)? (receivedMessage as SolvePartialProblems).SolvingTimeout : 0,
                     };
+                    _numberOfBusyThreads++;
                     thread.Start(task);
                 }
             }
@@ -121,6 +146,7 @@ namespace ComputationalCluster.ComputationalNode
             _semaphorePartialSolutions.WaitOne();
             _partialSolutions.AddLast(solutionMessage);
             _semaphorePartialSolutions.Release();
+            _numberOfBusyThreads--;
         }
 
         /// <summary>
