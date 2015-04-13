@@ -3,7 +3,6 @@ using ComputationalCluster.CommunicationServer.Models;
 using ComputationalCluster.CommunicationServer.Queueing;
 using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.NetModule;
-using ComputationalCluster.TaskSolver.ArithmeticProgressionSum;
 using System;
 using System.Collections.Generic;
 using System.IO;

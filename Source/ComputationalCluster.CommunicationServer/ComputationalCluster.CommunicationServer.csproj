@@ -104,10 +104,6 @@
       <Project>{af165ac2-8a7c-4a6a-9586-c0acc20ddcaf}</Project>
       <Name>ComputationalCluster.PluginManager</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ComputationalCluster.TaskSolver.ArithmeticProgressionSum\ComputationalCluster.TaskSolver.ArithmeticProgressionSum.csproj">
-      <Project>{aea7874f-825b-496f-8e8c-949e33fa2f87}</Project>
-      <Name>ComputationalCluster.TaskSolver.ArithmeticProgressionSum</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

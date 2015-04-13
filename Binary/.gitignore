@@ -1,1 +1,4 @@
 # Releases .gitignore
+*.pdb
+*.xml
+*vshost*
