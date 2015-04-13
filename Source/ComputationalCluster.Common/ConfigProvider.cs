@@ -17,7 +17,7 @@ namespace ComputationalCluster.Common
         {
             get
             {
-                if (_portCache != null)
+                if (_portCache == null)
                 {
                     var value = ConfigurationManager.AppSettings["Port"];
                     if (value != null)
