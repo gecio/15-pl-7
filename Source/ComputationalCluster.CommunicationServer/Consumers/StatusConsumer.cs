@@ -178,74 +178,73 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             }
             */
             #endregion
-
-            switch (_componentsRepository.GetById(message.Id).Type)
-            {
-                case RegisterType.TaskManager:
-                    return ConsumeFromTaskManager(message);
-                //case RegisterType.ComputationalNode:
-                   //TODO: przenieść!!
-                  ///  break;
-            }
+            _componentsRepository.UpdateLastStatusTimestamp(message.Id);
 
             if (message.Threads == null)
             {
                 message.Threads = new StatusThread[] { };
             }
 
-            if (_componentsRepository.GetById(message.Id).Type == RegisterType.ComputationalNode)
+            switch (_componentsRepository.GetById(message.Id).Type)
             {
-                int threadsCount = 0;
-                for (int i = 0; i < message.Threads.Length; i++)
-                    if (message.Threads[i].State == StatusThreadState.Idle)
-                        threadsCount++;
-                List<OrderedPartialProblem> partialProblems = new List<OrderedPartialProblem>();
-                OrderedPartialProblem problem = _partialProblemsQueue.GetNextTask(_componentsRepository.GetById(message.Id).SolvableProblems);
-
-                while (problem != null && problem.Done==false && threadsCount > 0)
+                case RegisterType.TaskManager:
+                    return ConsumeFromTaskManager(message);
+                case RegisterType.ComputationalNode:
                 {
-                    _log.DebugFormat("GetNextTask Id: {0}", problem.Id);
-                    partialProblems.Add(problem);
-                    threadsCount--;
-                    problem = _partialProblemsQueue.GetNextTask(new ProblemDefinition[] { problem.ProblemDefinition });
+                    return ConsumeFromNode(message);
                 }
-
-                var noOperationResponse = new NoOperation();
-                _componentsRepository.UpdateLastStatusTimestamp(message.Id);
-
-                if (partialProblems.Count != 0)
+                default:
                 {
-                    var partialProblemsMessage = new SolvePartialProblems()
+                    return new IMessage[] {new NoOperation()};
+                }
+            }
+
+
+        }
+
+        private ICollection<IMessage> ConsumeFromNode(Status message)
+        {
+            int threadsCount = 0;
+            for (int i = 0; i < message.Threads.Length; i++)
+                if (message.Threads[i].State == StatusThreadState.Idle)
+                    threadsCount++;
+            List<OrderedPartialProblem> partialProblems = new List<OrderedPartialProblem>();
+            OrderedPartialProblem problem = _partialProblemsQueue.GetNextTask(_componentsRepository.GetById(message.Id).SolvableProblems);
+
+            while (problem != null && problem.Done == false && threadsCount > 0)
+            {
+                _log.DebugFormat("GetNextTask Id: {0}", problem.Id);
+                partialProblems.Add(problem);
+                threadsCount--;
+                problem = _partialProblemsQueue.GetNextTask(new []{problem.ProblemDefinition});
+            }
+
+            if (partialProblems.Count != 0)
+            {
+                var partialProblemsMessage = new SolvePartialProblems()
+                {
+                    ProblemType = partialProblems[0].ProblemDefinition.Name,
+                    Id = partialProblems[0].Id,
+                    CommonData = partialProblems[0].CommonData,
+                    SolvingTimeout = partialProblems[0].Timeout,
+                    SolvingTimeoutSpecified = (partialProblems[0].Timeout != 0),
+                    PartialProblems = new SolvePartialProblemsPartialProblem[partialProblems.Count]
+                };
+                for (int i = 0; i < partialProblems.Count; i++)
+                {
+                    partialProblems[i].IsAwaiting = false;
+                    partialProblemsMessage.PartialProblems[i] = new SolvePartialProblemsPartialProblem()
                     {
-                        ProblemType = partialProblems[0].ProblemDefinition.Name,
-                        Id = partialProblems[0].Id,
-                        CommonData = partialProblems[0].CommonData,
-                        SolvingTimeout = partialProblems[0].Timeout,
-                        SolvingTimeoutSpecified = (partialProblems[0].Timeout != 0),
-                        PartialProblems = new SolvePartialProblemsPartialProblem[partialProblems.Count]
+                        TaskId = partialProblems[i].TaskId,
+                        Data = partialProblems[i].Data,
+                        NodeID = partialProblems[i].NodeId
                     };
-                    for (int i = 0; i < partialProblems.Count; i++)
-                    {
-                        partialProblems[i].IsAwaiting = false;
-                        partialProblemsMessage.PartialProblems[i] = new SolvePartialProblemsPartialProblem()
-                        {
-                            TaskId = partialProblems[i].TaskId,
-                            Data = partialProblems[i].Data,
-                            NodeID = partialProblems[i].NodeId
-                        };
-                    }
-
-                    return new IMessage[] { partialProblemsMessage, new NoOperation() };
                 }
-                else
-                    return new IMessage[] { noOperationResponse };
+
+                return new IMessage[] {partialProblemsMessage, new NoOperation()};
             }
             else
-            {
-                var noOperationResponse = new NoOperation();
-                _componentsRepository.UpdateLastStatusTimestamp(message.Id);
-                return new IMessage[] { noOperationResponse };
-            }
+                return new IMessage[] {new NoOperation() };
         }
 
         public ICollection<IMessage> Consume(IMessage message)
@@ -261,7 +260,6 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 
         private ICollection<IMessage> ConsumeFromTaskManager(Status message)
         {
-            _componentsRepository.UpdateLastStatusTimestamp(message.Id);
             int threadsCount = message.Threads.Count(t => t.State == StatusThreadState.Idle);
 
             if (threadsCount <= 0)
@@ -307,6 +305,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 
         private Solutions GetSolution(ulong componentId, int threadCount)
         {
+            //TODO: trzeba jakoś oznaczać to co już się wysłało a jeszcze nie otzymało się odpowiedzi żeby nie wysłać kilka razy zlecenia na łączenie
             if (threadCount <= 0) return null;
             var component = _componentsRepository.GetById(componentId);
             var partialSolutions = _partialProblemsRepository.GetFinishedProblem(component.SolvableProblems);
@@ -317,22 +316,14 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 {
                     ProblemType = partialSolutions.ElementAt(0).ProblemDefinition.Name,
                     CommonData = partialSolutions.ElementAt(0).CommonData,
-                    Id = partialSolutions.ElementAt(0).TaskId,
+                    Id = partialSolutions.ElementAt(0).Id,
                 };
 
-                var solutionsList = new List<SolutionsSolution>();
-                foreach (var orderedPartialProblem in partialSolutions)
+                solution.Solutions1 = partialSolutions.Select(orderedPartialProblem => new SolutionsSolution
                 {
-                    solutionsList.Add(new SolutionsSolution
-                    {
-                        Data = orderedPartialProblem.Data,
-                        TaskId = orderedPartialProblem.TaskId,
-                        TaskIdSpecified = true,
-                        Type = SolutionsSolutionType.Partial,
-                        //TODO: timeout i computatonTime
-                    });
-                }
-                solution.Solutions1 = solutionsList.ToArray();
+                    Data = orderedPartialProblem.Data, TaskId = orderedPartialProblem.TaskId, TaskIdSpecified = true, Type = SolutionsSolutionType.Partial,
+                    //TODO: timeout i computatonTime
+                }).ToArray();
 
                 return solution;
             }

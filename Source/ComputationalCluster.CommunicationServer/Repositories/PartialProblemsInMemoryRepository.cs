@@ -14,29 +14,25 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 {
     public class PartialProblemsInMemoryRepository : IQueuableTasksRepository<OrderedPartialProblem>, IPartialProblemsRepository
     {
-        private Dictionary<ulong, OrderedPartialProblem> _orderedPartialProblems;
-        private ulong _nextValidId = 1;
+        private List<OrderedPartialProblem> _orderedPartialProblems;
 
         public PartialProblemsInMemoryRepository(IProblemDefinitionsRepository repository)
         {
-            _orderedPartialProblems = new Dictionary<ulong, OrderedPartialProblem>();
+            _orderedPartialProblems = new List<OrderedPartialProblem>();
         }
 
         public ulong Add(OrderedPartialProblem problem)
         {
-            problem.Id = _nextValidId++;
             problem.RequestDate = DateTime.Now;
-            _orderedPartialProblems.Add(problem.Id, problem);
-            return problem.Id;
+            _orderedPartialProblems.Add(problem);
+            return problem.TaskId;
         }
 
 
         public ICollection<OrderedPartialProblem> GetFinishedProblem(ICollection<ProblemDefinition> problemDefinitions)
         {
-            var orderedPartialProblems = _orderedPartialProblems.Select(orderedPartialProblem => orderedPartialProblem.Value);
-
             var res2 =
-                orderedPartialProblems.Where(tmp => problemDefinitions.Contains(tmp.ProblemDefinition))
+                _orderedPartialProblems.Where(tmp => problemDefinitions.Contains(tmp.ProblemDefinition))
                     .OrderBy(tmp => tmp.RequestDate)
                     .GroupBy(tmp => tmp.Id)
                     .Select(g => g);
@@ -55,7 +51,7 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 
         public ICollection<IQueueableTask> GetQueuableTasks()
         {
-            return _orderedPartialProblems.Values
+            return _orderedPartialProblems
                 .Where(t => t.ProblemDefinition.AvailableComputationalNodes > 0)
                 .ToArray();
         }
@@ -64,13 +60,12 @@ namespace ComputationalCluster.CommunicationServer.Repositories
         public void RemoveFinishedProblems(ulong problemId)
         {
             _orderedPartialProblems = _orderedPartialProblems
-                .Where(t => t.Value.Id != problemId)
-                .ToDictionary(t => t.Key, t => t.Value);
+                .Where(t => t.Id != problemId).ToList();
         }
 
-        public OrderedPartialProblem FindById(int id)
+        public OrderedPartialProblem Find(ulong Problemid, ulong TaskId)
         {
-            return _orderedPartialProblems.ContainsKey((ulong) id) ? _orderedPartialProblems[(ulong) id] : null;
+            return _orderedPartialProblems.FirstOrDefault(item => item.Id == Problemid && item.TaskId == TaskId);
         }
     }
 }

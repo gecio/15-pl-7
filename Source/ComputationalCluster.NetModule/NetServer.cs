@@ -73,7 +73,7 @@ namespace ComputationalCluster.NetModule
                 _tcpClientConnected.WaitOne(); // wait for connection
             }
         }
-
+        
         private void HandleIncomingConnection(IAsyncResult asyncResult)
         {
             try

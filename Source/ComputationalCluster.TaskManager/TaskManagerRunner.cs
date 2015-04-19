@@ -78,14 +78,24 @@ namespace ComputationalCluster.TaskManager
                     {
                         State = StatusThreadState.Idle
                     };
-
-                var receivedMessage = _client.Send(new Status()
+                try
                 {
-                    Id = _id,
-                    Threads = threads
-                });
+                    var receivedMessages = _client.Send_ManyResponses(new Status()
+                    {
+                        Id = _id,
+                        Threads = threads
+                    });
 
-                Consume(receivedMessage);
+                    foreach (var receivedMessage in receivedMessages)
+                    {
+                        Consume(receivedMessage);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Server unavailable...");
+                    return;
+                }
                 SendPartialProblems();
                 SendSolution();
             }

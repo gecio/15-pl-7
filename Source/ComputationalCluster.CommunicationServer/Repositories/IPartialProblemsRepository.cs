@@ -14,6 +14,6 @@ namespace ComputationalCluster.CommunicationServer.Repositories
         ICollection<OrderedPartialProblem> GetFinishedProblem(ICollection<ProblemDefinition> problemDefinitions);
 
         void RemoveFinishedProblems(ulong problemId);
-        OrderedPartialProblem FindById(int id);
+        OrderedPartialProblem Find(ulong problemid, ulong taskId);
     }
 }

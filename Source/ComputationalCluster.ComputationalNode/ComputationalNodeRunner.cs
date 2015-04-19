@@ -58,9 +58,9 @@ namespace ComputationalCluster.ComputationalNode
             }) as RegisterResponse;
             Console.WriteLine("Register response ID={0}", response.Id);
 
-            while(true)
+            while (true)
             {
-                System.Threading.Thread.Sleep(new TimeSpan(0, 0, (int)(response.Timeout/2)));
+                System.Threading.Thread.Sleep(new TimeSpan(0, 0, (int)(response.Timeout / 2)));
 
                 var threads = new StatusThread[_numberOfThreads];
                 for (int i = 0; i < _numberOfBusyThreads; i++)
@@ -73,14 +73,24 @@ namespace ComputationalCluster.ComputationalNode
                     {
                         State = StatusThreadState.Idle
                     };
-
-                var receivedMessage = _client.Send(new Status()
+                try
                 {
-                    Id = response.Id,
-                    Threads = threads
-                });
+                    var receivedMessages = _client.Send_ManyResponses(new Status()
+                    {
+                        Id = response.Id,
+                        Threads = threads
+                    });
 
-                Consume(receivedMessage);
+                    foreach (var receivedMessage in receivedMessages)
+                    {
+                        Consume(receivedMessage);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Server unavailable...");
+                    return;
+                }
                 SendPartialSolutions();
             }
         }
@@ -98,19 +108,20 @@ namespace ComputationalCluster.ComputationalNode
             Console.WriteLine("Received message: {0}", receivedMessage.GetType().Name);
             if (receivedMessage.GetType() == typeof(SolvePartialProblems))
             {
-                Console.WriteLine("Received partial problems: ID={0}", (receivedMessage as SolvePartialProblems).Id);
-                var partialProblems = (receivedMessage as SolvePartialProblems).PartialProblems;
+                var received = receivedMessage as SolvePartialProblems;
+                Console.WriteLine("Received partial problems: ID={0}", received.Id);
+                var partialProblems = received.PartialProblems;
                 for (int i = 0; i < partialProblems.Length; i++)
                 {
                     Thread thread = new Thread(new ParameterizedThreadStart(SolvePartialProblem));
                     PartialProblem task = new PartialProblem
                     {
-                        ProblemType = (receivedMessage as SolvePartialProblems).ProblemType,
-                        ProblemId = (receivedMessage as SolvePartialProblems).Id,
-                        CommonData = (receivedMessage as SolvePartialProblems).CommonData,
+                        ProblemType = received.ProblemType,
+                        ProblemId = received.Id,
+                        CommonData = received.CommonData,
                         TaskId = partialProblems[i].TaskId,
                         Data = partialProblems[i].Data,
-                        Timeout = ((receivedMessage as SolvePartialProblems).SolvingTimeoutSpecified == true)? (receivedMessage as SolvePartialProblems).SolvingTimeout : 0,
+                        Timeout = (received.SolvingTimeoutSpecified == true) ? received.SolvingTimeout : 0,
                     };
                     _numberOfBusyThreads++;
                     thread.Start(task);
@@ -124,24 +135,25 @@ namespace ComputationalCluster.ComputationalNode
         /// <param name="problem">informacje o podproblemie do rozwiązania</param>
         public void SolvePartialProblem(object problem)
         {
-            TaskSolver solver = _taskSolversRepository.GetSolverInstance((problem as PartialProblem).ProblemType);
-            byte[] data = Convert.FromBase64String((problem as PartialProblem).Data);
-            byte[] solution = solver.Solve(data, TimeSpan.FromMilliseconds((problem as PartialProblem).Timeout));
+            var partialProblem = problem as PartialProblem;
+            TaskSolver solver = _taskSolversRepository.GetSolverInstance(partialProblem.ProblemType);
+            byte[] data = Convert.FromBase64String(partialProblem.Data);
+            byte[] solution = solver.Solve(data, TimeSpan.FromMilliseconds(partialProblem.Timeout));
 
             if (solver.State == TaskSolver.TaskSolverState.Error)
-                Console.WriteLine("An error occured during solving partial problem: ID={0}, TaskID={1}", (problem as PartialProblem).ProblemId, (problem as PartialProblem).TaskId);
+                Console.WriteLine("An error occured during solving partial problem: ID={0}, TaskID={1}", partialProblem.ProblemId, partialProblem.TaskId);
             else if (solver.State == TaskSolver.TaskSolverState.Timeout)
-                Console.WriteLine("Timeout occured during solving partial problem: ID={0}, TaskID={1}", (problem as PartialProblem).ProblemId, (problem as PartialProblem).TaskId);
+                Console.WriteLine("Timeout occured during solving partial problem: ID={0}, TaskID={1}", partialProblem.ProblemId, partialProblem.TaskId);
 
             var solutionMessage = new Solutions()
             {
-                ProblemType = (problem as PartialProblem).ProblemType,
-                Id = (problem as PartialProblem).ProblemId,
-                Solutions1 = new SolutionsSolution[]
+                ProblemType = partialProblem.ProblemType,
+                Id = partialProblem.ProblemId,
+                Solutions1 = new []
                 {
                     new SolutionsSolution()
                     {
-                        TaskId = (problem as PartialProblem).TaskId,
+                        TaskId = partialProblem.TaskId,
                         TaskIdSpecified = true,
                         Data = Convert.ToBase64String(solution),
                         Type = SolutionsSolutionType.Partial,
