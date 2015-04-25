@@ -11,6 +11,7 @@ namespace ComputationalCluster.Common
     public class ConfigProvider : IConfigProvider
     {
         private static readonly int DefaultPort = 16987;
+        private static readonly string DefaultIP = "127.0.0.1";
 
         private int? _portCache = null;
         public int Port
@@ -27,14 +28,30 @@ namespace ComputationalCluster.Common
                 }
                 return _portCache ?? DefaultPort;
             }
+            set
+            {
+                _portCache = value;
+            }
         }
 
+        private IPAddress _ipCache = null;
         public IPAddress IP
         {
             get
             {
-                return IPAddress.Parse(ConfigurationManager.AppSettings["IP"] ?? "127.0.0.1");
+                if (_ipCache == null)
+                {
+                    _ipCache = IPAddress.Parse(ConfigurationManager.AppSettings["IP"] ?? DefaultIP);
+                }
+                return _ipCache;
+            }
+            set
+            {
+                _ipCache = value;
             }
         }
+
+        public bool BackupMode { get; set; }
+        public int Timeout { get; set; }
     }
 }
