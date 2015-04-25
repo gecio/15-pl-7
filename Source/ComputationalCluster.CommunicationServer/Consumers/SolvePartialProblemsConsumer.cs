@@ -15,15 +15,24 @@ namespace ComputationalCluster.CommunicationServer.Consumers
     {
         private readonly IPartialProblemsRepository _partialProblemsRepository;
         private readonly IProblemDefinitionsRepository _problemDefinitionsRepository;
+        private readonly IProblemsRepository _problemsRepository;
 
-        public SolvePartialProblemsConsumer(IPartialProblemsRepository partialProblemsRepository, IProblemDefinitionsRepository problemDefinitionsRepository)
+        public SolvePartialProblemsConsumer(IPartialProblemsRepository partialProblemsRepository, IProblemDefinitionsRepository problemDefinitionsRepository, IProblemsRepository problemsRepository)
         {
             _partialProblemsRepository = partialProblemsRepository;
             _problemDefinitionsRepository = problemDefinitionsRepository;
+            _problemsRepository = problemsRepository;
         }
 
         public ICollection<IMessage> Consume(SolvePartialProblems message)
         {
+            if (_problemsRepository.FindById((int)message.Id) == null)
+                return new IMessage[] {new Error()
+                {
+                    ErrorType = ErrorErrorType.InvalidOperation,
+                    ErrorMessage = "Problem with Id="+message.Id+" doesn't exist."
+                }};
+
             SaveData(message);
             var noOperationResponse = new NoOperation();
             //Console.WriteLine("Received partial problem: number of tasks={0}, ID={1}", message.PartialProblems.Count(), message.Id);

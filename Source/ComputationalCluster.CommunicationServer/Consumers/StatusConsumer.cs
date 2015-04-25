@@ -178,6 +178,14 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             }
             */
             #endregion
+
+            if (_componentsRepository.GetById(message.Id) == null)
+                return new IMessage[] { new Error() 
+                {
+                    ErrorType=ErrorErrorType.UnknownSender,
+                    ErrorMessage = "Component is not registered."
+                }};
+
             _componentsRepository.UpdateLastStatusTimestamp(message.Id);
 
             if (message.Threads == null)

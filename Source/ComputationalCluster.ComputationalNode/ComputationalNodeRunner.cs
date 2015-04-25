@@ -127,6 +127,10 @@ namespace ComputationalCluster.ComputationalNode
                     thread.Start(task);
                 }
             }
+            else if (receivedMessage.GetType() == typeof(Error))
+            {
+                Console.WriteLine("Error: type={0}, message={1}", (receivedMessage as Error).ErrorType, (receivedMessage as Error).ErrorMessage);
+            }
         }
 
         /// <summary>

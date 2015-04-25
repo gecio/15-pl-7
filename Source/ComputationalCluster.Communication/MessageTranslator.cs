@@ -68,6 +68,9 @@ namespace ComputationalCluster.Communication
                             case "Status":
                                 type = typeof(Status);
                                 break;
+                            case "Error":
+                                type = typeof(Error);
+                                break;
                         }
                         break;
                     }

@@ -27,9 +27,11 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             var problemInstance = _problemsRepository.FindById((int)message.Id);
             if (problemInstance == null)
             {
-                //TODO: pytanie o nieistniejące zadanie.
-                //errorMessage?
-                return null;
+                return new IMessage[] {new Error()
+                {
+                    ErrorType = ErrorErrorType.InvalidOperation,
+                    ErrorMessage = "Cluster doesn't compute problem with Id="+message.Id.ToString(),
+                }};
             }
 
             ulong computationalTime = (ulong)(DateTime.Now - problemInstance.RequestDate).TotalMilliseconds;

@@ -47,14 +47,13 @@ namespace ComputationalCluster.ComputationalClient
             return response.Id;
         }
 
-        public Solutions SendSolutionRequest(int problemId)
+        public IMessage SendSolutionRequest(int problemId)
         {
             var solutionRequest = new SolutionRequest
             {
                 Id = (ulong)problemId
             };
-            Solutions response = _client.Send(solutionRequest) as Solutions;
-            return response;
+            return _client.Send(solutionRequest);
         }
     }
 }

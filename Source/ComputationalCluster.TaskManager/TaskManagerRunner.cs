@@ -122,6 +122,10 @@ namespace ComputationalCluster.TaskManager
                 _numberOfBusyThreads++;
                 thread.Start(receivedMessage);
             }
+            else if (receivedMessage.GetType() == typeof(Error))
+            {
+                Console.WriteLine("Error: type={0}, message={1}", (receivedMessage as Error).ErrorType, (receivedMessage as Error).ErrorMessage);
+            }
         }
 
         public void Divide(object problem)

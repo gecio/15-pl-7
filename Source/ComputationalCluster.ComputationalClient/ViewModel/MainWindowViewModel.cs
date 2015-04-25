@@ -140,7 +140,14 @@ namespace ComputationalCluster.ComputationalClient.ViewModel
         }
         private void SendSolutionRequest()
         {
-            var result = _cClient.SendSolutionRequest(ProblemId);
+            var response = _cClient.SendSolutionRequest(ProblemId);
+            if (response.GetType() == typeof(Error))
+            {
+                MessageBox.Show("Error: type="+(response as Error).ErrorType+", message="+(response as Error).ErrorMessage, "Error");
+                return;
+            }
+
+            var result = response as Solutions;
             if (result == null || result.Solutions1.Length <= 0)
             {
                 MessageBox.Show("Błąd!");
