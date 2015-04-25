@@ -43,8 +43,19 @@ namespace ComputationalCluster.ComputationalClient
                 solverRequest.SolvingTimeout = duration.Value;
                 solverRequest.SolvingTimeoutSpecified = true;
             }
-            SolveRequestResponse response = _client.Send(solverRequest) as SolveRequestResponse;
-            return response.Id;
+            var responses = _client.Send_ManyResponses(solverRequest);
+            ulong id=0;
+
+            foreach (var response in responses)
+            {
+                if (response.GetType() == typeof(SolveRequestResponse))
+                    id = (response as SolveRequestResponse).Id;
+                if (response.GetType() == typeof(NoOperation))
+                {
+                    //TODO: zapisanie informacji o backup'ie
+                }
+            }
+            return id;
         }
 
         public IMessage SendSolutionRequest(int problemId)
