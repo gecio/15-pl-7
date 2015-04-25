@@ -27,7 +27,12 @@ namespace ComputationalCluster.CommunicationServer.Runner
 
                 x.Service<CommunicationServerService>(s =>
                 {
-                    s.ConstructUsing(name => container.Resolve<CommunicationServerService>());
+                    s.ConstructUsing(name =>
+                    {
+                        var service = container.Resolve<CommunicationServerService>();
+                        service.ApplyArguments(args);
+                        return service;
+                    });
                     s.WhenStarted(cs => cs.Start());
                     s.WhenStopped(cs => cs.Stop());
                 });
