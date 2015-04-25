@@ -20,10 +20,14 @@ namespace ComputationalCluster.ComputationalNode
     {
         private LinkedList<Solutions> _partialSolutions;
         private Semaphore _semaphorePartialSolutions;
+        private LinkedList<Error> _errors;
 
         private ITaskSolversRepository _taskSolversRepository;
         private INetClient _client;
         private ConfigProviderThreads _configProvider;
+
+        private ulong _id;
+        private uint _timeout;
 
         private int _numberOfThreads;
         private int _numberOfBusyThreads;
@@ -39,6 +43,7 @@ namespace ComputationalCluster.ComputationalNode
 
             _partialSolutions = new LinkedList<Solutions>();
             _semaphorePartialSolutions = new Semaphore(1, 1);
+            _errors = new LinkedList<Error>();
 
             _taskSolversRepository = container.Resolve<ITaskSolversRepository>();
             _client = container.Resolve<INetClient>();
@@ -50,17 +55,11 @@ namespace ComputationalCluster.ComputationalNode
             _numberOfThreads = (_configProvider as ConfigProviderThreads).ThreadsCount;
             _numberOfBusyThreads = 0;
 
-            var response = _client.Send(new Register()
-            {
-                Type = RegisterType.ComputationalNode,
-                ParallelThreads = (byte)(_configProvider as ConfigProviderThreads).ThreadsCount,
-                SolvableProblems = _taskSolversRepository.GetSolversNames().ToArray(),
-            }) as RegisterResponse;
-            Console.WriteLine("Register response ID={0}", response.Id);
+            SendRegisterMessage();
 
             while (true)
             {
-                System.Threading.Thread.Sleep(new TimeSpan(0, 0, (int)(response.Timeout / 2)));
+                System.Threading.Thread.Sleep(new TimeSpan(0, 0, (int)(_timeout / 2)));
 
                 var threads = new StatusThread[_numberOfThreads];
                 for (int i = 0; i < _numberOfBusyThreads; i++)
@@ -77,7 +76,7 @@ namespace ComputationalCluster.ComputationalNode
                 {
                     var receivedMessages = _client.Send_ManyResponses(new Status()
                     {
-                        Id = response.Id,
+                        Id = _id,
                         Threads = threads
                     });
 
@@ -92,11 +91,26 @@ namespace ComputationalCluster.ComputationalNode
                     return;
                 }
                 SendPartialSolutions();
+                SendErrorMessages();
             }
         }
 
         public void Stop()
         {
+        }
+
+        public void SendRegisterMessage()
+        {
+            var response = _client.Send(new Register()
+            {
+                Type = RegisterType.ComputationalNode,
+                ParallelThreads = (byte)(_configProvider as ConfigProviderThreads).ThreadsCount,
+                SolvableProblems = _taskSolversRepository.GetSolversNames().ToArray(),
+            }) as RegisterResponse;
+            Console.WriteLine("Register response ID={0}", response.Id);
+
+            _id = response.Id;
+            _timeout = response.Timeout;
         }
 
         /// <summary>
@@ -130,6 +144,8 @@ namespace ComputationalCluster.ComputationalNode
             else if (receivedMessage.GetType() == typeof(Error))
             {
                 Console.WriteLine("Error: type={0}, message={1}", (receivedMessage as Error).ErrorType, (receivedMessage as Error).ErrorMessage);
+                if ((receivedMessage as Error).ErrorType == ErrorErrorType.UnknownSender)
+                    SendRegisterMessage();
             }
         }
 
@@ -145,7 +161,15 @@ namespace ComputationalCluster.ComputationalNode
             byte[] solution = solver.Solve(data, TimeSpan.FromMilliseconds(partialProblem.Timeout));
 
             if (solver.State == TaskSolver.TaskSolverState.Error)
+            {
                 Console.WriteLine("An error occured during solving partial problem: ID={0}, TaskID={1}", partialProblem.ProblemId, partialProblem.TaskId);
+                _errors.AddLast(new Error()
+                    {
+                        ErrorType = ErrorErrorType.ExceptionOccured,
+                        ErrorMessage = "Error during solving partial problem with ProblemId="+partialProblem.ProblemId+" and TaskId="+partialProblem.TaskId,
+                    });
+                return;
+            }
             else if (solver.State == TaskSolver.TaskSolverState.Timeout)
                 Console.WriteLine("Timeout occured during solving partial problem: ID={0}, TaskID={1}", partialProblem.ProblemId, partialProblem.TaskId);
 
@@ -185,6 +209,20 @@ namespace ComputationalCluster.ComputationalNode
                 Consume(response);
             }
             _semaphorePartialSolutions.Release();
+        }
+
+        /// <summary>
+        /// Wysyła ewentualne informacje o błędach, które wystąpiły w czasie obliczeń
+        /// </summary>
+        public void SendErrorMessages()
+        {
+            while (_errors.Count != 0)
+            {
+                Console.WriteLine("Sending error message: type={0} message={1}", _errors.First.Value.ErrorType, _errors.First.Value.ErrorMessage);
+                var response = _client.Send(_errors.First.Value);
+                _errors.RemoveFirst();
+                Consume(response);
+            }
         }
     }
 }

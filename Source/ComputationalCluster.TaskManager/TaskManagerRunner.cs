@@ -24,7 +24,10 @@ namespace ComputationalCluster.TaskManager
         private Semaphore _semaphorePartialProblems;
         private LinkedList<Solutions> _finalSolutions;
         private Semaphore _semaphoreFinalSolutions;
-        private ulong _id;
+        private LinkedList<Error> _errors;
+
+        private ulong _componentId;
+        private uint _timeout;
 
         private ConfigProviderThreads _configProvider;
         private int _numberOfThreads;
@@ -45,6 +48,7 @@ namespace ComputationalCluster.TaskManager
             _semaphorePartialProblems = new Semaphore(1, 1);
             _finalSolutions = new LinkedList<Solutions>();
             _semaphoreFinalSolutions = new Semaphore(1, 1);
+            _errors = new LinkedList<Error>();
 
             _configProvider = container.Resolve<ConfigProviderThreads>();
         }
@@ -54,18 +58,11 @@ namespace ComputationalCluster.TaskManager
             _numberOfThreads = (_configProvider as ConfigProviderThreads).ThreadsCount;
             _numberOfBusyThreads = 0;
 
-            var response = _client.Send(new Register()
-            {
-                Type = RegisterType.TaskManager,
-                ParallelThreads = (byte)_numberOfThreads,
-                SolvableProblems = _taskSolversRepository.GetSolversNames().ToArray(),
-            }) as RegisterResponse;
-            _id = response.Id;
-            Console.WriteLine("Register response: ID={0}", _id);
+            SendRegisterMessage();
 
             while (true)
             {
-                System.Threading.Thread.Sleep(new TimeSpan(0, 0, (int)(response.Timeout / 2)));
+                System.Threading.Thread.Sleep(new TimeSpan(0, 0, (int)(_timeout / 2)));
 
                 var threads = new StatusThread[_numberOfThreads];
                 for (int i=0; i<_numberOfBusyThreads; i++)
@@ -82,7 +79,7 @@ namespace ComputationalCluster.TaskManager
                 {
                     var receivedMessages = _client.Send_ManyResponses(new Status()
                     {
-                        Id = _id,
+                        Id = _componentId,
                         Threads = threads
                     });
 
@@ -98,11 +95,26 @@ namespace ComputationalCluster.TaskManager
                 }
                 SendPartialProblems();
                 SendSolution();
+                SendErrorMessages();
             }
         }
 
         public void Stop()
         {
+        }
+
+        public void SendRegisterMessage()
+        {
+            var response = _client.Send(new Register()
+            {
+                Type = RegisterType.TaskManager,
+                ParallelThreads = (byte)_numberOfThreads,
+                SolvableProblems = _taskSolversRepository.GetSolversNames().ToArray(),
+            }) as RegisterResponse;
+            Console.WriteLine("Register response: ID={0}", _componentId);
+
+            _componentId = response.Id;
+            _timeout = response.Timeout;
         }
 
         public void Consume(IMessage receivedMessage)
@@ -125,6 +137,8 @@ namespace ComputationalCluster.TaskManager
             else if (receivedMessage.GetType() == typeof(Error))
             {
                 Console.WriteLine("Error: type={0}, message={1}", (receivedMessage as Error).ErrorType, (receivedMessage as Error).ErrorMessage);
+                if ((receivedMessage as Error).ErrorType == ErrorErrorType.UnknownSender)
+                    SendRegisterMessage();
             }
         }
 
@@ -133,6 +147,19 @@ namespace ComputationalCluster.TaskManager
             Type solverType = _taskSolversRepository.GetSolverType((problem as DivideProblem).ProblemType);
             TaskSolver solver = (TaskSolver)Activator.CreateInstance(solverType, Convert.FromBase64String((problem as DivideProblem).Data));
             byte[][] partialProblems = solver.DivideProblem((int)(problem as DivideProblem).ComputationalNodes);
+
+            if (solver.State == TaskSolver.TaskSolverState.Error)
+            {
+                Console.WriteLine("An error occured during dividing problem: ID={0}", (problem as DivideProblem).Id);
+                _errors.AddLast(new Error()
+                {
+                    ErrorType = ErrorErrorType.ExceptionOccured,
+                    ErrorMessage = "Error during dividing problem with Id="+(problem as DivideProblem).Id,
+                });
+                return;
+            }
+            else if (solver.State == TaskSolver.TaskSolverState.Timeout)
+                Console.WriteLine("Timeout occured during dividing problem: ID={0}", (problem as DivideProblem).Id);
 
             var partialProblemsMessage = new SolvePartialProblems()
             {
@@ -146,7 +173,7 @@ namespace ComputationalCluster.TaskManager
                 {
                     Data = Convert.ToBase64String(partialProblems[i]),
                     TaskId = (ulong)(i+1),
-                    NodeID = _id,
+                    NodeID = _componentId,
                 };
             }
 
@@ -179,6 +206,19 @@ namespace ComputationalCluster.TaskManager
                 partialSolutions[i] = Convert.FromBase64String((problems as Solutions).Solutions1[i].Data);
                 
             byte[] solution = solver.MergeSolution(partialSolutions);
+
+            if (solver.State == TaskSolver.TaskSolverState.Error)
+            {
+                Console.WriteLine("An error occured during merging partial solutions: ID={0}", (problems as Solutions).Id);
+                _errors.AddLast(new Error()
+                {
+                    ErrorType = ErrorErrorType.ExceptionOccured,
+                    ErrorMessage = "Error during merging partial solutions with ProblemId="+(problems as Solutions).Id,
+                });
+                return;
+            }
+            else if (solver.State == TaskSolver.TaskSolverState.Timeout)
+                Console.WriteLine("Timeout occured during merging partial solutions: ID={0}", (problems as Solutions).Id);
 
             var solutionMessage = new Solutions()
             {
@@ -213,6 +253,20 @@ namespace ComputationalCluster.TaskManager
                 Consume(response);
             }
             _semaphoreFinalSolutions.Release();
+        }
+
+        /// <summary>
+        /// Wysyła ewentualne informacje o błędach, które wystąpiły w czasie obliczeń
+        /// </summary>
+        public void SendErrorMessages()
+        {
+            while (_errors.Count != 0)
+            {
+                Console.WriteLine("Sending error message: type={0} message={1}", _errors.First.Value.ErrorType, _errors.First.Value.ErrorMessage);
+                var response = _client.Send(_errors.First.Value);
+                _errors.RemoveFirst();
+                Consume(response);
+            }
         }
     }
 }
