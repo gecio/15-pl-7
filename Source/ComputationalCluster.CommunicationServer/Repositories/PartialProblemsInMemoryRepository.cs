@@ -37,16 +37,11 @@ namespace ComputationalCluster.CommunicationServer.Repositories
                     .GroupBy(tmp => tmp.Id)
                     .Select(g => g);
             
-            //if (res2.FirstOrDefault() != null && res2.FirstOrDefault().FirstOrDefault(x => x.Done == true) != null)
-            //    return new OrderedPartialProblem[] { res2.FirstOrDefault().FirstOrDefault(x => x.Done==true) };
-            //return null;
             IEnumerable<IGrouping<ulong, OrderedPartialProblem>> res3;
-            res3 = res2.Where(a => a.All(x => x.Done));
-
+            res3 = res2.Where(a => a.All(x => x.Done && x.AssignedTo == null));
 
             IGrouping<ulong, OrderedPartialProblem> first = res3.FirstOrDefault();
-            return first != null ? res3.FirstOrDefault().ToArray() : null;
-
+            return first != null ? first.ToArray() : null;
         }
 
         public ICollection<IQueueableTask> GetQueuableTasks()
@@ -59,6 +54,11 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 
         public void RemoveFinishedProblems(ulong problemId)
         {
+
+            foreach (var partialProblem in _orderedPartialProblems.Where(t => t.Id == problemId))
+            {
+                partialProblem.AssignedTo = null;
+            }
             _orderedPartialProblems = _orderedPartialProblems
                 .Where(t => t.Id != problemId).ToList();
         }

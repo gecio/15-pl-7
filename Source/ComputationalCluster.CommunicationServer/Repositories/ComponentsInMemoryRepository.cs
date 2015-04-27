@@ -120,6 +120,7 @@ namespace ComputationalCluster.CommunicationServer.Repositories
             foreach (var component in timedOutComponents)
             {
                 _log.InfoFormat("Component timed out. (Id={0})", component.Key);
+                component.Value.ClearAndRepeatTasks();
                 Deregister(component.Key);
             }
         }

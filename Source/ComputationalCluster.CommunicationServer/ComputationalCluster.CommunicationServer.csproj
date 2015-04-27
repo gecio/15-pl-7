@@ -71,6 +71,7 @@
     <Compile Include="Models\OrderedPartialProblem.cs" />
     <Compile Include="Models\Problem.cs" />
     <Compile Include="Models\ProblemDefinition.cs" />
+    <Compile Include="Models\QueueableTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queueing\IQueuableTasksRepository.cs" />
     <Compile Include="Queueing\IQueueable.cs" />

@@ -31,7 +31,7 @@ namespace ComputationalCluster.CommunicationServer
             {
                 new CommandLineOption { ShortNotation = 'p', LongNotation = "port", ParameterRequired = true, },
                 new CommandLineOption { ShortNotation = 'b', LongNotation = "backup", ParameterRequired = false, },
-                new CommandLineOption { ShortNotation = 't', LongNotation = "t", ParameterRequired = true, },
+                new CommandLineOption { ShortNotation = 't', LongNotation = "time", ParameterRequired = true, },
             });
 
             parser.Parse(arguments);

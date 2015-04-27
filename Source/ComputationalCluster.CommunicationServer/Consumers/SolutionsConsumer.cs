@@ -77,6 +77,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 var partialProblem = _partialProblemsRepository.Find(message.Id, message.Solutions1[i].TaskId);
                 if (partialProblem == null)
                     throw new Exception("Partial problem with ProblemId="+message.Id+" and TaskId="+message.Solutions1[i].TaskId+" doesn't exist.");
+                partialProblem.AssignedTo = null; // zakończone obliczenia
                 partialProblem.CommonData = message.CommonData;
                 partialProblem.Data = message.Solutions1[i].Data;
                 partialProblem.Done = true;
