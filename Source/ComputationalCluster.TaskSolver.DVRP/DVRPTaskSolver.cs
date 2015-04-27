@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ComputationalCluster.TaskSolver.DVRP.DataReader;
 
 namespace ComputationalCluster.TaskSolver.DVRP
 {
@@ -10,6 +11,15 @@ namespace ComputationalCluster.TaskSolver.DVRP
     {
         public DVRPTaskSolver(byte[] problemData) : base(problemData)
         {
+            var data = UTF8Encoding.UTF8.GetString(problemData);
+            try
+            {
+                Reader.Parse(data);
+            }
+            catch (ArgumentException)
+            {
+                State = TaskSolverState.Error;
+            }
         }
 
         public override byte[][] DivideProblem(int threadCount)

@@ -42,6 +42,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataReader\DataFormat.cs" />
+    <Compile Include="DataReader\DataReader.cs" />
+    <Compile Include="DataReader\DataType.cs" />
+    <Compile Include="DataReader\Key.cs" />
     <Compile Include="DVRPTaskSolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
