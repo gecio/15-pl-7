@@ -20,5 +20,15 @@ namespace ComputationalCluster.TaskSolver.DVRP.Tests
 
             reader.Parse(data);
         }
+
+        [TestCase("bad01.txt")]
+        public void BadFilesFailMiserably(string filename)
+        {
+            var data = File.ReadAllText("SampleData/" + filename);
+
+            var reader = new Reader();
+
+            Assert.Throws<ArgumentException>(() => reader.Parse(data));
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
         public DataType DataType { get; private set; }
         public object DefaultValue { get; private set; }
         public DataFormat DataFormat { get; private set; }
-        public object Value { get; set; }
+        public dynamic Value { get; set; }
         public bool Found { get; set; }
 
         public Key(string name, bool required, DataType dataType, DataFormat dataFormat, object defaultValue = null)
@@ -23,6 +23,14 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
             DataType = dataType;
             DefaultValue = defaultValue;
             DataFormat = dataFormat;
+            SpecialAction = () => { throw new NotImplementedException("Special action was not implemented"); };
+        }
+
+        public Action SpecialAction { get; set; }
+
+        public void DoSpecialThing()
+        {
+            SpecialAction.Invoke();
         }
     }
 }

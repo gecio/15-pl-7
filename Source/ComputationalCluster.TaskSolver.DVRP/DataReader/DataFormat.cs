@@ -9,6 +9,6 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
     {
         SINGLE_LINE,
         MULTI_LINE,
-        SPECIAL
+        PASSABLE
     }
 }

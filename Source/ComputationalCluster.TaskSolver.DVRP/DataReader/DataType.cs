@@ -7,11 +7,11 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
 {
     public enum DataType
     {
-        SPECIAL,
         STRING,
         ENUM,
         INT,
         REAL,
-        LIST_NUM
+        LIST_NUM,
+        NONE
     }
 }
