@@ -8,11 +8,13 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
 {
     public class Key
     {
-        public string Name;
-        public bool Required;
-        public DataType DataType;
-        public object DefaultValue;
-        public DataFormat DataFormat;
+        public string Name { get; private set; }
+        public bool Required { get; private set; }
+        public DataType DataType { get; private set; }
+        public object DefaultValue { get; private set; }
+        public DataFormat DataFormat { get; private set; }
+        public object Value { get; set; }
+        public bool Found { get; set; }
 
         public Key(string name, bool required, DataType dataType, DataFormat dataFormat, object defaultValue = null)
         {

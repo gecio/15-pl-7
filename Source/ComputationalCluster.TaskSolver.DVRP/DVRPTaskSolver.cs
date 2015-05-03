@@ -11,10 +11,11 @@ namespace ComputationalCluster.TaskSolver.DVRP
     {
         public DVRPTaskSolver(byte[] problemData) : base(problemData)
         {
-            var data = UTF8Encoding.UTF8.GetString(problemData);
+            var data = Encoding.UTF8.GetString(problemData);
+            var reader = new Reader();
             try
             {
-                Reader.Parse(data);
+                reader.Parse(data);
             }
             catch (ArgumentException)
             {
