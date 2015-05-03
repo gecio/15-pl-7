@@ -56,7 +56,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.UnitTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.Common.Tests", "ComputationalCluster.Common.Tests\ComputationalCluster.Common.Tests.csproj", "{257306ED-7BF8-47F5-A361-6CCEF8106900}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.TaskSolver.DVRP.Tests", "ComputationalCluster.TaskSolver.DVRP.Tests\ComputationalCluster.TaskSolver.DVRP.Tests.csproj", "{7DE817C8-4C0B-4EC1-A66A-FD960B660B56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputationalCluster.TaskSolver.DVRP.DataReader.Tests", "ComputationalCluster.TaskSolver.DVRP.Tests\ComputationalCluster.TaskSolver.DVRP.DataReader.Tests.csproj", "{7DE817C8-4C0B-4EC1-A66A-FD960B660B56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

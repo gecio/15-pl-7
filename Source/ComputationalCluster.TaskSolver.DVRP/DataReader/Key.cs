@@ -27,6 +27,8 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
         }
 
         public Action SpecialAction { get; set; }
+        public Type EnumType { get; set; }
+        public Type MultilineType { get; set; }
 
         public void DoSpecialThing()
         {

@@ -11,7 +11,7 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
         ENUM,
         INT,
         REAL,
-        LIST_NUM,
+        LIST,
         NONE
     }
 }
