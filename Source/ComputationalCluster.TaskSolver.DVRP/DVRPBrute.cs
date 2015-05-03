@@ -20,21 +20,21 @@ namespace ComputationalCluster.TaskSolver.DVRP
             return (float)Math.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
         }
 
-        public float CalculateRequiredTimeDFS(Node currentLocation, ICollection<Pickup> assignedPickups, int pickupsDone = 0,
-            int usedCapacity = 0, float time = 0)
+        public float CalculateRequiredTimeDFS(Node currentLocation, ICollection<Pickup> assignedPickups, int pickupsDone,
+            int usedCapacity, float time, float travel)
         {
             if (currentLocation is Pickup)
             {
                 var pickup = (Pickup)currentLocation;
 
                 if (currentLocation.Visited 
-                    || pickup.AvailableAfter > time 
+                    //|| pickup.AvailableAfter > time 
                     || usedCapacity + pickup.Size > _commonData.VehicleCapacity)
                     return float.MaxValue;
                 currentLocation.Visited = true;
-;
+
                 usedCapacity += pickup.Size;
-                time += pickup.UnloadTime;
+                time = Math.Max(time, pickup.AvailableAfter) + pickup.UnloadTime;
                 ++pickupsDone;
             }
             else if (currentLocation is Depot)
@@ -46,14 +46,13 @@ namespace ComputationalCluster.TaskSolver.DVRP
                 if (pickupsDone == assignedPickups.Count)
                 {
                     currentLocation.Visited = false;
-                    return time;
+                    return travel;
                 }
 
-                // unloading time?
                 usedCapacity = 0; // unload
             }
 
-            float minimumServingTime = float.MaxValue;
+            float minimumTotalDistance = float.MaxValue;
 
             if (pickupsDone < _commonData.Pickups.Count)
             {
@@ -64,11 +63,13 @@ namespace ComputationalCluster.TaskSolver.DVRP
 
                     float travelDistance = EuclideanDistance(currentLocation, pickup);
                     float travelTime = travelDistance / _commonData.VehicleSpeed;
-                    var foundTime = CalculateRequiredTimeDFS(pickup, assignedPickups, pickupsDone, usedCapacity, time + travelTime);
+                    var foundDistance = CalculateRequiredTimeDFS(pickup, assignedPickups, pickupsDone, usedCapacity, 
+                        time + travelTime, travel + travelDistance);
 
-                    if (foundTime < minimumServingTime)
+                    if (foundDistance < minimumTotalDistance)
                     {
-                        minimumServingTime = foundTime;
+                        currentLocation.NextOnPath = (Node)pickup;
+                        minimumTotalDistance = foundDistance;
                     }
                 }
             }
@@ -80,22 +81,24 @@ namespace ComputationalCluster.TaskSolver.DVRP
 
                 float travelDistance = EuclideanDistance(currentLocation, depot);
                 float travelTime = travelDistance / _commonData.VehicleSpeed;
-                var foundTime = CalculateRequiredTimeDFS(depot, assignedPickups, pickupsDone, usedCapacity, time + travelTime);
+                var foundDistance = CalculateRequiredTimeDFS(depot, assignedPickups, pickupsDone, usedCapacity, 
+                    time + travelTime, travel + travelDistance);
 
-                if (foundTime < minimumServingTime)
+                if (foundDistance < minimumTotalDistance)
                 {
-                    minimumServingTime = foundTime;
+                    currentLocation.NextOnPath = (Node)depot;
+                    minimumTotalDistance = foundDistance;
                 }
             }
 
             currentLocation.Visited = false;
-            return minimumServingTime;
+            return minimumTotalDistance;
         }
 
-        public float CalculateRequiredTime(ICollection<Pickup> assignedPickups)
+        public float CalculateRequiredDistance(ICollection<Pickup> assignedPickups)
         {
             // todo support for multiple starting locations
-            return CalculateRequiredTimeDFS(_commonData.Depots[0], assignedPickups, 0);
+            return CalculateRequiredTimeDFS(_commonData.Depots[0], assignedPickups, 0, 0, 0, 0);
         }
 
         public bool MoveNext(int[] set, int numVehicles, int[] maxSet)
@@ -137,28 +140,61 @@ namespace ComputationalCluster.TaskSolver.DVRP
             return pickups;
         }
 
+        // won't work, cycles possible
+        private List<int> RecreateWay(Node node)
+        {
+            var path = new List<int>();
+
+            do
+            {
+                path.Add(node.Id);
+                node.Visited = true;
+                node = node.NextOnPath;
+            }
+            while (node != null && (node is Depot || !node.Visited));
+
+            return path;
+        }
+
         public float IterateBetweenSetPartitions(DVRPRange range)
         {
             int[] current = range.Start;
             float bestSolution = float.MaxValue;
 
+            var bestPaths = new List<List<int>>();
+            var paths = new List<List<int>>();
+
             do
             {
-                float requiredTime = float.MinValue;
+                float requiredDistance = 0.0f;
+                paths.Clear();
 
                 for (int vehicle = 0; vehicle < _commonData.NumVehicles; ++vehicle)
                 {
                     var pickups = BuildPickupsForVehicle(vehicle, current);
-                    var vehicleTime = CalculateRequiredTime(pickups);
-                    requiredTime = Math.Max(requiredTime, vehicleTime);
+                    var vehicleDistance = CalculateRequiredDistance(pickups);
 
-                    if (requiredTime == float.MaxValue)
-                        break;
+                    if (vehicleDistance == float.MaxValue)
+                    {
+                        requiredDistance = float.MaxValue;
+                        break; // because it's impossible to do it
+                    }
+
+                    requiredDistance += vehicleDistance;
+
+                    if (requiredDistance >= bestSolution)
+                    {
+                        requiredDistance = float.MaxValue;
+                        break; // we have better solution already found
+                    }
+
+                    paths.Add(RecreateWay(_commonData.Depots[0]));
                 }
 
-                if (requiredTime < bestSolution)
+                if (requiredDistance < bestSolution)
                 {
-                    bestSolution = requiredTime;
+                    bestSolution = requiredDistance;
+                    bestPaths = paths;
                 }
             }
             while (MoveNext(current, _commonData.NumVehicles, range.End));

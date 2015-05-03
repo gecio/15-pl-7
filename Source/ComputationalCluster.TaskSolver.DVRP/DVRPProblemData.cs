@@ -8,10 +8,12 @@ namespace ComputationalCluster.TaskSolver.DVRP
 {
     internal class Node
     {
+        public int Id { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
 
         // NON-SERIALIZABLE ELEMENTS! (for dfs)
+        public Node NextOnPath { get; set; }
         public bool Visited { get; set; }
     }
 
