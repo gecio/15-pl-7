@@ -24,7 +24,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             _problemsRepository = problemsRepository;
         }
 
-        public ICollection<IMessage> Consume(SolvePartialProblems message)
+        public ICollection<IMessage> Consume(SolvePartialProblems message, ConnectionInfo connectionInfo = null)
         {
             if (_problemsRepository.FindById((int)message.Id) == null)
                 return new IMessage[] {new Error()
@@ -39,7 +39,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             return new IMessage[] { noOperationResponse };
         }
 
-        public ICollection<IMessage> Consume(IMessage message)
+        public ICollection<IMessage> Consume(IMessage message, ConnectionInfo connectionInfo = null)
         {
             var status = message as SolvePartialProblems;
             if (status == null)

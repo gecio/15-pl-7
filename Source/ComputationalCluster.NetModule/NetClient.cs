@@ -11,7 +11,7 @@ namespace ComputationalCluster.NetModule
 {
     public interface INetClient
     {
-        IEnumerable<IMessage> Send_ManyResponses(IMessage message);
+        IEnumerable<IMessage> Send_ManyResponses(IMessage message, IPAddress IP = null, int? port = null);
         IMessage Send(IMessage message);
     }
 
@@ -24,13 +24,21 @@ namespace ComputationalCluster.NetModule
         public NetClient(IMessageTranslator translator, Encoding encoding, IConfigProvider configProvider)
         {
             _messageTranslator = translator;
-            _encoding          = encoding;
+            _encoding = encoding;
             _configProvider = configProvider;
         }
 
-        public IEnumerable<IMessage> Send_ManyResponses(IMessage message)
+        public IEnumerable<IMessage> Send_ManyResponses(IMessage message, IPAddress IP = null, int? port = null)
         {
-            IPEndPoint serverEndPoint = new IPEndPoint(_configProvider.IP, _configProvider.Port);
+            IPEndPoint serverEndPoint;
+            if (IP != null && port != null)
+            {
+                serverEndPoint = new IPEndPoint(IP, port.Value);
+            }
+            else
+            {
+                serverEndPoint = new IPEndPoint(_configProvider.IP, _configProvider.Port);
+            }
 
             var client = new TcpClient();
             client.Connect(serverEndPoint);

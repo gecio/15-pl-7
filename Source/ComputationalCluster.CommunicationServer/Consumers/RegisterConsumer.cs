@@ -20,14 +20,36 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             ILog log)
         {
             _componentsRepository = componentsRepository;
-            _timeProvider         = timeProvider;
-            _log                  = log;
+            _timeProvider = timeProvider;
+            _log = log;
         }
 
-        public ICollection<IMessage> Consume(Register message)
+        public ICollection<IMessage> Consume(Register message, ConnectionInfo connectionInfo = null)
         {
             _log.InfoFormat("Consuming {0} = [{1}]", message.GetType().Name, message.ToString());
 
+            var backupComponent = _componentsRepository.GetBackupServer() as BackupComponent;
+
+            var response = new RegisterResponse()
+            {
+                Timeout = 30, // todo: config,
+                BackupCommunicationServers = backupComponent != null ? new RegisterResponseBackupCommunicationServers
+                        {
+                            BackupCommunicationServer =
+                                new RegisterResponseBackupCommunicationServersBackupCommunicationServer
+                                {
+                                    address = backupComponent.IpAddress.ToString(),
+                                    port = (ushort)backupComponent.Port,
+                                    portSpecified = true
+                                }
+                        } : null,
+            };
+
+            if (message.Type == RegisterType.CommunicationServer && backupComponent != null)
+            {
+                response.Id = 0;
+                return new IMessage[] { response };
+            }
             // Null object - dlaczego nie jest length=0 od razu?
             if (message.SolvableProblems == null)
             {
@@ -52,27 +74,33 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             {
                 _log.Warn("Registering component with no solvable problems.");
             }
-
-            var component = new Component()
+            Component component;
+            if (message.Type == RegisterType.CommunicationServer)
             {
-                LastStatusTimestamp = _timeProvider.Now,
-                Type = message.Type,
-                MaxThreads = message.ParallelThreads,
-                SolvableProblems = message.SolvableProblems.Select(t => new ProblemDefinition { Name = t }).ToList(),
-            };
-
-            var guid = _componentsRepository.Register(component);
-
-            var response = new RegisterResponse()
+                component = new BackupComponent
+                {
+                    IpAddress = connectionInfo != null ? connectionInfo.IpAddress : null,
+                    Port = connectionInfo != null ? connectionInfo.Port : 0,
+                    Type = message.Type,
+                    MaxThreads = message.ParallelThreads,
+                    LastStatusTimestamp = _timeProvider.Now,
+                };
+            }
+            else
             {
-                Id = guid,
-                Timeout = 30, // todo: config
-            };
-
+                component = new Component()
+                {
+                    LastStatusTimestamp = _timeProvider.Now,
+                    Type = message.Type,
+                    MaxThreads = message.ParallelThreads,
+                    SolvableProblems = message.SolvableProblems.Select(t => new ProblemDefinition { Name = t }).ToList(),
+                };
+            }
+            response.Id = _componentsRepository.Register(component);
             return new IMessage[] { response };
         }
 
-        public ICollection<IMessage> Consume(IMessage message)
+        public ICollection<IMessage> Consume(IMessage message, ConnectionInfo connection = null)
         {
             var status = message as Register;
             if (status == null)

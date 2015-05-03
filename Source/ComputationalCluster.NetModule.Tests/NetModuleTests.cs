@@ -50,7 +50,7 @@ namespace ComputationalCluster.NetModule.Tests
             var message = sb.ToString();
 
 
-            _receiverMock.Setup(t => t.Dispatch(It.IsAny<string>())).Returns((string msg) =>
+            _receiverMock.Setup(t => t.Dispatch(It.IsAny<string>(),It.IsAny<ConnectionInfo>())).Returns((string msg, ConnectionInfo connectionInfo) =>
             {
                 Assert.AreEqual(message.Length, msg.Length);
                 Assert.AreEqual(message, msg);

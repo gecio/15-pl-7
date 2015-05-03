@@ -31,7 +31,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             _log = log;
         }
 
-        public ICollection<IMessage> Consume(Status message)
+        public ICollection<IMessage> Consume(Status message, ConnectionInfo connectionInfo = null)
         {
             #region test
             /* // przykład, żeby przetestować jak node'y odbierają podproblemy
@@ -259,7 +259,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 return new IMessage[] {new NoOperation() };
         }
 
-        public ICollection<IMessage> Consume(IMessage message)
+        public ICollection<IMessage> Consume(IMessage message, ConnectionInfo connectionInfo = null)
         {
             var status = message as Status;
             if (status == null)

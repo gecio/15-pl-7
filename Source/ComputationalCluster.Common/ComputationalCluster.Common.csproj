@@ -45,6 +45,7 @@
     <Compile Include="ClientConfigurator.cs" />
     <Compile Include="CommandLineParser.cs" />
     <Compile Include="ConfigProvider.cs" />
+    <Compile Include="ConfigProviderBackup.cs" />
     <Compile Include="ConfigProviderThreads.cs" />
     <Compile Include="IConfigProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

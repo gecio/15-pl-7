@@ -15,7 +15,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         private readonly IPartialProblemsRepository _partialProblemsRepository;
         private readonly IProblemsRepository _problemsRepository;
         private readonly IProblemDefinitionsRepository _problemDefinitionsRepository;
-        
+
         public SolutionsConsumer(IPartialProblemsRepository partialProblemsRepository, IProblemsRepository problemsRepository, IProblemDefinitionsRepository problemDefinitionsRepository)
         {
             _partialProblemsRepository = partialProblemsRepository;
@@ -23,7 +23,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             _problemDefinitionsRepository = problemDefinitionsRepository;
         }
 
-        public ICollection<IMessage> Consume(Solutions message)
+        public ICollection<IMessage> Consume(Solutions message, ConnectionInfo connectionInfo = null)
         {
             if (message.Solutions1[0].Type == SolutionsSolutionType.Partial)
             {
@@ -57,7 +57,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             return new IMessage[] { noOperationResponse };
         }
 
-        public ICollection<IMessage> Consume(IMessage message)
+        public ICollection<IMessage> Consume(IMessage message, ConnectionInfo connectionInfo = null)
         {
             var status = message as Solutions;
             if (status == null)
@@ -72,11 +72,11 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         {
             ProblemDefinition problemDefinition = _problemDefinitionsRepository.FindByName(message.ProblemType);
 
-            for (int i=0; i<message.Solutions1.Length; i++)
+            for (int i = 0; i < message.Solutions1.Length; i++)
             {
                 var partialProblem = _partialProblemsRepository.Find(message.Id, message.Solutions1[i].TaskId);
                 if (partialProblem == null)
-                    throw new Exception("Partial problem with ProblemId="+message.Id+" and TaskId="+message.Solutions1[i].TaskId+" doesn't exist.");
+                    throw new Exception("Partial problem with ProblemId=" + message.Id + " and TaskId=" + message.Solutions1[i].TaskId + " doesn't exist.");
                 partialProblem.AssignedTo = null; // zakończone obliczenia
                 partialProblem.CommonData = message.CommonData;
                 partialProblem.Data = message.Solutions1[i].Data;
@@ -90,12 +90,12 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             ProblemDefinition problemDefinition = _problemDefinitionsRepository.FindByName(message.ProblemType);
             var solution = _problemsRepository.FindById((int)message.Id);
             if (solution == null)
-                throw new Exception("Problem with Id="+message.Id+" doesn't exist.");
-            
+                throw new Exception("Problem with Id=" + message.Id + " doesn't exist.");
+
             solution.OutputData = message.Solutions1[0].Data;
             solution.IsAwaiting = false;
             solution.IsDone = true;
-            
+
             _problemsRepository.Update(solution);
 
             Console.WriteLine("Solution saved: id={0}, result={1}", solution.Id, BitConverter.ToInt32(Convert.FromBase64String(solution.OutputData), 0));

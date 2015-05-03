@@ -31,14 +31,13 @@ namespace ComputationalCluster.CommunicationServer.Tests.Queueing
             queuableTaskMock.Setup(t => t.ProblemDefinition).Returns(problemDefinition);
 
             var repository = new Mock<IQueuableTasksRepository<IQueueableTask>>();
-            repository.Setup(t => t.GetQueuableTasks())
-                .Returns(new List<IQueueableTask>() { queuableTaskMock.Object });
+            repository.Setup(t => t.GetQueuableTasks()).Returns(new List<IQueueableTask>() { queuableTaskMock.Object });
 
             var queue = new TaskQueue<IQueueableTask>(repository.Object, new Mock<ILog>().Object);
 
             var task = queue.GetNextTask(new [] { problemDefinition });
 
-            repository.Verify(t => t.GetQueuableTasks(), Times.Once);
+            repository.Verify(t => t.GetQueuableTasks(), Times.Exactly(2));
             Assert.AreEqual(task, queuableTaskMock.Object);
         }
     }

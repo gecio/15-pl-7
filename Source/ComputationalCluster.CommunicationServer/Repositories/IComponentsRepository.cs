@@ -1,5 +1,6 @@
 ﻿using ComputationalCluster.CommunicationServer.Models;
 using System;
+using System.Collections.Generic;
 
 namespace ComputationalCluster.CommunicationServer.Repositories
 {
@@ -10,5 +11,7 @@ namespace ComputationalCluster.CommunicationServer.Repositories
         Component GetById(ulong componentId);
         void UpdateLastStatusTimestamp(ulong componentId);
         void RemoveInactive();
+        IEnumerable<Component> GetAll();
+        Component GetBackupServer();
     }
 }

@@ -6,6 +6,9 @@ using ComputationalCluster.PluginManager;
 using log4net;
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Runtime.Serialization.Formatters;
+using ComputationalCluster.CommunicationServer.Backup;
 
 namespace ComputationalCluster.CommunicationServer
 {
@@ -14,15 +17,17 @@ namespace ComputationalCluster.CommunicationServer
         private readonly INetServer _server;
         private readonly IComponentsRepository _components;
         private readonly ILog _log;
-        private readonly IConfigProvider _configProvider;
+        private readonly IConfigProviderBackup _configProvider;
+        private readonly BackupClient _backupClient;
 
         public CommunicationServerService(INetServer server, IComponentsRepository components, ILog log,
-            ITaskSolversRepository repository, IConfigProvider configProvider)
+            ITaskSolversRepository repository, IConfigProviderBackup configProvider, BackupClient backupClient)
         {
             _server         = server;
             _components     = components;
             _log            = log;
             _configProvider = configProvider;
+            _backupClient = backupClient;
         }
 
         public void ApplyArguments(string[] arguments)
@@ -31,6 +36,8 @@ namespace ComputationalCluster.CommunicationServer
             {
                 new CommandLineOption { ShortNotation = 'p', LongNotation = "port", ParameterRequired = true, },
                 new CommandLineOption { ShortNotation = 'b', LongNotation = "backup", ParameterRequired = false, },
+                new CommandLineOption { ShortNotation = 'a', LongNotation = "maddress", ParameterRequired = true},
+                new CommandLineOption { ShortNotation = 'b', LongNotation = "mport", ParameterRequired = true},
                 new CommandLineOption { ShortNotation = 't', LongNotation = "time", ParameterRequired = true, },
             });
 
@@ -42,8 +49,12 @@ namespace ComputationalCluster.CommunicationServer
 
             _configProvider.BackupMode = parser.TryGet("backup", out value);
 
-            if (parser.TryGet("t", out value))
+            if (parser.TryGet("time", out value))
                 _configProvider.Timeout = Int32.Parse(value);
+            if (parser.TryGet("maddress", out value))
+                _configProvider.MasterIP = IPAddress.Parse(value);
+            if (parser.TryGet("mport", out value))
+                _configProvider.MasterPort = Int32.Parse(value);
         }
 
         public void Start()
@@ -51,6 +62,10 @@ namespace ComputationalCluster.CommunicationServer
             _log.Info("Starting...");
 
             _server.Start();
+            if (_configProvider.BackupMode)
+            {
+                _backupClient.Start();
+            }
 
             _log.Info("Started.");
 

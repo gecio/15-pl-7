@@ -35,7 +35,7 @@ namespace ComputationalCluster.NetModule.Tests
 
             testTextConsumerMock = new Mock<IMessageConsumer<TestTextMessage>>();
             testTextConsumerMock.As<IMessageConsumer>()
-                .Setup(t => t.Consume(requestMessage))
+                .Setup(t => t.Consume(requestMessage,null))
                 .Returns(new List<IMessage> { responseMessage });
 
             _logMock = new Mock<ILog>();
@@ -54,7 +54,7 @@ namespace ComputationalCluster.NetModule.Tests
 
             translatorMock.Verify(t => t.CreateObject(requestMessageContent), Times.Once);
             translatorMock.Verify(t => t.Stringify(responseMessage), Times.Once);
-            testTextConsumerMock.Verify(t => t.Consume(requestMessage), Times.Once);
+            testTextConsumerMock.Verify(t => t.Consume(requestMessage,null), Times.Once);
 
             Assert.AreEqual(responseMessageContent, response);
         }

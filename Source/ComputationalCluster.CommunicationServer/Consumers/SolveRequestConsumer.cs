@@ -30,7 +30,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         }
 
 
-        public ICollection<IMessage> Consume(SolveRequest message)
+        public ICollection<IMessage> Consume(SolveRequest message, ConnectionInfo connectionInfo = null)
         {
             _log.InfoFormat("Consuming {0} = [{1}]", message.GetType().Name, message.ToString());
             ulong unqueId = SaveData(message);
@@ -41,7 +41,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             return new IMessage[] { response, new NoOperation() };
         }
 
-        public ICollection<IMessage> Consume(IMessage message)
+        public ICollection<IMessage> Consume(IMessage message, ConnectionInfo connectionInfo = null)
         {
             var solveRequest = message as SolveRequest;
             if (solveRequest == null)

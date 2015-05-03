@@ -124,5 +124,15 @@ namespace ComputationalCluster.CommunicationServer.Repositories
                 Deregister(component.Key);
             }
         }
+
+        public IEnumerable<Component> GetAll()
+        {
+            return _componentDictionary.Values;
+        }
+
+        public Component GetBackupServer()
+        {
+            return _componentDictionary.Values.FirstOrDefault(x => x.Type == RegisterType.CommunicationServer);
+        }
     }
 }
