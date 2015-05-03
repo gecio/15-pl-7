@@ -91,7 +91,7 @@ namespace ComputationalCluster.TaskSolver.DVRP.Tests
 
             var result = dvrp.IterateBetweenSetPartitions(range);
 
-            Assert.AreEqual(result, 8.324f, 0.005f);
+            Assert.AreEqual(8.324f, result, 0.005f);
         }
     }
 }

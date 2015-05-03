@@ -17,8 +17,8 @@ namespace ComputationalCluster.TaskSolver.DVRP
 
     internal class Depot : Node
     {
-        public int Starts { get; set; }
-        public int Ends { get; set; }
+        public float Starts { get; set; }
+        public float Ends { get; set; }
 
         public Depot()
         {
@@ -27,7 +27,7 @@ namespace ComputationalCluster.TaskSolver.DVRP
 
     internal class Pickup : Node
     {
-        public int AvailableAfter { get; set; }
+        public float AvailableAfter { get; set; }
         public int UnloadTime { get; set; }
         public int Size { get; set; }
 

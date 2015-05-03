@@ -25,19 +25,27 @@ namespace ComputationalCluster.TaskSolver.DVRP
         {
             if (currentLocation is Pickup)
             {
-                if (currentLocation.Visited)
+                var pickup = (Pickup)currentLocation;
+
+                if (currentLocation.Visited 
+                    || pickup.AvailableAfter > time 
+                    || usedCapacity + pickup.Size > _commonData.VehicleCapacity)
                     return float.MaxValue;
                 currentLocation.Visited = true;
-
-                var pickup = (Pickup)currentLocation;
+;
                 usedCapacity += pickup.Size;
+                time += pickup.UnloadTime;
                 ++pickupsDone;
             }
-
-            if (currentLocation is Depot)
+            else if (currentLocation is Depot)
             {
+                var depo = (Depot)currentLocation;
+                if (depo.Starts > time || time > depo.Ends)
+                    return float.MaxValue;
+
                 if (pickupsDone == _commonData.Pickups.Count)
                 {
+                    currentLocation.Visited = false;
                     return time;
                 }
 
@@ -56,7 +64,7 @@ namespace ComputationalCluster.TaskSolver.DVRP
 
                     float travelDistance = EuclideanDistance(currentLocation, pickup);
                     float travelTime = travelDistance / _commonData.VehicleSpeed;
-                    var foundTime = CalculateRequiredTimeDFS(pickup, assignedPickups, pickupsDone, usedCapacity, time+travelTime);
+                    var foundTime = CalculateRequiredTimeDFS(pickup, assignedPickups, pickupsDone, usedCapacity, time + travelTime);
 
                     if (foundTime < minimumServingTime)
                     {
@@ -80,6 +88,7 @@ namespace ComputationalCluster.TaskSolver.DVRP
                 }
             }
 
+            currentLocation.Visited = false;
             return minimumServingTime;
         }
 
