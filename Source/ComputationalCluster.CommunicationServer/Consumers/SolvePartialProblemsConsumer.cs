@@ -53,6 +53,8 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         public void SaveData(SolvePartialProblems message)
         {
             ProblemDefinition problemDefinition = _problemDefinitionsRepository.FindByName(message.ProblemType);
+            var problem = _problemsRepository.FindById((int)message.Id);
+            problem.AssignedTo = null; //zadanie zostało zakończone przez TM
             for (int i = 0; i < message.PartialProblems.Length; i++)
             {
                 var partialProblem = new OrderedPartialProblem()

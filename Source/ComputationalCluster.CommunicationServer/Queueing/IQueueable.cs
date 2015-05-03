@@ -26,5 +26,10 @@ namespace ComputationalCluster.CommunicationServer.Queueing
         /// Czy zadanie oczekuje na przydzielenie zasobu.
         /// </summary>
         bool IsAwaiting { get; }
+
+        /// <summary>
+        /// komponent, który wykonuje zadanie
+        /// </summary>
+        Component AssignedTo { get; set; }
     }
 }

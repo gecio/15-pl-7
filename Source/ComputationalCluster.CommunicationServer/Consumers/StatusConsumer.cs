@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Autofac.Core;
 using log4net;
 
 namespace ComputationalCluster.CommunicationServer.Consumers
@@ -217,11 +218,14 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 if (message.Threads[i].State == StatusThreadState.Idle)
                     threadsCount++;
             List<OrderedPartialProblem> partialProblems = new List<OrderedPartialProblem>();
-            OrderedPartialProblem problem = _partialProblemsQueue.GetNextTask(_componentsRepository.GetById(message.Id).SolvableProblems);
+            var component = _componentsRepository.GetById(message.Id);
+            OrderedPartialProblem problem = _partialProblemsQueue.GetNextTask(component.SolvableProblems);
 
             while (problem != null && problem.Done == false && threadsCount > 0)
             {
                 _log.DebugFormat("GetNextTask Id: {0}", problem.Id);
+                problem.IsAwaiting = false;
+                problem.AssignedTo = component;
                 partialProblems.Add(problem);
                 threadsCount--;
                 problem = _partialProblemsQueue.GetNextTask(new []{problem.ProblemDefinition});
@@ -299,6 +303,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             if (problem != null)
             {
                 problem.IsAwaiting = false;
+                problem.AssignedTo = component;
                 return new DivideProblem
                 {
                     ProblemType = problem.ProblemDefinition.Name,
@@ -327,10 +332,18 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                     Id = partialSolutions.ElementAt(0).Id,
                 };
 
-                solution.Solutions1 = partialSolutions.Select(orderedPartialProblem => new SolutionsSolution
+                solution.Solutions1 = partialSolutions.Select(orderedPartialProblem =>
                 {
-                    Data = orderedPartialProblem.Data, TaskId = orderedPartialProblem.TaskId, TaskIdSpecified = true, Type = SolutionsSolutionType.Partial,
-                    //TODO: timeout i computatonTime
+                    orderedPartialProblem.IsAwaiting = false;
+                    orderedPartialProblem.AssignedTo = component;
+                    return new SolutionsSolution
+                    {
+                        Data = orderedPartialProblem.Data,
+                        TaskId = orderedPartialProblem.TaskId,
+                        TaskIdSpecified = true,
+                        Type = SolutionsSolutionType.Partial,
+                        //TODO: timeout i computatonTime
+                    };
                 }).ToArray();
 
                 return solution;

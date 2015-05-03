@@ -38,7 +38,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             {
                 Id = unqueId
             };
-            return new IMessage[] { response };
+            return new IMessage[] { response, new NoOperation() };
         }
 
         public ICollection<IMessage> Consume(IMessage message)
