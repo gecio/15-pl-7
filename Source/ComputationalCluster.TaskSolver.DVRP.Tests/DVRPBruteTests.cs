@@ -93,5 +93,40 @@ namespace ComputationalCluster.TaskSolver.DVRP.Tests
 
             Assert.AreEqual(8.324f, result, 0.005f);
         }
+
+        [Test]
+        public void Solve_SimpleStaticCaseTwoVehicles()
+        {
+            var commonData = new DVRPCommonData
+            {
+                Depots = new List<Depot>()
+                {
+                    new Depot { X = 0, Y = 0, Starts = 0, Ends = 10000 },
+                },
+                Pickups = new List<Pickup>()
+                {
+                    new Pickup { X = 0, Y = 2, Size = 1 },
+                    new Pickup { X = 0, Y = 3, Size = 1 },
+                    new Pickup { X = 0, Y = 4, Size = 1 },
+                    new Pickup { X = 0, Y = -2, Size = 1 },
+                    new Pickup { X = 0, Y = -3, Size = 1 },
+                    new Pickup { X = 0, Y = -4, Size = 1 },
+                },
+                NumVehicles = 2,
+                VehicleCapacity = 10,
+                VehicleSpeed = 1,
+            };
+
+            var dvrp = new DVRPBrute(commonData);
+            var range = new DVRPRange
+            {
+                Start = new int[] { 0, 0, 0, 0, 0, 0 },
+                End = new int[] { 1, 1, 1, 1, 1, 1 },
+            };
+
+            var result = dvrp.IterateBetweenSetPartitions(range);
+
+            Assert.AreEqual(8.0f, result, 0.005f);
+        }
     }
 }

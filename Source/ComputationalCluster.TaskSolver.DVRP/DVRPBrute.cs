@@ -43,7 +43,7 @@ namespace ComputationalCluster.TaskSolver.DVRP
                 if (depo.Starts > time || time > depo.Ends)
                     return float.MaxValue;
 
-                if (pickupsDone == _commonData.Pickups.Count)
+                if (pickupsDone == assignedPickups.Count)
                 {
                     currentLocation.Visited = false;
                     return time;
@@ -144,23 +144,21 @@ namespace ComputationalCluster.TaskSolver.DVRP
 
             do
             {
-                float totalRequiredTime = 0;
+                float requiredTime = float.MinValue;
 
                 for (int vehicle = 0; vehicle < _commonData.NumVehicles; ++vehicle)
                 {
                     var pickups = BuildPickupsForVehicle(vehicle, current);
                     var vehicleTime = CalculateRequiredTime(pickups);
-                    if (vehicleTime == float.MaxValue) // impossible to solve
-                        totalRequiredTime = float.MaxValue;
-                    else totalRequiredTime += vehicleTime;
+                    requiredTime = Math.Max(requiredTime, vehicleTime);
 
-                    if (totalRequiredTime >= bestSolution)
+                    if (requiredTime == float.MaxValue)
                         break;
                 }
 
-                if (totalRequiredTime < bestSolution)
+                if (requiredTime < bestSolution)
                 {
-                    bestSolution = totalRequiredTime;
+                    bestSolution = requiredTime;
                 }
             }
             while (MoveNext(current, _commonData.NumVehicles, range.End));
