@@ -17,7 +17,7 @@ namespace ComputationalCluster.ComputationalClient
             builder.RegisterType<MessageReceiver>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<MessageTranslator>().AsImplementedInterfaces().AsSelf();
 
-            builder.RegisterType<ConfigProvider>().As<IConfigProvider>();
+            builder.RegisterType<ConfigProvider>().As<IConfigProvider>().SingleInstance();
         }
     }
 }

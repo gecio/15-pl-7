@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Autofac;
 using ComputationalCluster.Communication.Messages;
 using ComputationalCluster.NetModule;
+using ComputationalCluster.Common;
 
 namespace ComputationalCluster.ComputationalClient
 {
@@ -19,6 +20,12 @@ namespace ComputationalCluster.ComputationalClient
             var builder = new ContainerBuilder();
             builder.RegisterModule<ComputationalClientModule>();
             var container = builder.Build();
+
+            var cfg = container.Resolve<IConfigProvider>();
+            if (App.ArgAddress != null)
+                cfg.IP = App.ArgAddress;
+            if (App.ArgPort > 0)
+                cfg.Port = App.ArgPort;
 
             _client = container.Resolve<INetClient>();
             _encoding = container.Resolve<Encoding>();

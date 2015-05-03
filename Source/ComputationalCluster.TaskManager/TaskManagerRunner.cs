@@ -30,13 +30,16 @@ namespace ComputationalCluster.TaskManager
         private int _numberOfThreads;
         private int _numberOfBusyThreads;
 
-        public TaskManagerRunner()
+        public TaskManagerRunner(string[] args)
         {
             BasicConfigurator.Configure();
 
             var builder = new ContainerBuilder();
             builder.RegisterModule<TaskManagerModule>();
             var container = builder.Build();
+
+            var configurator = container.Resolve<ClientConfigurator>();
+            configurator.Apply(args);
 
             _taskSolversRepository = container.Resolve<ITaskSolversRepository>();
             _client = container.Resolve<INetClient>();

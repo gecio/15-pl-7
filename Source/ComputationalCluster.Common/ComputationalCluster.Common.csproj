@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientConfigurator.cs" />
     <Compile Include="CommandLineParser.cs" />
     <Compile Include="ConfigProvider.cs" />
     <Compile Include="ConfigProviderThreads.cs" />

@@ -21,6 +21,8 @@ namespace ComputationalCluster.Dependencies
             builder.RegisterType<NetServer>().AsImplementedInterfaces();
             builder.RegisterType<NetClient>().AsImplementedInterfaces();
 
+            builder.RegisterType<ClientConfigurator>().AsSelf();
+
             builder.RegisterType<ConfigProvider>().As<IConfigProvider>().SingleInstance();
             builder.RegisterType<TimeProviderUtcNow>().As<ITimeProvider>();
 
