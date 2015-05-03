@@ -15,10 +15,78 @@ namespace ComputationalCluster.TaskSolver.DVRP
             _commonData = commonData;
         }
 
-        public int CalculateRequiredTime(ICollection<Pickup> assignedPickups, int usedCapacity = 0, int time = 0)
+        private float EuclideanDistance(Node a, Node b)
         {
-            int minimumServingTime = int.MaxValue;
+            return (float)Math.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
+        }
+
+        public float CalculateRequiredTimeDFS(Node currentLocation, ICollection<Pickup> assignedPickups, int pickupsDone = 0,
+            int usedCapacity = 0, float time = 0)
+        {
+            if (currentLocation is Pickup)
+            {
+                if (currentLocation.Visited)
+                    return float.MaxValue;
+                currentLocation.Visited = true;
+
+                var pickup = (Pickup)currentLocation;
+                usedCapacity += pickup.Size;
+                ++pickupsDone;
+            }
+
+            if (currentLocation is Depot)
+            {
+                if (pickupsDone == _commonData.Pickups.Count)
+                {
+                    return time;
+                }
+
+                // unloading time?
+                usedCapacity = 0; // unload
+            }
+
+            float minimumServingTime = float.MaxValue;
+
+            if (pickupsDone < _commonData.Pickups.Count)
+            {
+                foreach (var pickup in assignedPickups)
+                {
+                    if (pickup == currentLocation)
+                        continue;
+
+                    float travelDistance = EuclideanDistance(currentLocation, pickup);
+                    float travelTime = travelDistance / _commonData.VehicleSpeed;
+                    var foundTime = CalculateRequiredTimeDFS(pickup, assignedPickups, pickupsDone, usedCapacity, time+travelTime);
+
+                    if (foundTime < minimumServingTime)
+                    {
+                        minimumServingTime = foundTime;
+                    }
+                }
+            }
+
+            foreach (var depot in _commonData.Depots)
+            {
+                if (depot == currentLocation)
+                    continue;
+
+                float travelDistance = EuclideanDistance(currentLocation, depot);
+                float travelTime = travelDistance / _commonData.VehicleSpeed;
+                var foundTime = CalculateRequiredTimeDFS(depot, assignedPickups, pickupsDone, usedCapacity, time + travelTime);
+
+                if (foundTime < minimumServingTime)
+                {
+                    minimumServingTime = foundTime;
+                }
+            }
+
             return minimumServingTime;
+        }
+
+        public float CalculateRequiredTime(ICollection<Pickup> assignedPickups)
+        {
+            // todo support for multiple starting locations
+            return CalculateRequiredTimeDFS(_commonData.Depots[0], assignedPickups, 0);
         }
 
         public bool MoveNext(int[] set, int numVehicles, int[] maxSet)
@@ -60,22 +128,23 @@ namespace ComputationalCluster.TaskSolver.DVRP
             return pickups;
         }
 
-        public int IterateBetweenSetPartitions(DVRPRange range)
+        public float IterateBetweenSetPartitions(DVRPRange range)
         {
             int[] current = range.Start;
-            int bestSolution = int.MaxValue;
+            float bestSolution = float.MaxValue;
 
             do
             {
-                int totalRequiredTime = 0;
+                float totalRequiredTime = 0;
 
                 for (int vehicle = 0; vehicle < _commonData.NumVehicles; ++vehicle)
                 {
                     var pickups = BuildPickupsForVehicle(vehicle, current);
                     var vehicleTime = CalculateRequiredTime(pickups);
-                    if (vehicleTime == int.MaxValue) // impossible to solve
-                        totalRequiredTime = int.MaxValue;
-                    
+                    if (vehicleTime == float.MaxValue) // impossible to solve
+                        totalRequiredTime = float.MaxValue;
+                    else totalRequiredTime += vehicleTime;
+
                     if (totalRequiredTime >= bestSolution)
                         break;
                 }

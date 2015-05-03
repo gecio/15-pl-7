@@ -61,5 +61,37 @@ namespace ComputationalCluster.TaskSolver.DVRP.Tests
             Assert.AreEqual(new int[] { 0, 0, 0 }, current);
             Assert.IsFalse(exists);
         }
+
+        [Test]
+        public void Solve_SimpleStaticCaseOneVehicle()
+        {
+            var commonData = new DVRPCommonData
+            {
+                Depots = new List<Depot>()
+                {
+                    new Depot { X = 0, Y = 0, Starts = 0, Ends = 10000 },
+                },
+                Pickups = new List<Pickup>()
+                {
+                    new Pickup { X = -1, Y = 3, Size = 1 },
+                    new Pickup { X = 0, Y = 3, Size = 1 },
+                    new Pickup { X = 1, Y = 3, Size = 1 },
+                },
+                NumVehicles = 1,
+                VehicleCapacity = 10,
+                VehicleSpeed = 1,
+            };
+
+            var dvrp = new DVRPBrute(commonData);
+            var range = new DVRPRange
+            {
+                Start = new int[] { 0, 0, 0 },
+                End = new int[] { 0, 0, 0 },
+            };
+
+            var result = dvrp.IterateBetweenSetPartitions(range);
+
+            Assert.AreEqual(result, 8.324f, 0.005f);
+        }
     }
 }

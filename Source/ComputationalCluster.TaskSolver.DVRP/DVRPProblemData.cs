@@ -6,10 +6,17 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.TaskSolver.DVRP
 {
-    internal class Depot
+    internal class Node
     {
         public int X { get; set; }
         public int Y { get; set; }
+
+        // NON-SERIALIZABLE ELEMENTS! (for dfs)
+        public bool Visited { get; set; }
+    }
+
+    internal class Depot : Node
+    {
         public int Starts { get; set; }
         public int Ends { get; set; }
 
@@ -18,10 +25,8 @@ namespace ComputationalCluster.TaskSolver.DVRP
         }
     }
 
-    internal class Pickup
+    internal class Pickup : Node
     {
-        public int X { get; set; }
-        public int Y { get; set; }
         public int AvailableAfter { get; set; }
         public int UnloadTime { get; set; }
         public int Size { get; set; }
