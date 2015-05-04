@@ -32,7 +32,6 @@ namespace ComputationalCluster.TaskSolver.DVRP
                     || usedCapacity + pickup.Size > _commonData.VehicleCapacity)
                     return float.MaxValue;
                 currentLocation.Visited = true;
-;
                 usedCapacity += pickup.Size;
                 time += pickup.UnloadTime;
                 ++pickupsDone;
