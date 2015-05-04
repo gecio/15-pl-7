@@ -38,7 +38,7 @@ namespace ComputationalCluster.CommunicationServer.Tests.Queueing
 
             var task = queue.GetNextTask(new [] { problemDefinition });
 
-            repository.Verify(t => t.GetQueuableTasks(), Times.Once);
+            repository.Verify(t => t.GetQueuableTasks(), Times.Exactly(2));
             Assert.AreEqual(task, queuableTaskMock.Object);
         }
     }

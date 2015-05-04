@@ -192,15 +192,18 @@ namespace ComputationalCluster.TaskSolver.DVRP.Tests
             var dvrp = new DVRPBrute(commonData);
             var range = new DVRPRange
             {
-                Start = new int[] { 0, 1, 1, 0, 1, 1, 0, 0 },
-                End = new int[]   { 0, 1, 1, 0, 1, 1, 0, 0 },
-                //Start = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 },
-                //End = new int[] { 7, 7, 7, 7, 7, 7, 7, 7 },
+                //Start = new int[] { 0, 1, 1, 0, 1, 0, 1, 1 },
+                //End = new int[]   { 0, 1, 1, 0, 1, 1, 0, 0 },
+                Start = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 },
+                End = new int[] { 7, 7, 7, 7, 7, 7, 7, 7 },
             };
+            // 0 0 0 1 0 0 1 1
+            var result = dvrp.IterateBetweenSetPartitions(range);
 
-            //var result = dvrp.IterateBetweenSetPartitions(range);
-            //Assert.AreEqual(680.09f, result, 0.0005f);
-            Assert.Fail();
+            var finalResult = ((int)((result+0.005f) * 100)) / 100.0f;
+            Assert.AreEqual(680.09f, finalResult, 0.005f);
+
+            //Assert.Fail();
         }
     }
 }

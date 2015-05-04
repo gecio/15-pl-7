@@ -21,8 +21,11 @@ namespace ComputationalCluster.TaskSolver.DVRP
         }
 
         public float CalculateRequiredTimeDFS(Node currentLocation, ICollection<Pickup> assignedPickups, int pickupsDone,
-            int usedCapacity, float time, float travel)
+            int usedCapacity, float time, float travel, float bestTravel)
         {
+            if (travel > bestTravel) // worse solution already
+                return float.MaxValue;
+
             if (currentLocation is Pickup)
             {
                 var pickup = (Pickup)currentLocation;
@@ -52,7 +55,8 @@ namespace ComputationalCluster.TaskSolver.DVRP
                 usedCapacity = 0; // unload
             }
 
-            float minimumTotalDistance = float.MaxValue;
+            float minimumTotalDistance = bestTravel;
+            bool anySolutionFound = false;
 
             if (pickupsDone < _commonData.Pickups.Count)
             {
@@ -63,8 +67,11 @@ namespace ComputationalCluster.TaskSolver.DVRP
 
                     float travelDistance = EuclideanDistance(currentLocation, pickup);
                     float travelTime = travelDistance / _commonData.VehicleSpeed;
-                    var foundDistance = CalculateRequiredTimeDFS(pickup, assignedPickups, pickupsDone, usedCapacity, 
-                        time + travelTime, travel + travelDistance);
+                    var foundDistance = CalculateRequiredTimeDFS(pickup, assignedPickups, pickupsDone, usedCapacity,
+                        time + travelTime, travel + travelDistance, minimumTotalDistance);
+
+                    if (foundDistance != float.MaxValue)
+                        anySolutionFound = true;
 
                     if (foundDistance < minimumTotalDistance)
                     {
@@ -74,20 +81,23 @@ namespace ComputationalCluster.TaskSolver.DVRP
                 }
             }
 
-            foreach (var depot in _commonData.Depots)
+            if (!anySolutionFound)
             {
-                if (depot == currentLocation)
-                    continue;
-
-                float travelDistance = EuclideanDistance(currentLocation, depot);
-                float travelTime = travelDistance / _commonData.VehicleSpeed;
-                var foundDistance = CalculateRequiredTimeDFS(depot, assignedPickups, pickupsDone, usedCapacity, 
-                    time + travelTime, travel + travelDistance);
-
-                if (foundDistance < minimumTotalDistance)
+                foreach (var depot in _commonData.Depots)
                 {
-                    currentLocation.NextOnPath = (Node)depot;
-                    minimumTotalDistance = foundDistance;
+                    if (depot == currentLocation)
+                        continue;
+
+                    float travelDistance = EuclideanDistance(currentLocation, depot);
+                    float travelTime = travelDistance / _commonData.VehicleSpeed;
+                    var foundDistance = CalculateRequiredTimeDFS(depot, assignedPickups, pickupsDone, usedCapacity,
+                        time + travelTime, travel + travelDistance, minimumTotalDistance);
+
+                    if (foundDistance < minimumTotalDistance)
+                    {
+                        currentLocation.NextOnPath = (Node)depot;
+                        minimumTotalDistance = foundDistance;
+                    }
                 }
             }
 
@@ -95,10 +105,10 @@ namespace ComputationalCluster.TaskSolver.DVRP
             return minimumTotalDistance;
         }
 
-        public float CalculateRequiredDistance(ICollection<Pickup> assignedPickups)
+        public float CalculateRequiredDistance(ICollection<Pickup> assignedPickups, float bestTravel = float.MaxValue)
         {
             // todo support for multiple starting locations
-            return CalculateRequiredTimeDFS(_commonData.Depots[0], assignedPickups, 0, 0, 0, 0);
+            return CalculateRequiredTimeDFS(_commonData.Depots[0], assignedPickups, 0, 0, 0, 0, bestTravel);
         }
 
         public bool MoveNext(int[] set, int numVehicles, int[] maxSet)
@@ -156,6 +166,14 @@ namespace ComputationalCluster.TaskSolver.DVRP
             return path;
         }
 
+
+        private void ApplyCutoff()
+        {
+            _commonData.Pickups
+                .Where(p => p.AvailableAfter >= _commonData.Depots.Max(t => t.Ends) / 2)
+                .ToList().ForEach(p => p.AvailableAfter = 0);
+        }
+
         public float IterateBetweenSetPartitions(DVRPRange range)
         {
             int[] current = range.Start;
@@ -164,15 +182,22 @@ namespace ComputationalCluster.TaskSolver.DVRP
             var bestPaths = new List<List<int>>();
             var paths = new List<List<int>>();
 
+            ApplyCutoff();
+
             do
             {
                 float requiredDistance = 0.0f;
                 paths.Clear();
 
+                foreach (var pickup in _commonData.Pickups)
+                    pickup.Visited = false;
+                foreach (var depo in _commonData.Depots)
+                    depo.Visited = false;
+
                 for (int vehicle = 0; vehicle < _commonData.NumVehicles; ++vehicle)
                 {
                     var pickups = BuildPickupsForVehicle(vehicle, current);
-                    var vehicleDistance = CalculateRequiredDistance(pickups);
+                    var vehicleDistance = CalculateRequiredDistance(pickups, bestSolution);
 
                     if (vehicleDistance == float.MaxValue)
                     {
