@@ -12,6 +12,7 @@ namespace ComputationalCluster.TaskSolver.DVRP
         public float Y { get; set; }
 
         // NON-SERIALIZABLE ELEMENTS! (for dfs)
+        public Node NextOnPath { get; set; }
         public bool Visited { get; set; }
     }
 
