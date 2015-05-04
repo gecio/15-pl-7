@@ -55,7 +55,7 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
         internal DVRPCommonData Parse(string data)
         {
             Key multilineHeaderKey = null;
-            foreach (var line in data.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(s => s + "\n"))
+            foreach (var line in data.Split(new[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(s => s + "\n"))
             {
                 var regex = new Regex(@"(?<!.)[A-Z_]+(?=[: \n])");
                 var key = regex.Match(line);
