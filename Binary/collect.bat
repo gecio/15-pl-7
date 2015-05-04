@@ -22,6 +22,7 @@ copy "..\Source\ComputationalCluster.TaskManager.Console\bin\Release\*.*" "Task 
 copy "..\Source\ComputationalCluster.ComputationalClient\bin\Release\*.*" "Client\*.*"
 
 copy "..\Source\ComputationalCluster.TaskSolver.ArithmeticProgressionSum\bin\Release\ComputationalCluster.TaskSolver.ArithmeticProgressionSum.dll" "Plugins\"
+copy "..\Source\ComputationalCluster.TaskSolver.DVRP\bin\Release\ComputationalCluster.TaskSolver.DVRP.dll" "Plugins\"
 copy "Plugins\*.*" "Communication Server\plugins\*.*"
 copy "Plugins\*.*" "Computational Node\plugins\*.*"
 copy "Plugins\*.*" "Task Manager\plugins\*.*"

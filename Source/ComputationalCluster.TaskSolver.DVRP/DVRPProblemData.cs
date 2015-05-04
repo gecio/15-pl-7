@@ -8,6 +8,7 @@ namespace ComputationalCluster.TaskSolver.DVRP
 {
     internal class Node
     {
+        public int Id { get; set; }
         public float X { get; set; }
         public float Y { get; set; }
 
@@ -37,7 +38,8 @@ namespace ComputationalCluster.TaskSolver.DVRP
         }
     }
 
-    internal class DVRPRange
+    [Serializable]
+    public class DVRPRange
     {
         public int[] Start { get; set; }
         public int[] End { get; set; }

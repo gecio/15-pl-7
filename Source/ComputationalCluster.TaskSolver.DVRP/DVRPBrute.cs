@@ -21,7 +21,7 @@ namespace ComputationalCluster.TaskSolver.DVRP
         }
 
         public float CalculateRequiredTimeDFS(Node currentLocation, ICollection<Pickup> assignedPickups, int pickupsDone,
-            int usedCapacity, float time, float travel, float bestTravel)
+            float usedCapacity, float time, float travel, float bestTravel)
         {
             if (travel > bestTravel) // worse solution already
                 return float.MaxValue;

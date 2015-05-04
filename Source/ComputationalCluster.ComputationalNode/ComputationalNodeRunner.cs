@@ -159,7 +159,7 @@ namespace ComputationalCluster.ComputationalNode
         public void SolvePartialProblem(object problem)
         {
             var partialProblem = problem as PartialProblem;
-            TaskSolver solver = _taskSolversRepository.GetSolverInstance(partialProblem.ProblemType);
+            TaskSolver solver = _taskSolversRepository.GetSolverInstance(partialProblem.ProblemType, Convert.FromBase64String(partialProblem.CommonData));
             byte[] data = Convert.FromBase64String(partialProblem.Data);
             byte[] solution = solver.Solve(data, TimeSpan.FromMilliseconds(partialProblem.Timeout));
 
