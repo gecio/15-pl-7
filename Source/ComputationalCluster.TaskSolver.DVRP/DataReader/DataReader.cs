@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace ComputationalCluster.TaskSolver.DVRP.DataReader
 {
-    public class Reader
+    internal class Reader
     {
         private State _state = State.EXPECTING_KEY;
 
@@ -18,8 +18,8 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
             {"NUM_VEHICLES", new Key("NUM_VEHICLES", true, DataType.INT, DataFormat.SINGLE_LINE)},
             {"NUM_CAPACITIES", new Key("NUM_CAPACITIES", false, DataType.INT, DataFormat.SINGLE_LINE, 1)},
             {"NUM_LOCATIONS", new Key("NUM_LOCATIONS", false, DataType.INT, DataFormat.SINGLE_LINE)}, //compute default
-            {"CAPACITIES", new Key("CAPACITIES", false, DataType.REAL, DataFormat.SINGLE_LINE, 0.0)},
-            {"SPEED", new Key("SPEED", false, DataType.REAL, DataFormat.SINGLE_LINE, 1.0)},
+            {"CAPACITIES", new Key("CAPACITIES", false, DataType.REAL, DataFormat.SINGLE_LINE, 0.0f)},
+            {"SPEED", new Key("SPEED", false, DataType.REAL, DataFormat.SINGLE_LINE, 1.0f)},
             {"MAX_TIME", new Key("MAX_TIME", false, DataType.REAL, DataFormat.SINGLE_LINE, double.PositiveInfinity)},
             {"EDGE_WEIGHT_TYPE", new Key("EDGE_WEIGHT_TYPE", false, DataType.ENUM, DataFormat.SINGLE_LINE){EnumType = typeof(EdgeWeightType)}},
             {"EDGE_WEIGHT_FORMAT", new Key("EDGE_WEIGHT_FORMAT", false, DataType.ENUM, DataFormat.SINGLE_LINE){EnumType = typeof(EdgeWeightFormat)}},
@@ -52,7 +52,7 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
             {"EOF", new Key("EOF", false, DataType.NONE, DataFormat.PASSABLE)}
         };
 
-        public void Parse(string data)
+        internal DVRPCommonData Parse(string data)
         {
             Key multilineHeaderKey = null;
             foreach (var line in data.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(s => s + "\n"))
@@ -96,7 +96,7 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
                                             relatedKey.Value = int.Parse(value.ToString());
                                             break;
                                         case DataType.REAL:
-                                            relatedKey.Value = double.Parse(value.ToString());
+                                            relatedKey.Value = float.Parse(value.ToString());
                                             break;
                                         case DataType.LIST:
                                             throw new ArgumentException("Single line keys can't have values of list type");
@@ -152,6 +152,63 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
             {
                 throw new ArgumentException("Some required keys were not found. Config data is invalid.");
             }
+
+            var depots = new List<Depot>();
+
+            foreach (var depotId in Keys["DEPOTS"].Value)
+            {
+                var depot = new Depot();
+                var coord = Keys["LOCATION_COORD_SECTION"].Value[int.Parse(depotId[0])]; // Ohhh... So bad
+                depot.X = float.Parse(coord[1]);
+                depot.Y = float.Parse(coord[2]);
+                if (Keys["DEPOT_TIME_WINDOW_SECTION"].Found)
+                {
+                    var times = Keys["DEPOT_TIME_WINDOW_SECTION"].Value[int.Parse(depotId[0])];
+                    depot.Starts = float.Parse(times[1]);
+                    depot.Ends = float.Parse(times[2]);
+                }
+                depots.Add(depot);
+            }
+
+            var pickups = new List<Pickup>();
+
+            foreach (var demand in Keys["DEMAND_SECTION"].Value)
+            {
+                var pickup = new Pickup();
+                var visitId = int.Parse(demand[0]);
+                pickup.Size = float.Parse(demand[1]);
+                var coord = Keys["LOCATION_COORD_SECTION"].Value[visitId]; // Probably even worse...
+                pickup.X = float.Parse(coord[1]);
+                pickup.Y = float.Parse(coord[2]);
+                pickup.UnloadTime = 0;
+                pickup.AvailableAfter = 0;
+                if (Keys["DURATION_SECTION"].Found)
+                {
+                    var duration = Keys["DURATION_SECTION"].Value[visitId - 1]; // :(
+                    pickup.UnloadTime = float.Parse(duration[1]);
+                }
+                if (Keys["TIME_AVAIL_SECTION"].Found)
+                {
+                    var avail = Keys["TIME_AVAIL_SECTION"].Value[visitId - 1];
+                    pickup.AvailableAfter = float.Parse(avail[1]);
+                }
+                pickups.Add(pickup);
+            }
+
+            var speed = Keys["SPEED"].Value ?? Keys["SPEED"].DefaultValue;
+
+            var capacity = Keys["CAPACITIES"].Value ?? Keys["CAPACITIES"].DefaultValue;
+
+            var count = Keys["NUM_VEHICLES"].Value ?? Keys["NUM_VEHICLES"].DefaultValue;
+
+            return new DVRPCommonData()
+            {
+                Depots = depots,
+                Pickups = pickups,
+                VehicleSpeed = speed,
+                VehicleCapacity = capacity,
+                NumVehicles = count
+            };
         }
 
         private enum State
@@ -160,27 +217,5 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
             EXPECTING_VALUE,
             EXPECTING_ANY
         }
-    }
-
-    public enum Objective
-    {
-        VEH_WEIGHT,
-        WEIGHT,
-        MIN_MAX_LEN
-    }
-
-    public enum EdgeWeightFormat
-    {
-        FULL_MATRIX,
-        LOWER_TRIANG,
-        ADJ
-    }
-
-    public enum EdgeWeightType
-    {
-        EUC_2D,
-        MAN_2D,
-        MAX_2D,
-        EXPLICIT
     }
 }

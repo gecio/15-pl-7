@@ -43,6 +43,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataReader\EdgeWeightFormat.cs" />
+    <Compile Include="DataReader\EdgeWeightType.cs" />
+    <Compile Include="DataReader\Objective.cs" />
     <Compile Include="DVRPBrute.cs" />
     <Compile Include="DVRPProblemData.cs" />
     <Compile Include="DataReader\DataFormat.cs" />

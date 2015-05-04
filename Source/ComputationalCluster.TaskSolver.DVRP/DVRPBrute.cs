@@ -21,7 +21,7 @@ namespace ComputationalCluster.TaskSolver.DVRP
         }
 
         public float CalculateRequiredTimeDFS(Node currentLocation, ICollection<Pickup> assignedPickups, int pickupsDone = 0,
-            int usedCapacity = 0, float time = 0)
+            float usedCapacity = 0, float time = 0)
         {
             if (currentLocation is Pickup)
             {

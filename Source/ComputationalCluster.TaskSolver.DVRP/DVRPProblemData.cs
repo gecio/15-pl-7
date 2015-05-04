@@ -8,8 +8,8 @@ namespace ComputationalCluster.TaskSolver.DVRP
 {
     internal class Node
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
 
         // NON-SERIALIZABLE ELEMENTS! (for dfs)
         public bool Visited { get; set; }
@@ -28,8 +28,8 @@ namespace ComputationalCluster.TaskSolver.DVRP
     internal class Pickup : Node
     {
         public float AvailableAfter { get; set; }
-        public int UnloadTime { get; set; }
-        public int Size { get; set; }
+        public float UnloadTime { get; set; }
+        public float Size { get; set; }
 
         public Pickup()
         {
@@ -50,8 +50,8 @@ namespace ComputationalCluster.TaskSolver.DVRP
     {
         public IList<Depot> Depots { get; set; }
         public IList<Pickup> Pickups { get; set; }
-        public int VehicleSpeed { get; set; }
-        public int VehicleCapacity { get; set; }
+        public float VehicleSpeed { get; set; }
+        public float VehicleCapacity { get; set; }
         public int NumVehicles { get; set; }
 
         public DVRPCommonData()
