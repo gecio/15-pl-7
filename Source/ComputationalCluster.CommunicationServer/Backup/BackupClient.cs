@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Autofac;
 using ComputationalCluster.Common;
 using ComputationalCluster.Communication.Messages;
 using ComputationalCluster.NetModule;
@@ -16,6 +18,7 @@ namespace ComputationalCluster.CommunicationServer.Backup
         private readonly INetClient _client;
         private readonly ILog _log;
         private readonly IConfigProviderBackup _configProvider;
+        private readonly IComponentContext _componentContext;
         private ulong _id;
 
 
@@ -24,18 +27,32 @@ namespace ComputationalCluster.CommunicationServer.Backup
             get { return _id; }
         }
 
-        public BackupClient(INetClient client, ILog log, IConfigProviderBackup configProvider)
+        public BackupClient(INetClient client,IConfigProviderBackup configProviderBackup,  ILog log, IComponentContext componentContext)
         {
             _client = client;
             _log = log;
-            _configProvider = configProvider;
+            _configProvider = configProviderBackup;
+            _componentContext = componentContext;
         }
 
         public void Start()
         {
             SendRegisterMessage();
+
+            while (true)
+            {
+                var response = _client.Send_ManyResponses(new Status(),_configProvider.MasterIP, _configProvider.MasterPort);
+                foreach (var message in response)
+                {
+                    var consumerType = typeof(IMessageConsumer<>).MakeGenericType(new[] { message.GetType() });
+                    var consumer = (IMessageConsumer)_componentContext.Resolve(consumerType);
+                    consumer.Consume(message); 
+                }
+            }
         }
 
+
+        
 
         /// <summary>
         /// Rejestracja jako BackupServer. 

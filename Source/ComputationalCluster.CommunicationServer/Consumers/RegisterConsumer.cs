@@ -7,6 +7,7 @@ using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace ComputationalCluster.CommunicationServer.Consumers
 {
@@ -28,8 +29,21 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         {
             _log.InfoFormat("Consuming {0} = [{1}]", message.GetType().Name, message.ToString());
 
-            var backupComponent = _componentsRepository.GetBackupServer() as BackupComponent;
+            //backup =======================================================
+            if (message.DeregisterSpecified && message.Deregister)
+            {
+                if (!message.IdSpecified)
+                {
+                    _log.Error("Deregister requested without specified component Id.");
+                    return null;
+                }
 
+                _componentsRepository.Deregister(message.Id);
+                return null;
+            }
+            //==============================================================
+
+            var backupComponent = _componentsRepository.GetBackupServer() as BackupComponent;
             var response = new RegisterResponse()
             {
                 Timeout = 30, // todo: config,
@@ -56,20 +70,6 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 message.SolvableProblems = new string[] { };
             }
 
-            /* Backup feature
-            if (message.DeregisterSpecified && message.Deregister)
-            {
-                if (!message.IdSpecified)
-                {
-                    _log.Error("Deregister requested without specified component Id.");
-                    return null;
-                }
-
-                _componentsRepository.Deregister(message.Id);
-                return null;
-            }
-            */
-
             if (message.SolvableProblems.Length == 0)
             {
                 _log.Warn("Registering component with no solvable problems.");
@@ -90,6 +90,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             {
                 component = new Component()
                 {
+                    Id = message.Id, // if id>0 -> message from backupMaster
                     LastStatusTimestamp = _timeProvider.Now,
                     Type = message.Type,
                     MaxThreads = message.ParallelThreads,

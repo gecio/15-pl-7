@@ -29,7 +29,14 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 
         public ulong Register(Component component)
         {
-            component.Id = _nextValidGuid++;
+            if (component.Id == 0)
+            {
+                component.Id = _nextValidGuid++;
+            }
+            else
+            {
+                _nextValidGuid = Math.Max(_nextValidGuid, component.Id) + 1;
+            }
 
             var solvableProblems = new List<ProblemDefinition>();
             foreach (var problem in component.SolvableProblems)

@@ -69,7 +69,7 @@ namespace ComputationalCluster.CommunicationServer.Tests.Backup
 
             _server = new NetServer(_receiverMock.Object, _encoding, _configProviderMock.Object, _logMock.Object);
             _client = new NetClient(_messageTranslator, _encoding, _configProviderBackupMock.Object);
-            _backupClient = new BackupClient(_client,_logMock.Object,_configProviderBackupMock.Object);
+        //    _backupClient = new BackupClient(_client,_logMock.Object,_configProviderBackupMock.Object,);
 
             _server.Start();
             _backupClient.Start();
@@ -82,4 +82,7 @@ namespace ComputationalCluster.CommunicationServer.Tests.Backup
 
         
     }
+
+
+
 }

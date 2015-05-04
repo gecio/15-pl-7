@@ -10,6 +10,7 @@ using ComputationalCluster.NetModule;
 using ComputationalCluster.PluginManager;
 using System.Data.Entity;
 using ComputationalCluster.Common;
+using ComputationalCluster.CommunicationServer.Backup;
 
 namespace ComputationalCluster.CommunicationServer
 {
@@ -31,8 +32,8 @@ namespace ComputationalCluster.CommunicationServer
 
             //builder.RegisterType<ServerDbContext>().As<DbContext>().AsSelf().InstancePerDependency();
             //builder.RegisterType<ProblemsRepository>().As<RepositoryBase<Problem>>().As<IRepository<Problem>>().AsSelf();
-            builder.RegisterType<ConfigProviderBackup>().As<IConfigProviderBackup>().SingleInstance();
-
+            builder.RegisterType<ConfigProviderBackup>().AsImplementedInterfaces().AsSelf().SingleInstance();
+            builder.RegisterType<BackupClient>().AsSelf().SingleInstance();
 
             builder.RegisterType<ProblemsInMemoryRepository>().As<IProblemsRepository>().As<IQueuableTasksRepository<Problem>>().SingleInstance();
             builder.RegisterType<ComponentsInMemoryRepository>().As<IComponentsRepository>().SingleInstance();

@@ -61,11 +61,12 @@ namespace ComputationalCluster.CommunicationServer
         {
             _log.Info("Starting...");
 
-            _server.Start();
             if (_configProvider.BackupMode)
             {
                 _backupClient.Start();
             }
+            _server.Start();
+            
 
             _log.Info("Started.");
 
