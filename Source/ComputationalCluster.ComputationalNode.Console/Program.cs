@@ -10,7 +10,7 @@ namespace ComputationalCluster.ComputationalNode.Console
     {
         static void Main(string[] args)
         {
-            var runner = new ComputationalNodeRunner();
+            var runner = new ComputationalNodeRunner(args);
             runner.Start();
             runner.Stop();
         }

@@ -18,6 +18,8 @@ namespace ComputationalCluster.ComputationalNode
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterModule<CommonModule>();
+
             builder.RegisterType<NetServer>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<NetClient>().AsImplementedInterfaces().AsSelf();
 
@@ -25,11 +27,9 @@ namespace ComputationalCluster.ComputationalNode
             builder.RegisterType<MessageReceiver>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<MessageTranslator>().AsImplementedInterfaces().AsSelf();
 
-            builder.RegisterType<ConfigProvider>().As<IConfigProvider>();
-            builder.RegisterType<ConfigProviderThreads>().AsSelf();
+            builder.RegisterType<ConfigProviderThreads>().As<IConfigProvider>().AsSelf().SingleInstance();
 
             builder.RegisterType<TaskSolversRepository>().As<ITaskSolversRepository>().SingleInstance();
-            builder.RegisterModule<CommonModule>();
         }
     }
 }

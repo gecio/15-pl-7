@@ -20,6 +20,7 @@ namespace ComputationalCluster.Common.Tests
                 new CommandLineOption { ShortNotation = 'l', LongNotation = "longoption", ParameterRequired = false },
                 new CommandLineOption { ShortNotation = 'p', LongNotation = "param", ParameterRequired = true },
                 new CommandLineOption { ShortNotation = 'o', LongNotation = "other", ParameterRequired = false },
+                new CommandLineOption { ShortNotation = 'x', LongNotation = "x", ParameterRequired = false },
             };
 
             _parser = new CommandLineParser(options);
@@ -110,6 +111,19 @@ namespace ComputationalCluster.Common.Tests
             Assert.IsTrue(resultLongOpt);
             Assert.AreEqual(param, "parameter");
             Assert.IsNull(longoption);
+        }
+
+        [TestCase("x")]
+        [TestCase("-x")]
+        public void Parse_ShortAndLongIdentical_Found(string commandLine)
+        {
+            _parser.Parse(commandLine.Split(' '));
+
+            string param = null;
+            var resultParam = _parser.TryGet("x", out param);
+
+            Assert.IsTrue(resultParam);
+            Assert.IsNull(param);
         }
     }
 }

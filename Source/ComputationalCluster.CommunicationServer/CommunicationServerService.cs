@@ -42,8 +42,8 @@ namespace ComputationalCluster.CommunicationServer
 
             _configProvider.BackupMode = parser.TryGet("backup", out value);
 
-            if (parser.TryGet("time", out value))
-                _configProvider.Port = Int32.Parse(value);
+            if (parser.TryGet("t", out value))
+                _configProvider.Timeout = Int32.Parse(value);
         }
 
         public void Start()

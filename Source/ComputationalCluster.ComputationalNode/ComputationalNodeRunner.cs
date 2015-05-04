@@ -32,7 +32,7 @@ namespace ComputationalCluster.ComputationalNode
         private int _numberOfThreads;
         private int _numberOfBusyThreads;
 
-        public ComputationalNodeRunner()
+        public ComputationalNodeRunner(string[] args)
         {
             // log4net configuration - log on console
             BasicConfigurator.Configure();
@@ -40,6 +40,9 @@ namespace ComputationalCluster.ComputationalNode
             var builder = new ContainerBuilder();
             builder.RegisterModule<ComputationalNodeModule>();
             var container = builder.Build();
+
+            var configurator = container.Resolve<ClientConfigurator>();
+            configurator.Apply(args);
 
             _partialSolutions = new LinkedList<Solutions>();
             _semaphorePartialSolutions = new Semaphore(1, 1);
@@ -85,7 +88,7 @@ namespace ComputationalCluster.ComputationalNode
                         Consume(receivedMessage);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Console.WriteLine("Server unavailable...");
                     return;
