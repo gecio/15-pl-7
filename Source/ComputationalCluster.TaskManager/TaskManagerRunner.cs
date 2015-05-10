@@ -166,6 +166,7 @@ namespace ComputationalCluster.TaskManager
 
             var partialProblemsMessage = new SolvePartialProblems()
             {
+                CommonData = (problem as DivideProblem).Data,
                 ProblemType = (problem as DivideProblem).ProblemType,
                 Id = (problem as DivideProblem).Id,
                 PartialProblems = new SolvePartialProblemsPartialProblem[partialProblems.Length],
@@ -201,8 +202,8 @@ namespace ComputationalCluster.TaskManager
 
         public void Merge(object problems)
         {
-            Type solverType = _taskSolversRepository.GetSolverType((problems as Solutions).ProblemType);
-            TaskSolver solver = (TaskSolver)Activator.CreateInstance(solverType);
+            var solver = _taskSolversRepository.GetSolverInstance((problems as Solutions).ProblemType);
+            //TaskSolver solver = (TaskSolver)Activator.CreateInstance(solverType);
             
             byte[][] partialSolutions = new byte[(problems as Solutions).Solutions1.Length][];
             for (int i = 0; i < partialSolutions.Length; i++)
