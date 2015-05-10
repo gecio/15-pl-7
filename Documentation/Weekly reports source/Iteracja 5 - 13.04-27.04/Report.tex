@@ -1,0 +1,78 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage[polish]{babel}
+
+\title{Raport - Iteracja 5}
+\date{13 kwietnia - 27 kwietnia}
+\author{Grupa 7}
+
+\begin{document}
+\maketitle
+
+\section{Zmiana człona zespołu}
+[opis]
+
+\section{Zadania wykonane}
+\subsection{Wprowadzenie nowego człona zespołu z projekt}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Maciej Głowacki, Katarzyna Węgiełek, Kamil Sienkiewicz, Marcin Wardziński
+    \item[Czas poświęciony zadaniu] \hfill \\ 4 godziny
+    \item[Krótki opis] \hfill \\ W ramach tego zadania zostało wykonane:
+    \begin{itemize}
+    	\item udzielenie dostępu do repozytorium nowemu członkowi zespołu,
+    	\item zapoznanie z obecnym stanem projektu,
+    	\item zaprezentowanie rozwiązań zastosowanych w projekcie oraz zapoznanie się z istotnymi fragmentami kodu. 
+    \end{itemize}
+\end{description}
+
+\subsection{Spotkanie zespołu}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Maciej Głowacki, Katarzyna Węgiełek, Kamil Sienkiewicz, Marcin Wardziński
+    \item[Czas poświęciony zadaniu] \hfill \\ 6 godziny
+    \item[Krótki opis] \hfill \\ W takcie spotkania nastąpiła drobna reorganizacja prac z racji dołączenia nowego członka zespołu.
+\end{description}
+
+\subsection{Praca z wieloma \texttt{Computational Node}'ami}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Marcin Wardziński
+    \item[Czas poświęciony zadaniu] \hfill \\ 3 godziny
+    \item[Krótki opis] \hfill \\ Implementacja poprawki umożliwiającej współpracę klastra z wieloma \texttt{Computational Node}'ami.
+\end{description}
+
+\subsection{Obsługa \texttt{ErrorMessage}}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Katarzyna Węgiełek
+    \item[Czas poświęciony zadaniu] \hfill \\ 4 godziny
+    \item[Krótki opis] \hfill \\ Dodanie do aplikacji \texttt{ErrorMessage}, implementacja odpowiedniej obsługi dla tej wiadomości.
+\end{description}
+   
+\subsection{Obsługa parametrów}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Kamil Sienkiewicz
+    \item[Czas poświęciony zadaniu] \hfill \\ 4 godziny
+    \item[Krótki opis] \hfill \\ Implementacja paresera umożliwiającego poprawną interpretację i obsługę parametrów poszczególnych aplikacji.
+\end{description}
+
+\subsection{Przesyłanie \texttt{NoOperationMessage} do \texttt{Client}a}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Katarzyna Węgiełek
+    \item[Czas poświęciony zadaniu] \hfill \\ 1,5 godziny
+    \item[Krótki opis] \hfill \\ Przesyłanie do \texttt{Client}a \texttt{NoOperationMessage} zawierającą informację o \texttt{backup Server}ze. Wiadomość odsyłana jest do \texttt{Client}a w odpowiedzi na wiadomość zlecającą zadanie do rozwiązania.
+\end{description}
+   
+\subsection{Wielowątkowość komponentów}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Marcin Wardziński
+    \item[Czas poświęciony zadaniu] \hfill \\ 1 godzina
+    \item[Krótki opis] \hfill \\ Poprawa mechanizmu wysyłania zadań do wielowątkowych komponentów.
+\end{description}   
+
+\subsection{Obsługa odłączenia komponentów}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Marcin Wardziński
+    \item[Czas poświęciony zadaniu] \hfill \\ 2 godzina
+    \item[Krótki opis] \hfill \\ Implementacja mechanizmu, który zapewnia rozwiązanie każdego zadania. W przypadku, gdy komponent rozwiązujący zadania zostanie wyłączony, zadanie wykonywane przez niego zostanie przydzielone kolejny raz.
+\end{description}      
+   
+\end{document}

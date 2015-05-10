@@ -1,0 +1,103 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage[polish]{babel}
+
+\title{Raport - Iteracja 3}
+\date{23 marca - 30 marca}
+\author{Grupa 7}
+
+\begin{document}
+\maketitle
+
+\section{Zadania wykonane}
+\subsection{Przykładowy \texttt{TaskSolver}}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Kamil Sienkiewicz
+    \item[Czas poświęciony zadaniu] \hfill \\ 1 godzina
+    \item[Krótki opis] \hfill \\ W ramach zadania został zaimplementowany przykładowy \texttt{TaskSolver} obliczający sumę ciągu arytmetycznego. Stworzony \texttt{TaskSolver} wykorzystywany był do testów komunikacji w trakcie implementacji pozostałych komponentów.
+\end{description}
+
+\subsection{Mechanizm rejestrujący pluginy w aplikacji}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Kamil Sienkiewicz
+    \item[Czas poświęciony zadaniu] \hfill \\ 2 godziny
+    \item[Krótki opis] \hfill \\ Implementacja mechanizmu wyszukującego i rejestrującego pluginy w \texttt{Comutational Node} i \texttt{Task Manager}ze.
+\end{description}
+
+\subsection{Zgłaszanie wyniku do \texttt{Communication Server}a}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Katarzyna Węgiełek
+    \item[Czas poświęciony zadaniu] \hfill \\ 5 godziny
+    \item[Krótki opis] \hfill \\ Implementacja mechanizmu przesyłającego rozwiązanie zleconego zadania od \texttt{Computational Node}'a i \texttt{Task Manager}a do \texttt{Communication Server}a
+\end{description}
+
+\subsection{Poprawna obsługa wiadomości \texttt{StatusMessage}}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Katarzyna Węgiełek
+    \item[Czas poświęciony zadaniu] \hfill \\ 7 godziny
+    \item[Krótki opis] \hfill \\ Stworzenie mechanizmu zlecającego odpowiednie zadanie w zależności od pochodzenia \texttt{StatusMessage}. Zadanie składało się z kilku etapów:
+    \begin{itemize}
+    	\item zlecenie scalenia wyników cząstkowych przez \texttt{Task Manager},
+    	\item zlecenie podzielenia zadania otrzymanego of \texttt{Client}a,
+    	\item zlecenie rozwiązania podzadania przez \texttt{Computational Node}
+    \end{itemize}
+\end{description}
+
+\subsection{Zlecenie zadania do obliczenia}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Marcin Wardziński
+    \item[Czas poświęciony zadaniu] \hfill \\ 3 godziny
+    \item[Krótki opis] \hfill \\ Implementacja mechanizmu przesyłającego zadanie do rozwiązania (od \texttt{Client}a do \texttt{Communication Server}a). W treści zadania zostają przesyłane informacje dotyczące typu zadania oraz parametry wejściowe.
+\end{description}
+
+\subsection{Przesyłanie wyniku finalnego do \texttt{Communication Server}a}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Katarzyna Węgiełek
+    \item[Czas poświęciony zadaniu] \hfill \\ 2 godziny
+    \item[Krótki opis] \hfill \\ Implementacja mechanizmu scalającego otrzymane wcześniej rozwiązania częściowe i przesłanie rozwiązania końcowego do \texttt{Communication Server}a.
+\end{description}
+
+\subsection{Zamiana ETB na Half-closing TCP}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Marcin Wardziński
+    \item[Czas poświęciony zadaniu] \hfill \\ 3 godziny
+    \item[Krótki opis] \hfill \\ Zamiana mechanizmu rozpoznającego koniec odczytywanych danych. Zamiast czekania na znak kończący wiadomości \texttt{ETB} zastosowano \texttt{Half-closing}. Mechanizm ten umożliwił rozróżnienie końca nadawania danych od znaku podziału wiadomości.
+\end{description} 
+
+\subsection{Pobieranie wyników obliczeń z poziomu \texttt{Client}a}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Marcin Wardziński
+    \item[Czas poświęciony zadaniu] \hfill \\ 4 godziny
+    \item[Krótki opis] \hfill \\ Umożliwienie zlecającemu zadanie pobranie wyników po zakończeniu obliczeń lub, w przypadku gdy obliczenia jeszcze trwają, powiadomienie go o stanie w jakim jest zadanie.
+\end{description}
+
+\subsection{Śledzenie rozwiązywalnych problemów w podłączonych komponentach}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Kamil Sienkiewicz
+    \item[Czas poświęciony zadaniu] \hfill \\ 1 godzina
+    \item[Krótki opis] \hfill \\ Aktualizacja informacji o liście zadań, które jest w stanie rozwiązać dany komponent w trakcie działania aplikacji.
+\end{description}
+
+\subsection{Struktura kolejki zadań}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Kamil Sienkiewicz
+    \item[Czas poświęciony zadaniu] \hfill \\ 3 godziny
+    \item[Krótki opis] \hfill \\ Stworzenie struktury pozwalającej kolejkować zadania w  \texttt{Communication Server}ze. Implementacja algorytmu umożliwiającego odpowiedni wybór kolejnego zadania (do podziału, rozwiązania luz scalenia).
+\end{description}
+
+\subsection{Obsługa łączenia rozwiązań}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Marcin Wardziński
+    \item[Czas poświęciony zadaniu] \hfill \\ 2 godziny
+    \item[Krótki opis] \hfill \\ Implementacja mechanizmu łączenia podzadań przez \texttt{Task Manager} oraz aktualizacja informacji o stanie poszczególnych zadań w serwerze.
+\end{description}
+
+\subsection{Przygotowanie aplikacji do pierwszego checkpointa}
+\begin{description}
+    \item[Wykonawcy zadania] \hfill \\ Katarzyna Węgiełek, Kamil Sienkiewicz, Marcin Wardziński 
+    \item[Czas poświęciony zadaniu] \hfill \\ 20 godzin
+    \item[Krótki opis] \hfill \\ Przygotowanie aplikacji do uruchomienia w trakcie zajęć. Poprawianie błędów wynikających z testowych uruchomień aplikacji.
+\end{description}
+
+\end{document}
