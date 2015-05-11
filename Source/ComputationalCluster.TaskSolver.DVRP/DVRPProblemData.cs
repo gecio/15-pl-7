@@ -13,8 +13,13 @@ namespace ComputationalCluster.TaskSolver.DVRP
         public float Y { get; set; }
 
         // NON-SERIALIZABLE ELEMENTS! (for dfs)
-        public Node NextOnPath { get; set; }
+        public Stack<Node> NextOnPath { get; set; }
         public bool Visited { get; set; }
+
+        public Node()
+        {
+            NextOnPath = new Stack<Node>();
+        }
     }
 
     internal class Depot : Node
@@ -22,7 +27,7 @@ namespace ComputationalCluster.TaskSolver.DVRP
         public float Starts { get; set; }
         public float Ends { get; set; }
 
-        public Depot()
+        public Depot() : base()
         {
         }
     }
@@ -33,7 +38,7 @@ namespace ComputationalCluster.TaskSolver.DVRP
         public float UnloadTime { get; set; }
         public float Size { get; set; }
 
-        public Pickup()
+        public Pickup() : base()
         {
         }
     }

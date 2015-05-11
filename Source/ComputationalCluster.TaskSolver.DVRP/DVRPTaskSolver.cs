@@ -75,13 +75,25 @@ namespace ComputationalCluster.TaskSolver.DVRP
 
         public override byte[] MergeSolution(byte[][] solutions)
         {
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            List<float> partialSolutions = new List<float>();
+            var binaryFormatter = new BinaryFormatter();
+            var partialSolutions = new List<Tuple<float,int[][]>>();
+
             foreach (var partialSolution in solutions)
             {
-                partialSolutions.Add((float)BinaryDeserializer(partialSolution));
+                partialSolutions.Add((Tuple<float,int[][]>)BinaryDeserializer(partialSolution));
             }
-            return Encoding.UTF8.GetBytes(String.Format("result: {0}", partialSolutions.Min()));
+
+            var solution = partialSolutions.First(s => s.Item1 == partialSolutions.Min(t => t.Item1));
+
+            var result = String.Format("result: {0}", solution.Item1);
+            for (int i = 0; i < solution.Item2.Length; ++i)
+            {
+                result += String.Format("\r\nvehicle {0}: ", i);
+                foreach (var r in solution.Item2[i])
+                    result += String.Format("{0} ", r);
+            }
+
+            return Encoding.UTF8.GetBytes(result);
         }
 
         public override string Name
@@ -92,11 +104,15 @@ namespace ComputationalCluster.TaskSolver.DVRP
         public override byte[] Solve(byte[] partialData, TimeSpan timeout)
         {
             var range = BinaryDeserializer(partialData) as Tuple<int[], int[]>;
-            var result = _dvrpBrute.IterateBetweenSetPartitions(new DVRPRange { 
+
+            int[][] routes = null;
+            var result = _dvrpBrute.IterateBetweenSetPartitions(new DVRPRange
+            {
                 Start = range.Item1,
                 End = range.Item2
-            });
-            byte[] resultBytes = BinarySerializer(result);
+            }, out routes);
+
+            byte[] resultBytes = BinarySerializer(new Tuple<float, int[][]>(result, routes));
             return resultBytes;
         }
 
