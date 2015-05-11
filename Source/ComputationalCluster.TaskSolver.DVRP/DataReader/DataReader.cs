@@ -177,7 +177,7 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
                 var pickup = new Pickup
                 {
                     Id = int.Parse(coord[0]),
-                    Size = float.Parse(demand[1]),
+                    Size = -float.Parse(demand[1]),
                     X = float.Parse(coord[1]),
                     Y = float.Parse(coord[2]),
                     UnloadTime = 0,
