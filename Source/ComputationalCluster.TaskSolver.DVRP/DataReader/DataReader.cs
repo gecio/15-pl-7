@@ -157,10 +157,8 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
 
             foreach (var depotId in Keys["DEPOTS"].Value)
             {
-                var depot = new Depot();
-                var coord = Keys["LOCATION_COORD_SECTION"].Value[int.Parse(depotId[0])]; // Ohhh... So bad
-                depot.X = float.Parse(coord[1]);
-                depot.Y = float.Parse(coord[2]);
+                var coord = Keys["LOCATION_COORD_SECTION"].Value[int.Parse(depotId[0])]; // Ohhh... So ba
+                var depot = new Depot {Id = int.Parse(coord[0]), X = float.Parse(coord[1]), Y = float.Parse(coord[2])};
                 if (Keys["DEPOT_TIME_WINDOW_SECTION"].Found)
                 {
                     var times = Keys["DEPOT_TIME_WINDOW_SECTION"].Value[int.Parse(depotId[0])];
@@ -174,14 +172,17 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
 
             foreach (var demand in Keys["DEMAND_SECTION"].Value)
             {
-                var pickup = new Pickup();
                 var visitId = int.Parse(demand[0]);
-                pickup.Size = float.Parse(demand[1]);
                 var coord = Keys["LOCATION_COORD_SECTION"].Value[visitId]; // Probably even worse...
-                pickup.X = float.Parse(coord[1]);
-                pickup.Y = float.Parse(coord[2]);
-                pickup.UnloadTime = 0;
-                pickup.AvailableAfter = 0;
+                var pickup = new Pickup
+                {
+                    Id = int.Parse(coord[0]),
+                    Size = float.Parse(demand[1]),
+                    X = float.Parse(coord[1]),
+                    Y = float.Parse(coord[2]),
+                    UnloadTime = 0,
+                    AvailableAfter = 0
+                };
                 if (Keys["DURATION_SECTION"].Found)
                 {
                     var duration = Keys["DURATION_SECTION"].Value[visitId - 1]; // :(
