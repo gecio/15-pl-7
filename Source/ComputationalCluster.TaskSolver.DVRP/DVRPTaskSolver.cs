@@ -88,10 +88,9 @@ namespace ComputationalCluster.TaskSolver.DVRP
             var result = String.Format("result: {0}", solution.Item1);
             for (int i = 0; i < solution.Item2.Length; ++i)
             {
-                result += String.Format("\r\nvehicle {0}:", i);
+                result += String.Format("\r\nvehicle {0}: ", i);
                 foreach (var r in solution.Item2[i])
                     result += String.Format("{0} ", r);
-                result += "\r\n";
             }
 
             return Encoding.UTF8.GetBytes(result);

@@ -139,7 +139,7 @@ namespace ComputationalCluster.TaskSolver.DVRP
                     return true;
             }
 
-            return false;
+            return true;
         }
 
         public IList<Pickup> BuildPickupsForVehicle(int vehicle, int[] partitioning)
@@ -169,6 +169,15 @@ namespace ComputationalCluster.TaskSolver.DVRP
                 node = node.NextOnPath.Count > 0 ? node.NextOnPath.Pop() : null;
             }
             while (node != null && (node is Depot || !node.Visited));
+
+            foreach (var pickup in _commonData.Pickups)
+            {
+                pickup.NextOnPath.Clear();
+            }
+            foreach (var depo in _commonData.Depots)
+            {
+                depo.NextOnPath.Clear();
+            }
 
             return path;
         }
@@ -203,9 +212,15 @@ namespace ComputationalCluster.TaskSolver.DVRP
                 paths.Clear();
 
                 foreach (var pickup in _commonData.Pickups)
+                {
+                    pickup.NextOnPath.Clear();
                     pickup.Visited = false;
+                }
                 foreach (var depo in _commonData.Depots)
+                {
+                    depo.NextOnPath.Clear();
                     depo.Visited = false;
+                }
 
                 for (int vehicle = 0; vehicle < _commonData.NumVehicles; ++vehicle)
                 {
@@ -232,7 +247,7 @@ namespace ComputationalCluster.TaskSolver.DVRP
                 if (requiredDistance < bestSolution)
                 {
                     bestSolution = requiredDistance;
-                    bestPaths = paths;
+                    bestPaths = paths.Select(t => t).ToList();
                 }
             }
             while (MoveNext(current, _commonData.NumVehicles, range.End));
