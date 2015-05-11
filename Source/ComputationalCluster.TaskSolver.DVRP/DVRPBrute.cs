@@ -247,7 +247,7 @@ namespace ComputationalCluster.TaskSolver.DVRP
                 if (requiredDistance < bestSolution)
                 {
                     bestSolution = requiredDistance;
-                    bestPaths = paths.Select(t => t).ToList();
+                    bestPaths = paths.ToList();
                 }
             }
             while (MoveNext(current, _commonData.NumVehicles, range.End));

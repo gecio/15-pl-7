@@ -65,12 +65,7 @@ namespace ComputationalCluster.TaskSolver.DVRP
                     1]));
             }
 
-            List<byte[]> parsedParameters = new List<byte[]>();
-            foreach (var param in parameters)
-            {
-                parsedParameters.Add(BinarySerializer(param));
-            }
-            return parsedParameters.ToArray();
+            return parameters.Select(BinarySerializer).ToArray();
         }
 
         public override byte[] MergeSolution(byte[][] solutions)
