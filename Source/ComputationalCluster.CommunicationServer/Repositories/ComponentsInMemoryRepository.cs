@@ -39,7 +39,7 @@ namespace ComputationalCluster.CommunicationServer.Repositories
             }
 
             var solvableProblems = new List<ProblemDefinition>();
-            foreach (var problem in component.SolvableProblems)
+            foreach (var problem in component.SolvableProblems ?? new List<ProblemDefinition>())
             {
                 var def = _problemDefinitionsRepository.FindByName(problem.Name);
 

@@ -12,5 +12,6 @@ namespace ComputationalCluster.CommunicationServer.Backup
         void Enqueue(IMessage message);
         IMessage Dequeue();
         void InitializeSync();
+        ICollection<IMessage> DequeueAll();
     }
 }

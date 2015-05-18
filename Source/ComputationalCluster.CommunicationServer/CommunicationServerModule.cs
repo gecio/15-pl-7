@@ -11,6 +11,7 @@ using ComputationalCluster.PluginManager;
 using System.Data.Entity;
 using ComputationalCluster.Common;
 using ComputationalCluster.CommunicationServer.Backup;
+using ComputationalCluster.CommunicationServer.Backup.Consumers;
 
 namespace ComputationalCluster.CommunicationServer
 {
@@ -29,6 +30,8 @@ namespace ComputationalCluster.CommunicationServer
             builder.RegisterType<SolvePartialProblemsConsumer>().As<IMessageConsumer<SolvePartialProblems>>();
             builder.RegisterType<SolutionRequestConsumer>().As<IMessageConsumer<SolutionRequest>>();
             builder.RegisterType<ErrorConsumer>().As<IMessageConsumer<Error>>();
+
+            builder.RegisterType<NoOperationBackupConsumer>().Named<IMessageConsumer<NoOperation>>("BackupMode");
 
             //builder.RegisterType<ServerDbContext>().As<DbContext>().AsSelf().InstancePerDependency();
             //builder.RegisterType<ProblemsRepository>().As<RepositoryBase<Problem>>().As<IRepository<Problem>>().AsSelf();

@@ -64,5 +64,17 @@ namespace ComputationalCluster.CommunicationServer.Backup
             }
             _isInitialized = true;
         }
+
+
+        public ICollection<IMessage> DequeueAll()
+        {
+            lock (_messageQueue)
+            {
+                var result = _messageQueue.ToList();
+                _messageQueue.Clear();
+                return result;
+            }
+        }
+
     }
 }

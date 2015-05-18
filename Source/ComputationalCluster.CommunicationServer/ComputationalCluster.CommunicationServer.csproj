@@ -59,6 +59,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Backup\BackupClient.cs" />
+    <Compile Include="Backup\Consumers\NoOperationBackupConsumer.cs" />
+    <Compile Include="Backup\Consumers\StatusBackupConsumer.cs" />
     <Compile Include="Backup\ISynchronizationQueue.cs" />
     <Compile Include="Backup\SynchronizationInMemoryQueue.cs" />
     <Compile Include="CommunicationServerService.cs" />

@@ -15,7 +15,7 @@ namespace ComputationalCluster.CommunicationServer.Backup
 {
     public class BackupClient
     {
-        private readonly INetClient _client;
+        private readonly BackupNetClient _client;
         private readonly ILog _log;
         private readonly IConfigProviderBackup _configProvider;
         private readonly IComponentContext _componentContext;
@@ -27,7 +27,7 @@ namespace ComputationalCluster.CommunicationServer.Backup
             get { return _id; }
         }
 
-        public BackupClient(INetClient client,IConfigProviderBackup configProviderBackup,  ILog log, IComponentContext componentContext)
+        public BackupClient(BackupNetClient client, IConfigProviderBackup configProviderBackup, ILog log, IComponentContext componentContext)
         {
             _client = client;
             _log = log;
@@ -41,11 +41,11 @@ namespace ComputationalCluster.CommunicationServer.Backup
 
             while (true)
             {
-                var response = _client.Send_ManyResponses(new Status(),_configProvider.MasterIP, _configProvider.MasterPort);
+                var response = _client.Send(new Status() {Id = _id } );
                 foreach (var message in response)
                 {
                     var consumerType = typeof(IMessageConsumer<>).MakeGenericType(new[] { message.GetType() });
-                    var consumer = (IMessageConsumer)_componentContext.Resolve(consumerType);
+                    var consumer = (IMessageConsumer)_componentContext.ResolveNamed("BackupMode", consumerType);
                     consumer.Consume(message); 
                 }
             }
@@ -74,7 +74,7 @@ namespace ComputationalCluster.CommunicationServer.Backup
 
             while (!isRegistered)
             {
-                var response = _client.Send_ManyResponses(registerMessage, address, port);
+                var response = _client.Send(registerMessage,_configProvider.Port);
                 var registerResponse = response.ElementAt(0) as RegisterResponse;
                 if (registerResponse.BackupCommunicationServers != null &&
                     registerResponse.BackupCommunicationServers.BackupCommunicationServer != null)
