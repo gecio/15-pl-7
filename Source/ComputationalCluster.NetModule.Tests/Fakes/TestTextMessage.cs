@@ -8,10 +8,6 @@ namespace ComputationalCluster.NetModule.Tests.Fakes
 {
     public class TestTextMessage : IMessage
     {
-        public TestTextMessage()
-        {
-        }
-
         public TestTextMessage(string content)
         {
             Content = content;

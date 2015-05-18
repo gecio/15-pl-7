@@ -21,7 +21,7 @@ namespace ComputationalCluster.CommunicationServer.Models
         //---------------------------------------------------------------------
         private List<QueueableTask> _runningTasks;
 
-        public void AddTask(QueueableTask task)
+        public virtual void AddTask(QueueableTask task)
         {
             _runningTasks.Add(task);
             if (task.AssignedTo == null)
@@ -30,7 +30,7 @@ namespace ComputationalCluster.CommunicationServer.Models
             }
         }
 
-        public void RemoveTask(QueueableTask task)
+        public virtual void RemoveTask(QueueableTask task)
         {
             _runningTasks.Remove(task);
             if (task.AssignedTo != null)
