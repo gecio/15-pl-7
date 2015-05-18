@@ -1,0 +1,7 @@
+# TexMaker / MikTex
+*.aux
+*.log
+*.pdf
+*.synctex.gz
+*.toc
+*.out

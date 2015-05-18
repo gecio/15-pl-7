@@ -1,0 +1,26 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage[polish]{babel}
+
+\title{Raport - Trello}
+\date{\today}
+\author{Grupa 7}
+
+\begin{document}
+\maketitle
+
+\section {Zaplanowana iteracja}
+\begin{itemize}
+\item Unit Testing - Do pokrycia wszystkie metody oznaczone jako public
+\item Weryfikacja poprawności wątków w TaskMangerze
+\item Poprawna obsługa timeout'u na zadanie (aktualizacja ComputationTime)
+\item Modyfikacja NetClienta, aby mógł wybierać specyficzny port per wiadomość (jeśli podany - inaczej domyślny)
+\item Podłączenie nowego IoC Containera do trybu backup do NetClient'a
+\item Łączenie się serwera i znajdowanie swojego miejsca w trybie backup.
+\item Kolejka backupowa - otrzymane wiadomości zrzucamy na kolejkę synchronizacyjną. Pamiętać o wysłanych.
+\item Synchronizacja danych między serwerami z użyciem wcześniej zrobionej kolejki
+\end{itemize}
+
+   
+\end{document}
