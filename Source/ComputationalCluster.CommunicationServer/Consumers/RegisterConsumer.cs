@@ -8,18 +8,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using ComputationalCluster.CommunicationServer.Backup;
 
 namespace ComputationalCluster.CommunicationServer.Consumers
 {
     public class RegisterConsumer : IMessageConsumer<Register>
     {
+        private readonly ISynchronizationQueue _synchronizationQueue;
         private readonly IComponentsRepository _componentsRepository;
         private readonly ITimeProvider _timeProvider;
         private readonly ILog _log;
 
         public RegisterConsumer(IComponentsRepository componentsRepository, ITimeProvider timeProvider,
-            ILog log)
+            ILog log, ISynchronizationQueue synchronizationQueue)
         {
+            _synchronizationQueue = synchronizationQueue;
             _componentsRepository = componentsRepository;
             _timeProvider = timeProvider;
             _log = log;
@@ -29,19 +32,6 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         {
             _log.InfoFormat("Consuming {0} = [{1}]", message.GetType().Name, message.ToString());
 
-            //backup =======================================================
-            if (message.DeregisterSpecified && message.Deregister)
-            {
-                if (!message.IdSpecified)
-                {
-                    _log.Error("Deregister requested without specified component Id.");
-                    return null;
-                }
-
-                _componentsRepository.Deregister(message.Id);
-                return null;
-            }
-            //==============================================================
 
             var backupComponent = _componentsRepository.GetBackupServer() as BackupComponent;
             var response = new RegisterResponse()
@@ -85,6 +75,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                     MaxThreads = message.ParallelThreads,
                     LastStatusTimestamp = _timeProvider.Now,
                 };
+                _synchronizationQueue.InitializeSync();
             }
             else
             {
@@ -97,7 +88,14 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                     SolvableProblems = message.SolvableProblems.Select(t => new ProblemDefinition { Name = t }).ToList(),
                 };
             }
-            response.Id = _componentsRepository.Register(component);
+            var id = _componentsRepository.Register(component);
+            response.Id = id;
+
+            //send register to backup
+            message.Id = id;
+            message.IdSpecified = true;
+            _synchronizationQueue.Enqueue(message);
+
             return new IMessage[] { response };
         }
 
@@ -109,7 +107,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 throw new NotSupportedException("RegisterConsumer consumes Register messages only.\n");
             }
 
-            return Consume(status);
+            return Consume(status, connection);
         }
     }
 }

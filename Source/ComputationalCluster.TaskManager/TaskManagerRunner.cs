@@ -177,7 +177,6 @@ namespace ComputationalCluster.TaskManager
                 {
                     Data = Convert.ToBase64String(partialProblems[i]),
                     TaskId = (ulong)(i+1),
-                    NodeID = _componentId,
                 };
             }
 

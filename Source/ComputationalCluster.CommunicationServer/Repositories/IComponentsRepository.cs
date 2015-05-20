@@ -1,16 +1,17 @@
 ﻿using ComputationalCluster.CommunicationServer.Models;
 using System;
 using System.Collections.Generic;
+using ComputationalCluster.NetModule;
 
 namespace ComputationalCluster.CommunicationServer.Repositories
 {
     public interface IComponentsRepository
     {
         ulong Register(Component component);
-        void Deregister(ulong componentId);
+        IMessage Deregister(ulong componentId);
         Component GetById(ulong componentId);
         void UpdateLastStatusTimestamp(ulong componentId);
-        void RemoveInactive();
+        IMessage[] RemoveInactive();
         IEnumerable<Component> GetAll();
         Component GetBackupServer();
     }

@@ -59,7 +59,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Backup\BackupClient.cs" />
+    <Compile Include="Backup\Consumers\DivideProblemBackupConsumer.cs" />
     <Compile Include="Backup\Consumers\NoOperationBackupConsumer.cs" />
+    <Compile Include="Backup\Consumers\RegisterBackupConsumer.cs" />
+    <Compile Include="Backup\Consumers\SolutionsBackupConsumer.cs" />
+    <Compile Include="Backup\Consumers\SolvePartialProblemsBackupConsumer.cs" />
+    <Compile Include="Backup\Consumers\SolveRequestBackupConsumer.cs" />
     <Compile Include="Backup\Consumers\StatusBackupConsumer.cs" />
     <Compile Include="Backup\ISynchronizationQueue.cs" />
     <Compile Include="Backup\SynchronizationInMemoryQueue.cs" />

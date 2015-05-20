@@ -5,6 +5,8 @@ using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ComputationalCluster.CommunicationServer.Backup;
+using ComputationalCluster.NetModule;
 
 namespace ComputationalCluster.CommunicationServer.Repositories
 {
@@ -23,7 +25,6 @@ namespace ComputationalCluster.CommunicationServer.Repositories
             _problemDefinitionsRepository = problemDefinitionsRepository;
             _timeProvider                 = timeProvider;
             _log                          = log;
-
             _componentDictionary = new Dictionary<ulong, Component>();
         }
 
@@ -72,14 +73,14 @@ namespace ComputationalCluster.CommunicationServer.Repositories
             return component.Id;
         }
 
-        public void Deregister(ulong componentId)
+        public IMessage Deregister(ulong componentId)
         {
             var component = GetById(componentId);
 
             if (component == null)
             {
                 _log.WarnFormat("Attempted to deregister unexisting component. (Id={0})", componentId);
-                return;
+                return null;
             }
 
             _log.InfoFormat("Deregistering component. (Id={0})", componentId);
@@ -98,6 +99,16 @@ namespace ComputationalCluster.CommunicationServer.Repositories
             }
 
             _componentDictionary.Remove(componentId);
+            return new Register
+            {
+                Deregister = true,
+                DeregisterSpecified = true,
+                Id = componentId,
+                Type = component.Type,
+                IdSpecified = true,
+                ParallelThreads = (byte)component.MaxThreads,
+                SolvableProblems = component.SolvableProblems.Select(t => t.Name).ToArray()
+            };
         }
 
         public Component GetById(ulong componentId)
@@ -116,7 +127,7 @@ namespace ComputationalCluster.CommunicationServer.Repositories
             component.LastStatusTimestamp = _timeProvider.Now;
         }
 
-        public void RemoveInactive()
+        public IMessage[] RemoveInactive()
         {
             var timeout = new TimeSpan(0, 0, 30); // TODO: config?
             var minimalTime = _timeProvider.Now.Subtract(timeout);
@@ -124,12 +135,15 @@ namespace ComputationalCluster.CommunicationServer.Repositories
             var timedOutComponents = _componentDictionary
                 .Where(t => t.Value.LastStatusTimestamp < minimalTime).ToList();
 
+            var deregisterMessages = new List<IMessage>();
+
             foreach (var component in timedOutComponents)
             {
                 _log.InfoFormat("Component timed out. (Id={0})", component.Key);
                 component.Value.ClearAndRepeatTasks();
-                Deregister(component.Key);
+                deregisterMessages.Add(Deregister(component.Key));
             }
+            return deregisterMessages.ToArray();
         }
 
         public IEnumerable<Component> GetAll()

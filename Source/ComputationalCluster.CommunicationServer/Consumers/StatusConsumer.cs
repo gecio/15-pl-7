@@ -80,15 +80,14 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 
         private ICollection<IMessage> ConsumeFromBackup(Status message)
         {
-            return _synchronizationQueue.DequeueAll();
+            var messageList = _synchronizationQueue.DequeueAll().ToList<IMessage>();
+            messageList.Add(new NoOperation());
+            return messageList;
         }
 
         private ICollection<IMessage> ConsumeFromNode(Status message)
         {
-            int threadsCount = 0;
-            for (int i = 0; i < message.Threads.Length; i++)
-                if (message.Threads[i].State == StatusThreadState.Idle)
-                    threadsCount++;
+            int threadsCount = message.Threads.Count(t => t.State == StatusThreadState.Idle);
             List<OrderedPartialProblem> partialProblems = new List<OrderedPartialProblem>();
             var component = _componentsRepository.GetById(message.Id);
             OrderedPartialProblem problem = _partialProblemsQueue.GetNextTask(component.SolvableProblems);
@@ -125,6 +124,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                     };
                 }
 
+                _synchronizationQueue.Enqueue(partialProblemsMessage);
                 return new IMessage[] {partialProblemsMessage, new NoOperation()};
             }
             else
@@ -153,12 +153,14 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             var mergeSolution = GetSolution(message.Id, threadsCount);
             if (mergeSolution != null)
             {
+                _synchronizationQueue.Enqueue(mergeSolution);
                 return new IMessage[] {mergeSolution, new NoOperation()};
             }
 
             var divideMessage = GetProblems(message.Id, threadsCount);
             if (divideMessage != null)
             {
+                _synchronizationQueue.Enqueue(divideMessage);
                 return new IMessage[] {divideMessage, new NoOperation()};
             }
             
@@ -188,9 +190,9 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             return null;
         }
 
+        //TODO: jakoś to trzeb obsłużyć w backup
         private Solutions GetSolution(ulong componentId, int threadCount)
         {
-            //TODO: trzeba jakoś oznaczać to co już się wysłało a jeszcze nie otzymało się odpowiedzi żeby nie wysłać kilka razy zlecenia na łączenie
             if (threadCount <= 0) return null;
             var component = _componentsRepository.GetById(componentId);
             var partialSolutions = _partialProblemsRepository.GetFinishedProblem(component.SolvableProblems);
@@ -206,6 +208,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 
                 solution.Solutions1 = partialSolutions.Select(orderedPartialProblem =>
                 {
+                    //TODO: dokładnie chodzi o to
                     orderedPartialProblem.IsAwaiting = false;
                     orderedPartialProblem.AssignedTo = component;
                     return new SolutionsSolution

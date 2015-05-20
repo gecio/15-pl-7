@@ -19,15 +19,17 @@ namespace ComputationalCluster.CommunicationServer
         private readonly ILog _log;
         private readonly IConfigProviderBackup _configProvider;
         private readonly BackupClient _backupClient;
+        private readonly ISynchronizationQueue _synchronizationQueue;
 
         public CommunicationServerService(INetServer server, IComponentsRepository components, ILog log,
-            ITaskSolversRepository repository, IConfigProviderBackup configProvider, BackupClient backupClient)
+            ITaskSolversRepository repository, IConfigProviderBackup configProvider, BackupClient backupClient, ISynchronizationQueue synchronizationQueue)
         {
             _server         = server;
             _components     = components;
             _log            = log;
             _configProvider = configProvider;
             _backupClient = backupClient;
+            _synchronizationQueue = synchronizationQueue;
         }
 
         public void ApplyArguments(string[] arguments)
@@ -73,7 +75,11 @@ namespace ComputationalCluster.CommunicationServer
             while (true)
             {
                 System.Threading.Thread.Sleep(new TimeSpan(0, 0, 30));
-                _components.RemoveInactive();
+                var deletedComponents = _components.RemoveInactive();
+                foreach (var deletedComponent in deletedComponents)
+                {
+                    _synchronizationQueue.Enqueue(deletedComponent);
+                }
             }
         }
 

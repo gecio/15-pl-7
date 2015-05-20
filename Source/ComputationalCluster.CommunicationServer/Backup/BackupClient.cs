@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using ComputationalCluster.Common;
@@ -48,12 +49,13 @@ namespace ComputationalCluster.CommunicationServer.Backup
                     var consumer = (IMessageConsumer)_componentContext.ResolveNamed("BackupMode", consumerType);
                     consumer.Consume(message); 
                 }
+
+                Thread.Sleep(5000);
             }
         }
 
 
         
-
         /// <summary>
         /// Rejestracja jako BackupServer. 
         /// Konfiguracja zostaje zmieniona na konfiguracje serwera, z którego będzimy odczytywać dane.

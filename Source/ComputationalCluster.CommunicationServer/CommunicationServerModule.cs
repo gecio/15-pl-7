@@ -31,7 +31,14 @@ namespace ComputationalCluster.CommunicationServer
             builder.RegisterType<SolutionRequestConsumer>().As<IMessageConsumer<SolutionRequest>>();
             builder.RegisterType<ErrorConsumer>().As<IMessageConsumer<Error>>();
 
+            builder.RegisterType<SynchronizationInMemoryQueue>().As<ISynchronizationQueue>().SingleInstance();
             builder.RegisterType<NoOperationBackupConsumer>().Named<IMessageConsumer<NoOperation>>("BackupMode");
+            builder.RegisterType<StatusBackupConsumer>().Named<IMessageConsumer<Status>>("BackupMode");
+            builder.RegisterType<RegisterBackupConsumer>().Named<IMessageConsumer<Register>>("BackupMode");
+            builder.RegisterType<DivideProblemBackupConsumer>().Named<IMessageConsumer<DivideProblem>>("BackupMode");
+            builder.RegisterType<SolutionsBackupConsumer>().Named<IMessageConsumer<Solutions>>("BackupMode");
+            builder.RegisterType<SolvePartialProblemsBackupConsumer>().Named<IMessageConsumer<SolvePartialProblems>>("BackupMode");
+            builder.RegisterType<SolveRequestBackupConsumer>().Named<IMessageConsumer<SolveRequest>>("BackupMode");
 
             //builder.RegisterType<ServerDbContext>().As<DbContext>().AsSelf().InstancePerDependency();
             //builder.RegisterType<ProblemsRepository>().As<RepositoryBase<Problem>>().As<IRepository<Problem>>().AsSelf();

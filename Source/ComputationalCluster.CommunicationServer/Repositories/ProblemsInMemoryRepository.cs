@@ -20,7 +20,14 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 
         public ulong Add(Problem problem)
         {
-            problem.Id = _nextvalidId++;
+            if (problem.Id == 0)
+            {
+                problem.Id = _nextvalidId++;
+            }
+            else
+            {
+                _nextvalidId = Math.Max(_nextvalidId, problem.Id) + 1;
+            }
             problem.RequestDate = DateTime.Now;
             _problems.Add(problem.Id, problem);
             return problem.Id;

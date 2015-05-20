@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
 
 namespace ComputationalCluster.CommunicationServer.Consumers
 {
@@ -16,12 +17,15 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         private readonly IPartialProblemsRepository _partialProblemsRepository;
         private readonly IProblemDefinitionsRepository _problemDefinitionsRepository;
         private readonly IProblemsRepository _problemsRepository;
+        private readonly ILog _log;
 
-        public SolvePartialProblemsConsumer(IPartialProblemsRepository partialProblemsRepository, IProblemDefinitionsRepository problemDefinitionsRepository, IProblemsRepository problemsRepository)
+        public SolvePartialProblemsConsumer(IPartialProblemsRepository partialProblemsRepository, IProblemDefinitionsRepository problemDefinitionsRepository, IProblemsRepository problemsRepository,
+            ILog log)
         {
             _partialProblemsRepository = partialProblemsRepository;
             _problemDefinitionsRepository = problemDefinitionsRepository;
             _problemsRepository = problemsRepository;
+            _log = log;
         }
 
         public ICollection<IMessage> Consume(SolvePartialProblems message, ConnectionInfo connectionInfo = null)
@@ -64,7 +68,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                     ProblemDefinition = problemDefinition,
                     CommonData = message.CommonData,
                     Data = message.PartialProblems[i].Data,
-                    NodeId = message.PartialProblems[i].NodeID,
+                //    NodeId = message.PartialProblems[i].NodeID,
                     Timeout = message.SolvingTimeoutSpecified ? message.SolvingTimeout : 0,
                     Done = false,
                     IsAwaiting = true
