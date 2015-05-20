@@ -15,5 +15,6 @@ namespace ComputationalCluster.CommunicationServer.Repositories
 
         void RemoveFinishedProblems(ulong problemId);
         OrderedPartialProblem Find(ulong problemid, ulong taskId);
+        bool IsProblemComputed(ulong ProblemId);
     }
 }

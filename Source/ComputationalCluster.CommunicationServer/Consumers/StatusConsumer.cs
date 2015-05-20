@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using Autofac.Core;
 using log4net;
+using ComputationalCluster.Common;
 
 namespace ComputationalCluster.CommunicationServer.Consumers
 {
@@ -19,16 +20,20 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         private TaskQueue<OrderedPartialProblem> _partialProblemsQueue;
         private TaskQueue<Problem> _problems;
         private IPartialProblemsRepository _partialProblemsRepository;
+        private IProblemsRepository _problemsRepository;
         private ILog _log;
+        private ITimeProvider _timeProvider;
 
         public StatusConsumer(IComponentsRepository componentsRepository, TaskQueue<OrderedPartialProblem> partialProblemsQueue, TaskQueue<Problem> problemsQueue,
-            IPartialProblemsRepository partialProblemsRepository, ILog log)
+            IPartialProblemsRepository partialProblemsRepository, IProblemsRepository problemsRepository, ILog log, ITimeProvider timeProvider)
         {
             _componentsRepository = componentsRepository;
             _partialProblemsQueue = partialProblemsQueue;
             _problems = problemsQueue;
             _partialProblemsRepository = partialProblemsRepository;
+            _problemsRepository = problemsRepository;
             _log = log;
+            _timeProvider = timeProvider;
         }
 
         public ICollection<IMessage> Consume(Status message)
@@ -194,6 +199,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 message.Threads = new StatusThread[] { };
             }
 
+            _problemsRepository.StopSolvingTimedOutProblems();
             switch (_componentsRepository.GetById(message.Id).Type)
             {
                 case RegisterType.TaskManager:
@@ -219,27 +225,28 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                     threadsCount++;
             List<OrderedPartialProblem> partialProblems = new List<OrderedPartialProblem>();
             var component = _componentsRepository.GetById(message.Id);
-            OrderedPartialProblem problem = _partialProblemsQueue.GetNextTask(component.SolvableProblems);
+            OrderedPartialProblem partialProblem = _partialProblemsQueue.GetNextTask(component.SolvableProblems);
 
-            while (problem != null && problem.Done == false && threadsCount > 0)
+            while (partialProblem != null && partialProblem.Done == false && threadsCount > 0)
             {
-                _log.DebugFormat("GetNextTask Id: {0}", problem.Id);
-                problem.IsAwaiting = false;
-                problem.AssignedTo = component;
-                partialProblems.Add(problem);
+                _log.DebugFormat("GetNextTask Id: {0}", partialProblem.Id);
+                partialProblem.IsAwaiting = false;
+                partialProblem.AssignedTo = component;
+                partialProblems.Add(partialProblem);
                 threadsCount--;
-                problem = _partialProblemsQueue.GetNextTask(new []{problem.ProblemDefinition});
+                partialProblem = _partialProblemsQueue.GetNextTask(new []{partialProblem.ProblemDefinition});
             }
 
             if (partialProblems.Count != 0)
             {
+                var problem = _problemsRepository.FindById((int)partialProblems[0].Id);
                 var partialProblemsMessage = new SolvePartialProblems()
                 {
                     ProblemType = partialProblems[0].ProblemDefinition.Name,
                     Id = partialProblems[0].Id,
                     CommonData = partialProblems[0].CommonData,
-                    SolvingTimeout = partialProblems[0].Timeout,
-                    SolvingTimeoutSpecified = (partialProblems[0].Timeout != 0),
+                    SolvingTimeout = problem.Timeout - (ulong)(_timeProvider.Now-problem.RequestDate).TotalMilliseconds,
+                    SolvingTimeoutSpecified = (problem.Timeout != 0),
                     PartialProblems = new SolvePartialProblemsPartialProblem[partialProblems.Count]
                 };
                 for (int i = 0; i < partialProblems.Count; i++)
@@ -308,7 +315,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 {
                     ProblemType = problem.ProblemDefinition.Name,
                     Id = problem.Id,
-                    ComputationalNodes = (ulong) problem.ProblemDefinition.AvailableComputationalNodes,
+                    ComputationalNodes = problem.ProblemDefinition.AvailableComputationalNodes != 0 ? (ulong)problem.ProblemDefinition.AvailableComputationalNodes : 1,
                     NodeID = component.Id,
                     Data = problem.InputData
                 };

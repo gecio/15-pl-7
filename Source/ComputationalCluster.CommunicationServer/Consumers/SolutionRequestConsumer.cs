@@ -34,11 +34,13 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 }};
             }
 
-            ulong computationalTime = (ulong)(DateTime.Now - problemInstance.RequestDate).TotalMilliseconds;
+            //ulong computationalTime = (ulong)(DateTime.Now - problemInstance.RequestDate).TotalMilliseconds;
             var solution = new SolutionsSolution
             {
-                ComputationsTime = computationalTime,
-                TimeoutOccured = problemInstance.Timeout == 0 ? false : (computationalTime > problemInstance.Timeout),
+                //ComputationsTime = computationalTime,
+                //TimeoutOccured = problemInstance.Timeout == 0 ? false : (computationalTime > problemInstance.Timeout),
+                ComputationsTime = problemInstance.ComputationsTime,
+                TimeoutOccured = problemInstance.TimeoutOccured,
                 TaskIdSpecified = false
             };
 

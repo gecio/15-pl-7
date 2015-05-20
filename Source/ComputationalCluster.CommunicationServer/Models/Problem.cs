@@ -15,6 +15,8 @@ namespace ComputationalCluster.CommunicationServer.Models
         public ProblemDefinition ProblemType { get; set; }
         public ulong Timeout { get; set; }
         public bool IsDone { get; set; }
+        public bool TimeoutOccured { get; set; }
+        public ulong ComputationsTime { get; set; }
 
     }
 }

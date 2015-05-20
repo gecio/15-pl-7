@@ -15,14 +15,16 @@ namespace ComputationalCluster.CommunicationServer
         private readonly IComponentsRepository _components;
         private readonly ILog _log;
         private readonly IConfigProvider _configProvider;
+        private readonly IProblemsRepository _problems;
 
         public CommunicationServerService(INetServer server, IComponentsRepository components, ILog log,
-            ITaskSolversRepository repository, IConfigProvider configProvider)
+            ITaskSolversRepository repository, IConfigProvider configProvider, IProblemsRepository problems)
         {
             _server         = server;
             _components     = components;
             _log            = log;
             _configProvider = configProvider;
+            _problems       = problems;
         }
 
         public void ApplyArguments(string[] arguments)
@@ -58,6 +60,7 @@ namespace ComputationalCluster.CommunicationServer
             {
                 System.Threading.Thread.Sleep(new TimeSpan(0, 0, 30));
                 _components.RemoveInactive();
+                _problems.StopSolvingTimedOutProblems();
             }
         }
 

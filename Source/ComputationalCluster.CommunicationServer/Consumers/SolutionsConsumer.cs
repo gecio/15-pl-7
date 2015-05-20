@@ -1,4 +1,5 @@
-﻿using ComputationalCluster.Communication.Messages;
+﻿using ComputationalCluster.Common;
+using ComputationalCluster.Communication.Messages;
 using ComputationalCluster.CommunicationServer.Models;
 using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.NetModule;
@@ -15,12 +16,15 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         private readonly IPartialProblemsRepository _partialProblemsRepository;
         private readonly IProblemsRepository _problemsRepository;
         private readonly IProblemDefinitionsRepository _problemDefinitionsRepository;
+        private readonly ITimeProvider _timeProvider;
         
-        public SolutionsConsumer(IPartialProblemsRepository partialProblemsRepository, IProblemsRepository problemsRepository, IProblemDefinitionsRepository problemDefinitionsRepository)
+        public SolutionsConsumer(IPartialProblemsRepository partialProblemsRepository, IProblemsRepository problemsRepository,
+            IProblemDefinitionsRepository problemDefinitionsRepository, ITimeProvider timeProvider)
         {
             _partialProblemsRepository = partialProblemsRepository;
             _problemsRepository = problemsRepository;
             _problemDefinitionsRepository = problemDefinitionsRepository;
+            _timeProvider = timeProvider;
         }
 
         public ICollection<IMessage> Consume(Solutions message)
@@ -83,6 +87,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 partialProblem.Done = true;
                 partialProblem.IsAwaiting = false;
             }
+            _problemsRepository.StopSolvingTimedOutProblems();
         }
 
         public void SaveFinalSolution(Solutions message)
@@ -95,6 +100,9 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             solution.OutputData = message.Solutions1[0].Data;
             solution.IsAwaiting = false;
             solution.IsDone = true;
+            solution.AssignedTo = null;
+            solution.TimeoutOccured = false;
+            solution.ComputationsTime = (ulong)_timeProvider.Now.Subtract(solution.RequestDate).TotalMilliseconds;
             
             _problemsRepository.Update(solution);
 

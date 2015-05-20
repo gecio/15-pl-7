@@ -12,5 +12,6 @@ namespace ComputationalCluster.CommunicationServer.Repositories
         ulong Add(Problem problem);
         Problem FindById(int id);
         void Update(Problem problem);
+        void StopSolvingTimedOutProblems();
     }
 }

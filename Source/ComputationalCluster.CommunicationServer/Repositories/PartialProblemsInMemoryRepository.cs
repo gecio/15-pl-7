@@ -67,5 +67,10 @@ namespace ComputationalCluster.CommunicationServer.Repositories
         {
             return _orderedPartialProblems.FirstOrDefault(item => item.Id == Problemid && item.TaskId == TaskId);
         }
+
+        public bool IsProblemComputed(ulong ProblemId)
+        {
+            return _orderedPartialProblems.Where(t => t.Id == ProblemId).Where(t => t.AssignedTo != null).Count() != 0;
+        }
     }
 }

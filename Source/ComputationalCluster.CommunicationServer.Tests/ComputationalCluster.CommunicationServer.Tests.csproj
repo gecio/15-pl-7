@@ -76,11 +76,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\ComponentTests.cs" />
-    <Compile Include="Models\QueableTaskTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queuing\TaskQueueTests.cs" />
-    <Compile Include="Repositories\ComponentsInMemoryRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

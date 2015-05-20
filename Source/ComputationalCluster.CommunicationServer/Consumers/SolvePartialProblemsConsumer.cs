@@ -65,12 +65,13 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                     CommonData = message.CommonData,
                     Data = message.PartialProblems[i].Data,
                     NodeId = message.PartialProblems[i].NodeID,
-                    Timeout = message.SolvingTimeoutSpecified ? message.SolvingTimeout : 0,
+                    Timeout = problem.Timeout,
                     Done = false,
                     IsAwaiting = true
                 };
                 _partialProblemsRepository.Add(partialProblem);
             }
+            _problemsRepository.StopSolvingTimedOutProblems();
         }
     }
 }
