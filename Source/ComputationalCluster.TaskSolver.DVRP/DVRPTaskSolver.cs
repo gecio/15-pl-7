@@ -101,11 +101,15 @@ namespace ComputationalCluster.TaskSolver.DVRP
             var range = BinaryDeserializer(partialData) as Tuple<int[], int[]>;
 
             int[][] routes = null;
+            bool timeoutOccured;
             var result = _dvrpBrute.IterateBetweenSetPartitions(new DVRPRange
             {
                 Start = range.Item1,
                 End = range.Item2
-            }, out routes);
+            }, out routes, timeout, out timeoutOccured);
+
+            if (timeoutOccured)
+                State = TaskSolverState.Timeout; 
 
             byte[] resultBytes = BinarySerializer(new Tuple<float, int[][]>(result, routes));
             return resultBytes;

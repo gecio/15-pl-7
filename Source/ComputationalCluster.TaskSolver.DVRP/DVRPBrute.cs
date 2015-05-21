@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace ComputationalCluster.TaskSolver.DVRP
 {
     internal class DVRPBrute
     {
         DVRPCommonData _commonData;
+        private bool timeoutOccured;
 
         public DVRPBrute(DVRPCommonData commonData)
         {
             _commonData = commonData;
+            timeoutOccured = false;
         }
 
         private float EuclideanDistance(Node a, Node b)
@@ -193,10 +196,11 @@ namespace ComputationalCluster.TaskSolver.DVRP
         public float IterateBetweenSetPartitions(DVRPRange range)
         {
             int[][] routes = null;
-            return IterateBetweenSetPartitions(range, out routes);
+            bool timeoutOccured;
+            return IterateBetweenSetPartitions(range, out routes, TimeSpan.FromMilliseconds(0), out timeoutOccured);
         }
 
-        public float IterateBetweenSetPartitions(DVRPRange range, out int[][] routes)
+        public float IterateBetweenSetPartitions(DVRPRange range, out int[][] routes, TimeSpan timeout, out bool _timeoutOccured)
         {
             int[] current = range.Start;
             float bestSolution = float.MaxValue;
@@ -206,8 +210,16 @@ namespace ComputationalCluster.TaskSolver.DVRP
 
             ApplyCutoff();
 
+            Timer timer = null;
+            if (timeout.TotalMilliseconds > 0)
+            {
+                timer = new Timer(timeout.TotalMilliseconds);
+                timer.Elapsed += timer_Elapsed;
+                timer.Start();
+            }
             do
             {
+                if (timeoutOccured) break;
                 float requiredDistance = 0.0f;
                 paths.Clear();
 
@@ -221,9 +233,10 @@ namespace ComputationalCluster.TaskSolver.DVRP
                     depo.NextOnPath.Clear();
                     depo.Visited = false;
                 }
-
+                
                 for (int vehicle = 0; vehicle < _commonData.NumVehicles; ++vehicle)
                 {
+                    if (timeoutOccured) break;
                     var pickups = BuildPickupsForVehicle(vehicle, current);
                     var vehicleDistance = CalculateRequiredDistance(pickups, bestSolution);
 
@@ -252,8 +265,15 @@ namespace ComputationalCluster.TaskSolver.DVRP
             }
             while (MoveNext(current, _commonData.NumVehicles, range.End));
 
+            if (timeout.TotalMilliseconds > 0) timer.Stop();
+            _timeoutOccured = timeoutOccured;
             routes = bestPaths.Select(t => t.ToArray()).ToArray();
             return bestSolution;
+        }
+
+        void timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            timeoutOccured = true;
         }
     }
 }
