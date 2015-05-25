@@ -59,5 +59,11 @@ namespace ComputationalCluster.NetModule.Tests
             Assert.AreEqual(responseMessageContent, response);
         }
 
+        [Test]
+        public void Dispatch_NullMessageThrowsAnException()
+        {
+            Assert.Throws<Exception>(() => receiver.Dispatch(""));
+        }
+
     }
 }
