@@ -99,7 +99,27 @@ namespace ComputationalCluster.ComputationalClient
             {
                 Id = (ulong)problemId
             };
-            return _client.Send(solutionRequest);
+            try
+            {
+                return _client.Send(solutionRequest);
+            }
+            catch (Exception)
+            {
+                if (_backupIp == null || (Equals(_configProvider.IP, _backupIp) && _configProvider.Port == _backupPort))
+                {
+                    return null;
+                }
+                _configProvider.IP = _backupIp;
+                _configProvider.Port = _backupPort;
+                try
+                {
+                    return _client.Send(solutionRequest);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
         }
     }
 }
