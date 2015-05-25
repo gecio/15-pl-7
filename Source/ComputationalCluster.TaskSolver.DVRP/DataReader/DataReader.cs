@@ -186,12 +186,12 @@ namespace ComputationalCluster.TaskSolver.DVRP.DataReader
                 if (Keys["DURATION_SECTION"].Found)
                 {
                     var duration = Keys["DURATION_SECTION"].Value[visitId - 1]; // :(
-                    pickup.UnloadTime = float.Parse(duration[1]);
+                    pickup.UnloadTime = float.Parse(duration[1], System.Globalization.CultureInfo.InvariantCulture);
                 }
                 if (Keys["TIME_AVAIL_SECTION"].Found)
                 {
                     var avail = Keys["TIME_AVAIL_SECTION"].Value[visitId - 1];
-                    pickup.AvailableAfter = float.Parse(avail[1]);
+                    pickup.AvailableAfter = float.Parse(avail[1], System.Globalization.CultureInfo.InvariantCulture);
                 }
                 pickups.Add(pickup);
             }
