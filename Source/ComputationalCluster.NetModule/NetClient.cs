@@ -9,12 +9,19 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.NetModule
 {
+    /// <summary>
+    /// Interfejs sieciowy umożliwiający wysyłanie i odbieranie wiadomości.
+    /// </summary>
     public interface INetClient
     {
         IEnumerable<IMessage> Send_ManyResponses(IMessage message);
         IMessage Send(IMessage message);
     }
 
+    /// <summary>
+    /// Wygodny wrapper na klasę TcpClient umożliwiający wysyłanie wiadomości, odebranie odpowiedzi
+    /// i zdeserializowanie jej do wygodnego obiektu.
+    /// </summary>
     public class NetClient : INetClient
     {
         private readonly IMessageTranslator _messageTranslator;

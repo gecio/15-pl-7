@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.Common
 {
+    /// <summary>
+    /// Konfigurator odczytujący i analizujący linię poleceń, a następnie zapisujący ustawienia do konfiguracji.
+    /// </summary>
     public class ClientConfigurator
     {
         private readonly IConfigProvider _configProvider;

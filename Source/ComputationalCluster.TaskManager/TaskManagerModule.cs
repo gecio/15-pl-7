@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.TaskManager
 {
+    /// <summary>
+    /// Moduł definiujący kontener IoC dla Task Managera. 
+    /// </summary>
     public class TaskManagerModule : Module
     {
         protected override void Load(ContainerBuilder builder)

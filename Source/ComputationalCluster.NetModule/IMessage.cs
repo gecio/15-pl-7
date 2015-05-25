@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.NetModule
 {
+    /// <summary>
+    /// Interfejs wiadomości.
+    /// </summary>
     public interface IMessage
     {
     }

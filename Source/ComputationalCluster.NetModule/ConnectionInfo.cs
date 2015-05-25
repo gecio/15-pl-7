@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.NetModule
 {
+    /// <summary>
+    /// Informacje o połączeniu.
+    /// </summary>
     public class ConnectionInfo
     {
         public IPAddress IpAddress { get; set; }

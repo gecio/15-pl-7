@@ -21,6 +21,9 @@ namespace ComputationalCluster.Common
         public bool ParameterRequired { get; set; }
     }
 
+    /// <summary>
+    /// Parser linii poleceń, weryfikuje ją i zwraca zarejestrowane polecenia w wygodnej formie.
+    /// </summary>
     public class CommandLineParser
     {
         private List<CommandLineOption> _options;

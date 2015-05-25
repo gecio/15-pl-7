@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.Common
 {
+    /// <summary>
+    /// Bazowy interfejs konfiguracji każdego elementu klastra.
+    /// </summary>
     public interface IConfigProvider
     {
         int Port { get; set; }

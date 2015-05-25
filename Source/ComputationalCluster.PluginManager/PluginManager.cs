@@ -8,12 +8,20 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.PluginManager
 {
+    /// <summary>
+    /// Interfejs menadżera pluginów
+    /// </summary>
+    /// <typeparam name="T">Typ klasy bazowej wyszukiwanych pluginów</typeparam>
     public interface IPluginManager<T>
     {
         void AddDirectory(string directoryPath);
         ICollection<Type> GetPlugins();
     }
 
+    /// <summary>
+    /// Implementacja menadżera pluginów.
+    /// </summary>
+    /// <typeparam name="T">Typ klasy bazowej wyszukiwanych pluginów</typeparam>
     public class PluginManager<T> : IPluginManager<T>
     {
         private List<Type> _plugins;
@@ -23,6 +31,10 @@ namespace ComputationalCluster.PluginManager
             _plugins = new List<Type>();
         }
 
+        /// <summary>
+        /// Przeszukuje nierekursywnie dany katalog w celu odnalezienia klas rozszerzających klasę T.
+        /// </summary>
+        /// <param name="directoryPath">Ścieżka do katalogu</param>
         public void AddDirectory(string directoryPath)
         {
             if (!Directory.Exists(directoryPath))
@@ -47,6 +59,10 @@ namespace ComputationalCluster.PluginManager
             }
         }
 
+        /// <summary>
+        /// Zwraca odnalezione wcześniej pluginy.
+        /// </summary>
+        /// <returns>Kolekcja (lista) odnalezionych pluginów</returns>
         public ICollection<Type> GetPlugins()
         {
             return _plugins;

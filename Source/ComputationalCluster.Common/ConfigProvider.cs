@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.Common
 {
+    /// <summary>
+    /// Podstawowa implementacja dostawcy ustawień.
+    /// </summary>
     public class ConfigProvider : IConfigProvider
     {
         private static readonly int DefaultPort = 16987;

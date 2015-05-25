@@ -16,6 +16,9 @@ using UCCTaskSolver;
 
 namespace ComputationalCluster.TaskManager
 {
+    /// <summary>
+    /// Klasa konfigurująca i uruchamiająca Task Manager.
+    /// </summary>
     public class TaskManagerRunner
     {
         private ITaskSolversRepository _taskSolversRepository;

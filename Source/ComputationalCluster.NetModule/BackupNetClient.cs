@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.NetModule
 {
+    /// <summary>
+    /// Wersja NetClienta dla serwera backupowego. Różni się od zwykłego klienta tym, że możemy
+    /// wyslać wiadomości z określonego portu (wynika z dokumentacji i sposobu informowania
+    /// na jakim porcie backup nasłuchuje).
+    /// </summary>
     public class BackupNetClient
     {
         private readonly IMessageTranslator _messageTranslator;

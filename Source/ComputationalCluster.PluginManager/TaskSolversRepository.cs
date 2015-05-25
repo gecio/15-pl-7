@@ -10,6 +10,9 @@ using UCCTaskSolver;
 
 namespace ComputationalCluster.PluginManager
 {
+    /// <summary>
+    /// Interfejs repozytorium implementacji task solverów.
+    /// </summary>
     public interface ITaskSolversRepository
     {
         ICollection<string> GetSolversNames();
@@ -17,6 +20,9 @@ namespace ComputationalCluster.PluginManager
         UCCTaskSolver.TaskSolver GetSolverInstance(string name, byte[] problemData = null);
     }
 
+    /// <summary>
+    /// Implementacja repozytorium task solverów. 
+    /// </summary>
     public class TaskSolversRepository : ITaskSolversRepository
     {
         private readonly IConfigProvider _configProvider;

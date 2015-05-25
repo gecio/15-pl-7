@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.Common
 {
+    /// <summary>
+    /// Implementacja konfiguracji dla węzłów i managerów zadań.
+    /// </summary>
     public class ConfigProviderThreads : ConfigProvider
     {
         public int ThreadsCount

@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.Common
 {
+    /// <summary>
+    /// Provider dla czasu, aby umożliwić testowanie.
+    /// </summary>
     public interface ITimeProvider
     {
         DateTime Now { get; }
     }
 
+    /// <summary>
+    /// Podstawowa implementacja zwracająca aktualny czas.
+    /// </summary>
     public class TimeProviderUtcNow : ITimeProvider
     {
         public DateTime Now

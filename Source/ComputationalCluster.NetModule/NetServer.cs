@@ -8,6 +8,9 @@ using System.Threading;
 
 namespace ComputationalCluster.NetModule
 {
+    /// <summary>
+    /// Interfejs warstwy abstrakcji dla połączeń TCP/IP.
+    /// </summary>
     public interface INetServer
     {
         void Start();
@@ -15,6 +18,9 @@ namespace ComputationalCluster.NetModule
     }
 
     /// <summary>
+    /// Warstwa abstrakcji dla połączeń TCP/IP, umożliwia wygodne rejestrowanie konsumentów dla danych
+    /// wiadomości, transformacji oraz zwracania odpowiedzi. Sterowanie konsumentami odbywa się poprzez
+    /// poprawne skonfigurowanie odbiorcy wiadomości.
     /// </summary>
     public class NetServer : INetServer
     {

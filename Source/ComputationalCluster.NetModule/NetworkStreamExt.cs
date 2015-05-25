@@ -11,6 +11,7 @@ namespace ComputationalCluster.NetModule
     public static class NetworkStreamExt
     {
         private static int BUFFER_SIZE = 4096;
+
         public static int WriteBuffered(this NetworkStream stream, byte[] buffer, int offset, int size)
         {
             int sendedBytes = 0;
