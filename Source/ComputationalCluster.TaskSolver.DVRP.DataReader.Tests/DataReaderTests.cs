@@ -53,7 +53,7 @@ namespace ComputationalCluster.TaskSolver.DVRP.Tests
             Assert.AreEqual(parsed.Pickups[0].X, -39);
             Assert.AreEqual(parsed.Pickups[0].Y, 97);
             Assert.AreEqual(parsed.Pickups[0].AvailableAfter, 276);
-            Assert.AreEqual(parsed.Pickups[0].Size, -29);
+            Assert.AreEqual(parsed.Pickups[0].Size, 29);
             Assert.AreEqual(parsed.Pickups[0].UnloadTime, 20);
         }
     }
