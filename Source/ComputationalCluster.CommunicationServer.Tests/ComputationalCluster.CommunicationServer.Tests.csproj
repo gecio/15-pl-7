@@ -76,9 +76,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommunicationServerServiceTests.cs" />
+    <Compile Include="Models\ComponentTests.cs" />
+    <Compile Include="Models\QueableTaskTests.cs" />
     <Compile Include="Backup\BackupConnectionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queuing\TaskQueueTests.cs" />
+    <Compile Include="Repositories\ComponentsInMemoryRepositoryTests.cs" />
+    <Compile Include="Repositories\PartialProblemsInMemoryRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -100,6 +105,10 @@
     <ProjectReference Include="..\ComputationalCluster.NetModule\ComputationalCluster.NetModule.csproj">
       <Project>{C646AEF9-72F4-4967-89D9-96D1A25A9A8A}</Project>
       <Name>ComputationalCluster.NetModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ComputationalCluster.PluginManager\ComputationalCluster.PluginManager.csproj">
+      <Project>{AF165AC2-8A7C-4A6A-9586-C0ACC20DDCAF}</Project>
+      <Name>ComputationalCluster.PluginManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
