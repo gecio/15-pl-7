@@ -80,7 +80,7 @@ namespace ComputationalCluster.NetModule
             {
                 var listener = (TcpListener)asyncResult.AsyncState;
                 var tcpClient = (TcpClient)listener.EndAcceptTcpClient(asyncResult);
-
+                
                 _log.InfoFormat("Connected: {0}", tcpClient.Client.AddressFamily.ToString());
 
                 _tcpClientConnected.Set(); // run waiting for next connection
@@ -90,7 +90,13 @@ namespace ComputationalCluster.NetModule
                 var requestBuffer = stream.ReadBuffered(0);
                 var request = _encoding.GetString(requestBuffer, 0, requestBuffer.Length);
 
-                var response = _messageReceiver.Dispatch(request);
+                var connectionInfo = new ConnectionInfo
+                {
+                    IpAddress = (tcpClient.Client.RemoteEndPoint as IPEndPoint).Address,
+                    Port = (tcpClient.Client.RemoteEndPoint as IPEndPoint).Port
+                };
+
+                var response = _messageReceiver.Dispatch(request,connectionInfo);
 
                 byte[] responseBuffer = _encoding.GetBytes(response);
                 

@@ -8,6 +8,7 @@ using log4net.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,6 +33,13 @@ namespace ComputationalCluster.TaskManager
         private ConfigProviderThreads _configProvider;
         private int _numberOfThreads;
         private int _numberOfBusyThreads;
+
+
+        // backup
+        private int _backupPort;
+        private IPAddress _backupAddress;
+
+        
 
         public TaskManagerRunner(string[] args)
         {
@@ -65,8 +73,6 @@ namespace ComputationalCluster.TaskManager
 
             while (true)
             {
-                System.Threading.Thread.Sleep(new TimeSpan(0, 0, (int)(_timeout / 2)));
-
                 var threads = new StatusThread[_numberOfThreads];
                 for (int i=0; i<_numberOfBusyThreads; i++)
                     threads[i] = new StatusThread()
@@ -93,12 +99,19 @@ namespace ComputationalCluster.TaskManager
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Server unavailable...");
-                    return;
+                    if (_backupAddress == null || (Equals(_configProvider.IP, _backupAddress) && _configProvider.Port == _backupPort))
+                    {
+                        return;
+                    }
+                    _configProvider.IP = _backupAddress;
+                    _configProvider.Port = _backupPort;
+                    continue;
                 }
                 SendPartialProblems();
                 SendSolution();
                 SendErrorMessages();
+
+                System.Threading.Thread.Sleep(new TimeSpan(0, 0, (int)(_timeout / 2)));
             }
         }
 
@@ -114,10 +127,18 @@ namespace ComputationalCluster.TaskManager
                 ParallelThreads = (byte)_numberOfThreads,
                 SolvableProblems = _taskSolversRepository.GetSolversNames().ToArray(),
             }) as RegisterResponse;
-            Console.WriteLine("Register response: ID={0}", _componentId);
 
             _componentId = response.Id;
             _timeout = response.Timeout;
+
+            Console.WriteLine("Register response: ID={0}", _componentId);
+
+            if (response.BackupCommunicationServers != null &&
+                response.BackupCommunicationServers.BackupCommunicationServer != null)
+            {
+                _backupPort = response.BackupCommunicationServers.BackupCommunicationServer.port;
+                _backupAddress = IPAddress.Parse(response.BackupCommunicationServers.BackupCommunicationServer.address);
+            }
         }
 
         public void Consume(IMessage receivedMessage)
@@ -142,6 +163,16 @@ namespace ComputationalCluster.TaskManager
                 Console.WriteLine("Error: type={0}, message={1}", (receivedMessage as Error).ErrorType, (receivedMessage as Error).ErrorMessage);
                 if ((receivedMessage as Error).ErrorType == ErrorErrorType.UnknownSender)
                     SendRegisterMessage();
+            }
+            else if (receivedMessage is NoOperation)
+            {
+                var response = (NoOperation)receivedMessage;
+                if (response.BackupCommunicationServers != null &&
+                response.BackupCommunicationServers.BackupCommunicationServer != null)
+                {
+                    _backupPort = response.BackupCommunicationServers.BackupCommunicationServer.port;
+                    _backupAddress = IPAddress.Parse(response.BackupCommunicationServers.BackupCommunicationServer.address);
+                }
             }
         }
 
@@ -177,7 +208,6 @@ namespace ComputationalCluster.TaskManager
                 {
                     Data = Convert.ToBase64String(partialProblems[i]),
                     TaskId = (ulong)(i+1),
-                    NodeID = _componentId,
                 };
             }
 

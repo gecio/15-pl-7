@@ -42,7 +42,7 @@ namespace ComputationalCluster.NetModule.Tests
             //       test przechodzi, ale problem trzeba rozwiązać, wynika on z nieco
             //       olewczego podejścia do wątków i zarządzania nimi
             var responseMessage = "Response.";
-            _receiverMock.Setup(t => t.Dispatch(It.IsAny<string>())).Returns(responseMessage);
+            _receiverMock.Setup(t => t.Dispatch(It.IsAny<string>(), It.IsAny<ConnectionInfo>())).Returns(responseMessage);
 
             var client = new NetClient(_translator, _encoding, _configMock.Object);
             _server = new NetServer(_receiverMock.Object, _encoding, _configMock.Object, _logMock.Object);
@@ -66,8 +66,8 @@ namespace ComputationalCluster.NetModule.Tests
             var responseMessageTwo = "Response2.";
 
             var receiverMock = new Mock<IMessageReceiver>();
-            _receiverMock.Setup(t => t.Dispatch(It.IsAny<string>()))
-                .Returns((string input) => input == requestMessageOne ? responseMessageOne : responseMessageTwo);
+            _receiverMock.Setup(t => t.Dispatch(It.IsAny<string>(),It.IsAny<ConnectionInfo>()))
+                .Returns((string input, ConnectionInfo connectionInfo) => input == requestMessageOne ? responseMessageOne : responseMessageTwo);
 
             var clientOne = new NetClient(_translator, _encoding, _configMock.Object);
             var clientTwo = new NetClient(_translator, _encoding, _configMock.Object);
@@ -90,7 +90,7 @@ namespace ComputationalCluster.NetModule.Tests
         public void IntegrationServerClient_ClientSendRequest_TwoResponsesReceived()
         {
             var responseMessage = "Response.";
-            _receiverMock.Setup(t => t.Dispatch(It.IsAny<string>())).Returns(String.Join(NetServer.ETB.ToString(),responseMessage,responseMessage));
+            _receiverMock.Setup(t => t.Dispatch(It.IsAny<string>(), It.IsAny<ConnectionInfo>())).Returns(String.Join(NetServer.ETB.ToString(),responseMessage,responseMessage));
 
             var client = new NetClient(_translator, _encoding, _configMock.Object);
             _server = new NetServer(_receiverMock.Object, _encoding, _configMock.Object, _logMock.Object);

@@ -18,13 +18,13 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             _log = log;
         }
 
-        public ICollection<IMessage> Consume(Error message)
+        public ICollection<IMessage> Consume(Error message, ConnectionInfo connectionInfo = null)
         {
             _log.Error("Error: type="+message.ErrorType+", message="+message.ErrorMessage);
             return new IMessage[] { new NoOperation() };
         }
 
-        public ICollection<IMessage> Consume(IMessage message)
+        public ICollection<IMessage> Consume(IMessage message, ConnectionInfo connectionInfo = null)
         {
             var status = message as Error;
             if (status == null)

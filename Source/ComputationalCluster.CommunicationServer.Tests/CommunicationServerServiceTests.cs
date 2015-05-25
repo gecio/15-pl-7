@@ -26,10 +26,10 @@ namespace ComputationalCluster.CommunicationServer.Tests
             var componentsRepository = new Mock<IComponentsRepository>();
             var taskSolversRepository = new Mock<ITaskSolversRepository>();
             var log = new Mock<ILog>();
-            var configProvider = new ConfigProvider();
+            var configProvider = new ConfigProviderBackup();
             var problemsRepository = new Mock<IProblemsRepository>();
             var cs = new CommunicationServerService(netServer.Object, componentsRepository.Object, log.Object,
-                taskSolversRepository.Object, configProvider, problemsRepository.Object);
+                taskSolversRepository.Object, configProvider, null, null, problemsRepository.Object);
 
             cs.ApplyArguments(parameters);
 

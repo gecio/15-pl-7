@@ -9,29 +9,24 @@ using System.Threading.Tasks;
 
 namespace ComputationalCluster.NetModule
 {
-    public interface INetClient
-    {
-        IEnumerable<IMessage> Send_ManyResponses(IMessage message);
-        IMessage Send(IMessage message);
-    }
-
-    public class NetClient : INetClient
+    public class BackupNetClient
     {
         private readonly IMessageTranslator _messageTranslator;
         private readonly Encoding _encoding;
-        private readonly IConfigProvider _configProvider;
+        private readonly IConfigProviderBackup _configProvider;
 
-        public NetClient(IMessageTranslator translator, Encoding encoding, IConfigProvider configProvider)
+        public BackupNetClient(IMessageTranslator translator, Encoding encoding, IConfigProviderBackup configProvider)
         {
             _messageTranslator = translator;
             _encoding = encoding;
             _configProvider = configProvider;
         }
 
-        public IEnumerable<IMessage> Send_ManyResponses(IMessage message)
+        public IEnumerable<IMessage> Send(IMessage message, int port = 0)
         {
-            IPEndPoint serverEndPoint = new IPEndPoint(_configProvider.IP, _configProvider.Port);
-            var client = new TcpClient();
+            var serverEndPoint = new IPEndPoint(_configProvider.MasterIP, _configProvider.MasterPort);
+            var localEndPoint = new IPEndPoint(IPAddress.Any, port);
+            var client = new TcpClient(localEndPoint);
             client.Connect(serverEndPoint);
             var stream = client.GetStream();
             var request = _messageTranslator.Stringify(message);
@@ -44,9 +39,5 @@ namespace ComputationalCluster.NetModule
             return response.Split(NetServer.ETB).Select(msg => _messageTranslator.CreateObject(msg));
         }
 
-        public IMessage Send(IMessage message)
-        {
-            return Send_ManyResponses(message).FirstOrDefault();
-        }
     }
 }

@@ -15,8 +15,9 @@ namespace ComputationalCluster.NetModule
         /// Metoda która obsługuje wiadomości przychodzące, może wygenerować odpowiedź.
         /// </summary>
         /// <param name="message">Wiadomość przychodząca.</param>
+        /// <param name="connectionInfo">Informacja na temat nadawcy wiadomości</param>
         /// <returns>Opcjonalna odpowiedź dla wysyłającego.</returns>
-        string Dispatch(string message);
+        string Dispatch(string message, ConnectionInfo connectionInfo = null);
     }
 
     /// <summary>
@@ -41,7 +42,7 @@ namespace ComputationalCluster.NetModule
             //_messageConsumersResolver = builder.Build();
         }
 
-        public string Dispatch(string message)
+        public string Dispatch(string message, ConnectionInfo connectionInfo = null)
         {
             var splitMessages = message.Split(NetServer.ETB);
             var results = new List<string>();
@@ -54,7 +55,7 @@ namespace ComputationalCluster.NetModule
 
                 var consumerType = typeof(IMessageConsumer<>).MakeGenericType(new[] { messageObject.GetType() });
                 var consumer = (IMessageConsumer)_componentContext.Resolve(consumerType);
-                var responses = consumer.Consume(messageObject);
+                var responses = consumer.Consume(messageObject, connectionInfo);
 
                 foreach (var response in responses)
                 {

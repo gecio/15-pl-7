@@ -9,6 +9,7 @@ using log4net.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,6 +32,11 @@ namespace ComputationalCluster.ComputationalNode
 
         private int _numberOfThreads;
         private int _numberOfBusyThreads;
+
+
+        //backupData
+        private int _backupPort;
+        private IPAddress _backupAddress;
 
         public ComputationalNodeRunner(string[] args)
         {
@@ -62,8 +68,6 @@ namespace ComputationalCluster.ComputationalNode
 
             while (true)
             {
-                System.Threading.Thread.Sleep(new TimeSpan(0, 0, (int)(_timeout / 2)));
-
                 var threads = new StatusThread[_numberOfThreads];
                 for (int i = 0; i < _numberOfBusyThreads; i++)
                     threads[i] = new StatusThread()
@@ -90,11 +94,18 @@ namespace ComputationalCluster.ComputationalNode
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Server unavailable...");
-                    return;
+                    if (_backupAddress == null || (Equals(_configProvider.IP, _backupAddress) && _configProvider.Port == _backupPort))
+                    {
+                        return;
+                    }
+                    _configProvider.IP = _backupAddress;
+                    _configProvider.Port = _backupPort;
+                    continue;
                 }
                 SendPartialSolutions();
                 SendErrorMessages();
+
+                System.Threading.Thread.Sleep(new TimeSpan(0, 0, (int)(_timeout / 2)));
             }
         }
 
@@ -114,6 +125,12 @@ namespace ComputationalCluster.ComputationalNode
 
             _id = response.Id;
             _timeout = response.Timeout;
+            if (response.BackupCommunicationServers != null &&
+                response.BackupCommunicationServers.BackupCommunicationServer != null)
+            {
+                _backupPort = response.BackupCommunicationServers.BackupCommunicationServer.port;
+                _backupAddress = IPAddress.Parse(response.BackupCommunicationServers.BackupCommunicationServer.address);
+            }
         }
 
         /// <summary>
@@ -150,6 +167,17 @@ namespace ComputationalCluster.ComputationalNode
                 if ((receivedMessage as Error).ErrorType == ErrorErrorType.UnknownSender)
                     SendRegisterMessage();
             }
+            else if (receivedMessage is NoOperation)
+            {
+                var response = (NoOperation) receivedMessage;
+                if (response.BackupCommunicationServers != null &&
+                response.BackupCommunicationServers.BackupCommunicationServer != null)
+                {
+                    _backupPort = response.BackupCommunicationServers.BackupCommunicationServer.port;
+                    _backupAddress = IPAddress.Parse(response.BackupCommunicationServers.BackupCommunicationServer.address);
+                }
+            }
+
         }
 
         /// <summary>
