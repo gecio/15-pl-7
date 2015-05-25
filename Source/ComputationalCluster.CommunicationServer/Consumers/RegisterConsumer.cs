@@ -36,7 +36,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             var backupComponent = _componentsRepository.GetBackupServer() as BackupComponent;
             var response = new RegisterResponse()
             {
-                Timeout = 30, // todo: config,
+                Timeout = StaticConfig.DropAfterTime, // todo: config,
                 BackupCommunicationServers = backupComponent != null ? new RegisterResponseBackupCommunicationServers
                         {
                             BackupCommunicationServer =

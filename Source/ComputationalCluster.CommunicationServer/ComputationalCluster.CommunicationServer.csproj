@@ -95,6 +95,7 @@
     <Compile Include="Repositories\PartialProblemsInMemoryRepository.cs" />
     <Compile Include="Repositories\ProblemsInMemoryRepository.cs" />
     <Compile Include="Repositories\ProblemDefinitionsInMemoryRepository.cs" />
+    <Compile Include="StaticConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ComputationalCluster.Common\ComputationalCluster.Common.csproj">
