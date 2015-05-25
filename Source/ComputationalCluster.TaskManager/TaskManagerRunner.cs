@@ -97,7 +97,7 @@ namespace ComputationalCluster.TaskManager
                         Consume(receivedMessage);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     if (_backupAddress == null || (Equals(_configProvider.IP, _backupAddress) && _configProvider.Port == _backupPort))
                     {

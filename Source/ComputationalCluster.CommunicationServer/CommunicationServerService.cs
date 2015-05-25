@@ -79,7 +79,7 @@ namespace ComputationalCluster.CommunicationServer
 
             while (true)
             {
-                System.Threading.Thread.Sleep(new TimeSpan(0, 0, 30));
+                System.Threading.Thread.Sleep(new TimeSpan(0, 0, StaticConfig.DropAfterTime));
                 var deletedComponents = _components.RemoveInactive();
                 foreach (var deletedComponent in deletedComponents)
                 {
