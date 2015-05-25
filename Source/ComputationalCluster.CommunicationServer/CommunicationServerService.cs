@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization.Formatters;
+using System.Threading;
 using ComputationalCluster.CommunicationServer.Backup;
 
 namespace ComputationalCluster.CommunicationServer
@@ -65,7 +66,9 @@ namespace ComputationalCluster.CommunicationServer
 
             if (_configProvider.BackupMode)
             {
-                _backupClient.Start();
+                var backupThread = new Thread(_backupClient.Start);
+                backupThread.Start();
+                Thread.Sleep(5000);
             }
             _server.Start();
             

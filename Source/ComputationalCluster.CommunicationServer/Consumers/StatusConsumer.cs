@@ -71,7 +71,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 }
                 default:
                 {
-                    return new IMessage[] {new NoOperation()};
+                    return new IMessage[] {PrepareNoOperationMessage()};
                 }
             }
 
@@ -125,10 +125,10 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 }
 
                 _synchronizationQueue.Enqueue(partialProblemsMessage);
-                return new IMessage[] {partialProblemsMessage, new NoOperation()};
+                return new IMessage[] {partialProblemsMessage, PrepareNoOperationMessage()};
             }
             else
-                return new IMessage[] {new NoOperation() };
+                return new IMessage[] {PrepareNoOperationMessage() };
         }
 
         public ICollection<IMessage> Consume(IMessage message, ConnectionInfo connectionInfo = null)
@@ -148,23 +148,23 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 
             if (threadsCount <= 0)
             {
-                return new IMessage[] {new NoOperation() };
+                return new IMessage[] { PrepareNoOperationMessage() };
             }
             var mergeSolution = GetSolution(message.Id, threadsCount);
             if (mergeSolution != null)
             {
                 _synchronizationQueue.Enqueue(mergeSolution);
-                return new IMessage[] {mergeSolution, new NoOperation()};
+                return new IMessage[] {mergeSolution, PrepareNoOperationMessage()};
             }
 
             var divideMessage = GetProblems(message.Id, threadsCount);
             if (divideMessage != null)
             {
                 _synchronizationQueue.Enqueue(divideMessage);
-                return new IMessage[] {divideMessage, new NoOperation()};
+                return new IMessage[] {divideMessage, PrepareNoOperationMessage()};
             }
             
-            return new IMessage[] { new NoOperation() };
+            return new IMessage[] { PrepareNoOperationMessage() };
 
         }
 
@@ -226,5 +226,27 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             return null;
         }
 
+
+        private IMessage PrepareNoOperationMessage()
+        {
+            var backup = _componentsRepository.GetBackupServer();
+            if (backup == null)
+            {
+                return new NoOperation();
+            }
+
+            return new NoOperation
+            {
+                BackupCommunicationServers = new NoOperationBackupCommunicationServers
+                {
+                    BackupCommunicationServer = new NoOperationBackupCommunicationServersBackupCommunicationServer
+                    {
+                        address = ((BackupComponent) backup).IpAddress.ToString(),
+                        port = (ushort) ((BackupComponent) backup).Port,
+                        portSpecified = true
+                    }
+                }
+            };
+        }
     }
 }

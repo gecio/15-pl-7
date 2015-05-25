@@ -39,18 +39,23 @@ namespace ComputationalCluster.CommunicationServer.Backup
         public void Start()
         {
             SendRegisterMessage();
-
-            while (true)
+            bool isMainServerAvailable = true;
+            while (isMainServerAvailable)
             {
-                var response = _client.Send(new Status() {Id = _id } );
-                foreach (var message in response)
+                try
                 {
-                    var consumerType = typeof(IMessageConsumer<>).MakeGenericType(new[] { message.GetType() });
-                    var consumer = (IMessageConsumer)_componentContext.ResolveNamed("BackupMode", consumerType);
-                    consumer.Consume(message); 
+                    var response = _client.Send(new Status() {Id = _id});
+                    foreach (var message in response)
+                    {
+                        var consumerType = typeof (IMessageConsumer<>).MakeGenericType(new[] {message.GetType()});
+                        var consumer = (IMessageConsumer) _componentContext.ResolveNamed("BackupMode", consumerType);
+                        consumer.Consume(message);
+                    }
+                }catch
+                {
+                    isMainServerAvailable = false;
                 }
-
-                Thread.Sleep(5000);
+                Thread.Sleep(10000);
             }
         }
 
