@@ -200,6 +200,15 @@ namespace ComputationalCluster.TaskSolver.DVRP
             return IterateBetweenSetPartitions(range, out routes, TimeSpan.FromMilliseconds(0), out timeoutOccured);
         }
 
+        public bool ValidatePartitioning(int[] partitioning)
+        {
+            var vehiclesCounts = new int[_commonData.NumVehicles];
+            foreach (var assignment in partitioning)
+                ++vehiclesCounts[assignment];
+            var aggr = vehiclesCounts.Aggregate(0, (prev, current) => prev <= current ? current : int.MaxValue);
+            return aggr != int.MaxValue;
+        }
+
         public float IterateBetweenSetPartitions(DVRPRange range, out int[][] routes, TimeSpan timeout, out bool _timeoutOccured)
         {
             int[] current = range.Start;
@@ -220,6 +229,10 @@ namespace ComputationalCluster.TaskSolver.DVRP
             do
             {
                 if (timeoutOccured) break;
+
+                if (!ValidatePartitioning(current))
+                    continue;
+
                 float requiredDistance = 0.0f;
                 paths.Clear();
 
