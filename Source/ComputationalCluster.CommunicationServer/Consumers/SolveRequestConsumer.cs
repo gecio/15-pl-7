@@ -19,17 +19,19 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         private readonly ISynchronizationQueue _synchronizationQueue;
         private readonly IProblemsRepository _problemsRepository;
         private readonly IProblemDefinitionsRepository _problemDefinitionsRepository;
+        private readonly IComponentsRepository _componentsRepository;
         private readonly ITimeProvider _timeProvider;
         private readonly ILog _log;
 
         public SolveRequestConsumer(IProblemsRepository problemRepository, IProblemDefinitionsRepository problemDefinitionsRepository,
-            ISynchronizationQueue synchronizationQueue, ITimeProvider timeProvider, ILog log)
+            ISynchronizationQueue synchronizationQueue, IComponentsRepository componentsRepository,  ITimeProvider timeProvider, ILog log)
         {
             _synchronizationQueue = synchronizationQueue;
             _problemsRepository = problemRepository;
             _timeProvider       = timeProvider;
             _log                = log;
             _problemDefinitionsRepository = problemDefinitionsRepository;
+            _componentsRepository = componentsRepository;
         }
 
 
@@ -46,7 +48,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             message.IdSpecified = true;
             _synchronizationQueue.Enqueue(message);
 
-            return new IMessage[] { response, new NoOperation() };
+            return new IMessage[] { response, PrepareNoOperationMessage() };
         }
 
         public ICollection<IMessage> Consume(IMessage message, ConnectionInfo connectionInfo = null)
@@ -84,6 +86,28 @@ namespace ComputationalCluster.CommunicationServer.Consumers
                 IsAwaiting = true,
             };
             return _problemsRepository.Add(orderedProblem);
+        }
+
+        private IMessage PrepareNoOperationMessage()
+        {
+            var backup = _componentsRepository.GetBackupServer();
+            if (backup == null)
+            {
+                return new NoOperation();
+            }
+
+            return new NoOperation
+            {
+                BackupCommunicationServers = new NoOperationBackupCommunicationServers
+                {
+                    BackupCommunicationServer = new NoOperationBackupCommunicationServersBackupCommunicationServer
+                    {
+                        address = ((BackupComponent)backup).IpAddress.ToString(),
+                        port = (ushort)((BackupComponent)backup).Port,
+                        portSpecified = true
+                    }
+                }
+            };
         }
 
     }
