@@ -82,6 +82,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queuing\TaskQueueTests.cs" />
     <Compile Include="Repositories\ComponentsInMemoryRepositoryTests.cs" />
+    <Compile Include="Repositories\PartialProblemsInMemoryRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
