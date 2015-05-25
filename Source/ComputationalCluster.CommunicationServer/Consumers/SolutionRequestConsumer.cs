@@ -21,7 +21,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             _problemsRepository = problemsRepository;
             _log = log;
         }
-        public ICollection<IMessage> Consume(SolutionRequest message)
+        public ICollection<IMessage> Consume(SolutionRequest message, ConnectionInfo connectionInfo = null)
         {
             _log.InfoFormat("Consuming {0} = [{1}]", message.GetType().Name, message.ToString());
             var problemInstance = _problemsRepository.FindById((int)message.Id);
@@ -58,13 +58,13 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             {
                 Id = message.Id,
                 ProblemType = problemInstance.ProblemDefinition.Name,
-                Solutions1 = new []{solution}
+                Solutions1 = new[] { solution }
             };
 
-            return new[] {result};
+            return new[] { result };
         }
 
-        public ICollection<IMessage> Consume(IMessage message)
+        public ICollection<IMessage> Consume(IMessage message, ConnectionInfo connectionInfo = null)
         {
             var solutionRequest = message as SolutionRequest;
             if (solutionRequest == null)

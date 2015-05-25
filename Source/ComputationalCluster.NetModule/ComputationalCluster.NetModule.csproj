@@ -50,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackupNetClient.cs" />
+    <Compile Include="ConnectionInfo.cs" />
     <Compile Include="IConsumer.cs" />
     <Compile Include="IMessage.cs" />
     <Compile Include="IMessageTranslator.cs" />

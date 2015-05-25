@@ -20,6 +20,7 @@ namespace ComputationalCluster.Dependencies
 
             builder.RegisterType<NetServer>().AsImplementedInterfaces();
             builder.RegisterType<NetClient>().AsImplementedInterfaces();
+            builder.RegisterType<BackupNetClient>().AsSelf();
 
             builder.RegisterType<ClientConfigurator>().AsSelf();
 

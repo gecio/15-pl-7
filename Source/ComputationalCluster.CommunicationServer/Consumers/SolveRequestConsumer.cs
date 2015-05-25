@@ -8,6 +8,7 @@ using ComputationalCluster.Communication.Messages;
 using ComputationalCluster.NetModule;
 using ComputationalCluster.CommunicationServer.Repositories;
 using ComputationalCluster.Common;
+using ComputationalCluster.CommunicationServer.Backup;
 using log4net;
 using ComputationalCluster.CommunicationServer.Models;
 
@@ -15,14 +16,16 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 {
     public class SolveRequestConsumer : IMessageConsumer<SolveRequest>
     {
+        private readonly ISynchronizationQueue _synchronizationQueue;
         private readonly IProblemsRepository _problemsRepository;
         private readonly IProblemDefinitionsRepository _problemDefinitionsRepository;
         private readonly ITimeProvider _timeProvider;
         private readonly ILog _log;
 
-        public SolveRequestConsumer(IProblemsRepository problemRepository, IProblemDefinitionsRepository problemDefinitionsRepository, ITimeProvider timeProvider,
-            ILog log)
+        public SolveRequestConsumer(IProblemsRepository problemRepository, IProblemDefinitionsRepository problemDefinitionsRepository,
+            ISynchronizationQueue synchronizationQueue, ITimeProvider timeProvider, ILog log)
         {
+            _synchronizationQueue = synchronizationQueue;
             _problemsRepository = problemRepository;
             _timeProvider       = timeProvider;
             _log                = log;
@@ -30,7 +33,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
         }
 
 
-        public ICollection<IMessage> Consume(SolveRequest message)
+        public ICollection<IMessage> Consume(SolveRequest message, ConnectionInfo connectionInfo = null)
         {
             _log.InfoFormat("Consuming {0} = [{1}]", message.GetType().Name, message.ToString());
             ulong unqueId = SaveData(message);
@@ -38,10 +41,15 @@ namespace ComputationalCluster.CommunicationServer.Consumers
             {
                 Id = unqueId
             };
+
+            message.Id = unqueId;
+            message.IdSpecified = true;
+            _synchronizationQueue.Enqueue(message);
+
             return new IMessage[] { response, new NoOperation() };
         }
 
-        public ICollection<IMessage> Consume(IMessage message)
+        public ICollection<IMessage> Consume(IMessage message, ConnectionInfo connectionInfo = null)
         {
             var solveRequest = message as SolveRequest;
             if (solveRequest == null)
@@ -68,6 +76,7 @@ namespace ComputationalCluster.CommunicationServer.Consumers
 
             var orderedProblem = new Problem
             {
+                Id = solveRequest.Id > 0 ? solveRequest.Id : 0,
                 InputData = solveRequest.Data,
                 Timeout = solveRequest.SolvingTimeout,
                 ProblemDefinition = problemDefinition,

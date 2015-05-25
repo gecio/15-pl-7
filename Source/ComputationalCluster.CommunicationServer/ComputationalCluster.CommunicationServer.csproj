@@ -58,6 +58,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Backup\BackupClient.cs" />
+    <Compile Include="Backup\Consumers\DivideProblemBackupConsumer.cs" />
+    <Compile Include="Backup\Consumers\NoOperationBackupConsumer.cs" />
+    <Compile Include="Backup\Consumers\RegisterBackupConsumer.cs" />
+    <Compile Include="Backup\Consumers\SolutionsBackupConsumer.cs" />
+    <Compile Include="Backup\Consumers\SolvePartialProblemsBackupConsumer.cs" />
+    <Compile Include="Backup\Consumers\SolveRequestBackupConsumer.cs" />
+    <Compile Include="Backup\Consumers\StatusBackupConsumer.cs" />
+    <Compile Include="Backup\ISynchronizationQueue.cs" />
+    <Compile Include="Backup\SynchronizationInMemoryQueue.cs" />
     <Compile Include="CommunicationServerService.cs" />
     <Compile Include="CommunicationServerModule.cs" />
     <Compile Include="Consumers\ErrorConsumer.cs" />
@@ -67,6 +77,7 @@
     <Compile Include="Consumers\SolveRequestConsumer.cs" />
     <Compile Include="Consumers\RegisterConsumer.cs" />
     <Compile Include="Consumers\StatusConsumer.cs" />
+    <Compile Include="Models\BackupComponent.cs" />
     <Compile Include="Models\Component.cs" />
     <Compile Include="Models\OrderedPartialProblem.cs" />
     <Compile Include="Models\Problem.cs" />

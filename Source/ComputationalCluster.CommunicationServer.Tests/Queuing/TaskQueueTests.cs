@@ -31,8 +31,7 @@ namespace ComputationalCluster.CommunicationServer.Tests.Queueing
             queuableTaskMock.Setup(t => t.ProblemDefinition).Returns(problemDefinition);
 
             var repository = new Mock<IQueuableTasksRepository<IQueueableTask>>();
-            repository.Setup(t => t.GetQueuableTasks())
-                .Returns(new List<IQueueableTask>() { queuableTaskMock.Object });
+            repository.Setup(t => t.GetQueuableTasks()).Returns(new List<IQueueableTask>() { queuableTaskMock.Object });
 
             var queue = new TaskQueue<IQueueableTask>(repository.Object, new Mock<ILog>().Object);
 

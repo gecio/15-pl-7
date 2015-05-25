@@ -7,6 +7,7 @@ using Autofac;
 using ComputationalCluster.Communication.Messages;
 using ComputationalCluster.NetModule;
 using ComputationalCluster.Common;
+using System.Net;
 
 namespace ComputationalCluster.ComputationalClient
 {
@@ -15,17 +16,22 @@ namespace ComputationalCluster.ComputationalClient
         private INetClient _client;
         private Encoding _encoding;
 
+        IConfigProvider _configProvider;
+        // backup
+        public int _backupPort;
+        public IPAddress _backupIp;
+
         public ComputationalClientRunner()
         {
             var builder = new ContainerBuilder();
             builder.RegisterModule<ComputationalClientModule>();
             var container = builder.Build();
 
-            var cfg = container.Resolve<IConfigProvider>();
+            _configProvider = container.Resolve<IConfigProvider>();
             if (App.ArgAddress != null)
-                cfg.IP = App.ArgAddress;
+                _configProvider.IP = App.ArgAddress;
             if (App.ArgPort > 0)
-                cfg.Port = App.ArgPort;
+                _configProvider.Port = App.ArgPort;
 
             _client = container.Resolve<INetClient>();
             _encoding = container.Resolve<Encoding>();
@@ -50,18 +56,40 @@ namespace ComputationalCluster.ComputationalClient
                 solverRequest.SolvingTimeout = duration.Value;
                 solverRequest.SolvingTimeoutSpecified = true;
             }
-            var responses = _client.Send_ManyResponses(solverRequest);
-            ulong id=0;
+            IEnumerable<IMessage> responses;
+            try
+            {
+                responses = _client.Send_ManyResponses(solverRequest);
+            }
+            catch
+            {
+                if (_backupIp == null || (Equals(_configProvider.IP, _backupIp) && _configProvider.Port == _backupPort))
+                {
+                    return 0;
+                }
+                _configProvider.IP = _backupIp;
+                _configProvider.Port = _backupPort;
+                responses = _client.Send_ManyResponses(solverRequest);
+            }
+            ulong id = 0;
 
             foreach (var response in responses)
             {
                 if (response.GetType() == typeof(SolveRequestResponse))
+                {
                     id = (response as SolveRequestResponse).Id;
+                }
                 if (response.GetType() == typeof(NoOperation))
                 {
-                    //TODO: zapisanie informacji o backup'ie
+                    var noOp = (NoOperation)response;
+                    if (noOp.BackupCommunicationServers != null && noOp.BackupCommunicationServers.BackupCommunicationServer != null)
+                    {
+                        _backupIp = IPAddress.Parse(noOp.BackupCommunicationServers.BackupCommunicationServer.address);
+                        _backupPort = noOp.BackupCommunicationServers.BackupCommunicationServer.port;
+                    }
                 }
             }
+
             return id;
         }
 
